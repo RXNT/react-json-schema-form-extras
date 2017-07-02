@@ -1,21 +1,19 @@
 import React from "react";
 import applyExtras from "../../src/index";
 import Form from "react-jsonschema-form";
-import AsyncTypeaheadWidget from '../../src/components/AsyncTypeaheadWidget';
+import AllergyTypeaheadWidget from '../../src/components/allergyTypeaheadWidget';
 
-//const staticOptions = [{"id":1,AllergyName:"One"},{"id":2,AllergyName:"Two"},{"id":3,AllergyName:"Three"},{"id":4,AllergyName:"Four"}]
-
-/*const LookaheadWidget = (props) => {
+const AllergyTypeaheadInstance = (props) => {
   return (
-    <Typeahead
-      labelKey="AllergyName"
-      options={staticOptions}
-    />
+    <AllergyTypeaheadWidget
+      {...props}
+      token="passTemporarySecurityTokenHere"
+      />
   );
-};*/
+};
 
 const widgets = {
-  lookaheadWidget: AsyncTypeaheadWidget
+  lookaheadWidget: AllergyTypeaheadInstance
 };
 
 const schema = {
