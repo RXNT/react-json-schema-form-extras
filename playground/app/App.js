@@ -1,28 +1,21 @@
 import React from "react";
 import applyExtras from "../../src/index";
 import Form from "react-jsonschema-form";
-import {Typeahead} from 'react-bootstrap-typeahead';
+import AsyncTypeaheadWidget from '../../src/components/AsyncTypeaheadWidget';
 
-const staticOptions = [
-  {id: 1, label: 'John'},
-  {id: 2, label: 'Miles'},
-  {id: 3, label: 'Charles'},
-  {id: 4, label: 'Herbie'},
-];
+//const staticOptions = [{"id":1,AllergyName:"One"},{"id":2,AllergyName:"Two"},{"id":3,AllergyName:"Three"},{"id":4,AllergyName:"Four"}]
 
-const LookaheadWidget = (props) => {
+/*const LookaheadWidget = (props) => {
   return (
     <Typeahead
+      labelKey="AllergyName"
       options={staticOptions}
-      placeholder="Choose an option.."
-      value={props.value}
-      required={props.required}
     />
   );
-};
+};*/
 
 const widgets = {
-  lookaheadWidget: LookaheadWidget
+  lookaheadWidget: AsyncTypeaheadWidget
 };
 
 const schema = {
