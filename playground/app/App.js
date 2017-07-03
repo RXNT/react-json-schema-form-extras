@@ -2,18 +2,45 @@ import React from "react";
 import applyExtras from "../../src/index";
 import Form from "react-jsonschema-form";
 import AllergyTypeaheadWidget from '../../src/components/allergyTypeaheadWidget';
+import MedicationTypeaheadWidget from '../../src/components/medicationTypeaheadWidget';
 
 const AllergyTypeaheadInstance = (props) => {
+
+  let rxntProps = {
+    doctorGroupId: 4,
+    doctorCompanyId: 2824,
+    token: "OMITTED",
+    requestInfoHeader: "OMITTED"
+  }
+
   return (
     <AllergyTypeaheadWidget
       {...props}
-      token="passTemporarySecurityTokenHere"
+      rxntProps={rxntProps}
+      />
+  );
+};
+
+const MedicationTypeaheadInstance = (props) => {
+
+  let rxntProps = {
+    doctorGroupId: 4,
+    doctorCompanyId: 2824,
+    token: "OMITTED",
+    requestInfoHeader: "OMITTED"
+  }
+
+  return (
+    <MedicationTypeaheadWidget
+      {...props}
+      rxntProps={rxntProps}
       />
   );
 };
 
 const widgets = {
-  lookaheadWidget: AllergyTypeaheadInstance
+  allergyWidget: AllergyTypeaheadInstance,
+  medicationWidget: MedicationTypeaheadInstance
 };
 
 const schema = {
@@ -21,20 +48,29 @@ const schema = {
   type: "object",
   required: ["firstName"],
   properties: {
-    firstName: {
+    allergies: {
       type: "string",
-      title: "First name",
+      title: "Allergies",
+    },
+    medications: {
+      type: "string",
+      title: "Medications",
     }
   },
 };
 
 const uiSchema = {
-  firstName: {
+  allergies: {
     classNames: "col-md-4 col-xs-4 success",
     "ui:autofocus": true,
     "ui:emptyValue": "",
-    "ui:tabID": "0",
-    "ui:widget": "lookaheadWidget"
+    "ui:widget": "allergyWidget"
+  },
+  medications: {
+    classNames: "col-md-4 col-xs-4 success",
+    "ui:autofocus": false,
+    "ui:emptyValue": "",
+    "ui:widget": "medicationWidget"
   }
 };
 

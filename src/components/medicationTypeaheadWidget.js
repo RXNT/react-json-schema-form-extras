@@ -1,7 +1,7 @@
 import React from 'react';
 import {AsyncTypeahead} from 'react-bootstrap-typeahead';
 
-class AllergyTypeaheadWidget extends React.Component{
+class MedicationTypeaheadWidget extends React.Component{
   constructor(props){
     super(props);
     this.state = {
@@ -18,10 +18,10 @@ class AllergyTypeaheadWidget extends React.Component{
         <AsyncTypeahead
           {...this.state}
           filterBy={this.filterByCallback}
-          labelKey="AllergyName"
+          labelKey="DrugId"
           minLength={3}
           onSearch={this._handleSearch}
-          placeholder="Search for allergies..."
+          placeholder="Search for medicines..."
           renderMenuItemChildren={this._renderMenuItemChildren}
         />
       </div>
@@ -30,8 +30,8 @@ class AllergyTypeaheadWidget extends React.Component{
 
   _renderMenuItemChildren(option, props, index) {
     return (
-      <div key={option.AllergyID}>
-        <span>{option.AllergyName}</span>
+      <div key={option.DrugId}>
+        <span>{option.DrugName}</span>
       </div>
     );
   }
@@ -42,7 +42,7 @@ class AllergyTypeaheadWidget extends React.Component{
     }
 
     //Currently on hold until RxNT provides support for CORS (preflighted OPTIONS requests are giving 400s)
-    let allergyRequestObj = {
+    let drugRequestObj = {
        method: 'POST',
        mode: 'cors',
        headers: new Headers({
@@ -50,19 +50,19 @@ class AllergyTypeaheadWidget extends React.Component{
          'RequestInfo': this.props.rxntProps.requestInfoHeader
        }),
        body: {
-         AllergyName: query,
+         Name: query,
          DoctorGroupId: this.props.rxntProps.doctorGroupId,
          DoctorCompanyId: this.props.rxntProps.doctorCompanyId,
          Token: this.props.rxntProps.token
        }
      };
 
-    var allergyRequest = new Request('http://devqa.rxnt.com/PatientDashboardApiServices/ehrv8/patientallergies/SearchAllergies', allergyRequestObj);
+    var drugRequest = new Request('http://devqa.rxnt.com/PatientDashboardApiServices/ehrv8/currentmedications/SearchMedications', drugRequestObj);
 
-    fetch(allergyRequest)
+    fetch(drugRequest)
       .then(resp => resp.json())
-      .then(json => {this.setState({options: json.AllergiesList}); console.log('query executed: ' + query + ' , submitted with token: ' + this.props.rxntProps.token); });
+      .then(json => {this.setState({options: json.DrugList}); console.log('query executed: ' + query + ' , submitted with token: ' + this.props.rxntProps.token); });
   }
 }
 
-export default AllergyTypeaheadWidget;
+export default MedicationTypeaheadWidget;
