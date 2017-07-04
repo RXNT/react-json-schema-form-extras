@@ -13,6 +13,7 @@ class AllergyTypeaheadWidget extends React.Component{
   }
 
   render() {
+    console.log('rxnt props test: ' + JSON.stringify(this.props.rxntProps));
     return (
       <div>
         <AsyncTypeahead

@@ -1,47 +1,6 @@
 import React from "react";
 import applyExtras from "../../src/index";
 import Form from "react-jsonschema-form";
-import AllergyTypeaheadWidget from '../../src/components/allergyTypeaheadWidget';
-import MedicationTypeaheadWidget from '../../src/components/medicationTypeaheadWidget';
-
-const AllergyTypeaheadInstance = (props) => {
-
-  let rxntProps = {
-    doctorGroupId: 4,
-    doctorCompanyId: 2824,
-    token: "OMITTED",
-    requestInfoHeader: "OMITTED"
-  }
-
-  return (
-    <AllergyTypeaheadWidget
-      {...props}
-      rxntProps={rxntProps}
-      />
-  );
-};
-
-const MedicationTypeaheadInstance = (props) => {
-
-  let rxntProps = {
-    doctorGroupId: 4,
-    doctorCompanyId: 2824,
-    token: "OMITTED",
-    requestInfoHeader: "OMITTED"
-  }
-
-  return (
-    <MedicationTypeaheadWidget
-      {...props}
-      rxntProps={rxntProps}
-      />
-  );
-};
-
-const widgets = {
-  allergyWidget: AllergyTypeaheadInstance,
-  medicationWidget: MedicationTypeaheadInstance
-};
 
 const schema = {
   title: "A registration form",
@@ -78,6 +37,13 @@ const formData = {
   firstName: ""
 };
 
+const rxntProps = {
+  doctorGroupId: 4,
+  doctorCompanyId: 2824,
+  token: "OMITTED",
+  requestInfoHeader: "OMITTED"
+}
+
 let FormWithExtras = applyExtras(Form);
 
 export function App() {
@@ -89,7 +55,7 @@ export function App() {
       formData={formData}
       schema={schema}
       uiSchema={uiSchema}
-      widgets={widgets}
+      rxntProps={rxntProps}
     />
   );
 }
