@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { isDevelopment} from "./utils";
 import AllergyTypeaheadWidget from './components/allergyTypeaheadWidget';
 import MedicationTypeaheadWidget from './components/medicationTypeaheadWidget';
+import AllergyTableWidget from './components/allergyTableWidget';
 
 export default function applyExtras(FormComponent) {
 
@@ -32,7 +33,8 @@ export default function applyExtras(FormComponent) {
     createWidgetObject(rxntProps){
       const widgets = {
         allergyWidget: this.widgetObjFactory(AllergyTypeaheadWidget, rxntProps),
-        medicationWidget: this.widgetObjFactory(MedicationTypeaheadWidget, rxntProps)
+        medicationWidget: this.widgetObjFactory(MedicationTypeaheadWidget, rxntProps),
+        allergyTableWidget: this.widgetObjFactory(AllergyTableWidget, rxntProps)
       };
 
       return widgets;

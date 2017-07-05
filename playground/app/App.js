@@ -14,6 +14,10 @@ const schema = {
     medications: {
       type: "string",
       title: "Medications",
+    },
+    allergyList: {
+      type: "string",
+      title: "Allergy List"
     }
   },
 };
@@ -30,6 +34,11 @@ const uiSchema = {
     "ui:autofocus": false,
     "ui:emptyValue": "",
     "ui:widget": "medicationWidget"
+  },
+  allergyList: {
+    "ui:autofocus": false,
+    "ui:emptyValue": "",
+    "ui:widget": "allergyTableWidget"
   }
 };
 
@@ -41,7 +50,8 @@ const rxntProps = {
   doctorGroupId: 4,
   doctorCompanyId: 2824,
   token: "OMITTED",
-  requestInfoHeader: "OMITTED"
+  requestInfoHeader: "OMITTED",
+  allergyList: [{name: "drug1", dosage: "120"}, {name: "drug2", dosage: "60"}]
 }
 
 let FormWithExtras = applyExtras(Form);
