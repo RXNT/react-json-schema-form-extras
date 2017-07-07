@@ -17,9 +17,10 @@ class AsyncTypeaheadWidget extends React.Component{
       <div>
         <AsyncTypeahead
           {...this.state}
-          labelKey="login"
+          labelKey="name"
+          minLength={3}
           onSearch={this._handleSearch}
-          placeholder="Search for a Github user..."
+          placeholder="Search..."
           renderMenuItemChildren={this._renderMenuItemChildren}
         />
       </div>
@@ -28,16 +29,8 @@ class AsyncTypeaheadWidget extends React.Component{
 
   _renderMenuItemChildren(option, props, index) {
     return (
-      <div key={option.id}>
-        <img
-          src={option.avatar_url}
-          style={{
-            height: '24px',
-            marginRight: '10px',
-            width: '24px',
-          }}
-        />
-        <span>{option.login}</span>
+      <div key={option.key}>
+        <span>{option.name}</span>
       </div>
     );
   }
@@ -47,9 +40,19 @@ class AsyncTypeaheadWidget extends React.Component{
       return;
     }
 
-    fetch(`https://api.github.com/search/users?q=${query}`)
+    let asyncRequestObj = {
+       method: 'POST',
+       mode: 'cors',
+       body: {
+         test: 'test'
+       }
+     };
+
+    var asyncRequest = new Request('http://www.mocky.io/v2/595ff1500f0000f00d0eadf0', asyncRequestObj);
+
+    fetch(asyncRequest)
       .then(resp => resp.json())
-      .then(json => this.setState({options: json.items}));
+      .then(json => {this.setState({options: json.ItemList}); });
   }
 }
 

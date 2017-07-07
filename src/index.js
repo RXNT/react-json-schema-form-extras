@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { isDevelopment} from "./utils";
-import AllergyTypeaheadWidget from './components/allergyTypeaheadWidget';
-import MedicationTypeaheadWidget from './components/medicationTypeaheadWidget';
-import AllergyTableWidget from './components/allergyTableWidget';
+import AsyncTypeaheadWidget from './components/asyncTypeaheadWidget';
+import AsyncTableWidget from './components/asyncTableWidget';
 
 export default function applyExtras(FormComponent) {
 
@@ -18,7 +17,7 @@ export default function applyExtras(FormComponent) {
       delete configs.schema;
       delete configs.uiSchema;
 
-      let widgets = this.createWidgetObject(this.props.rxntProps);
+      let widgets = this.createWidgetObject(this.props.widgetData);
 
       return (
         <FormComponent
@@ -30,23 +29,22 @@ export default function applyExtras(FormComponent) {
       );
     }
 
-    createWidgetObject(rxntProps){
+    createWidgetObject(widgetData){
       const widgets = {
-        allergyWidget: this.widgetObjFactory(AllergyTypeaheadWidget, rxntProps),
-        medicationWidget: this.widgetObjFactory(MedicationTypeaheadWidget, rxntProps),
-        allergyTableWidget: this.widgetObjFactory(AllergyTableWidget, rxntProps)
+        asyncTypeaheadWidget: this.widgetObjFactory(AsyncTypeaheadWidget, widgetData.asyncTypeaheadWidgetData),
+        asyncTableWidget: this.widgetObjFactory(AsyncTableWidget, widgetData.asyncTableWidgetData)
       };
 
       return widgets;
     }
 
-    widgetObjFactory(WidgetClass, rxntProps){
+    widgetObjFactory(WidgetClass, widgetData){
 
       function CustomWidget(props){
         return (
           <WidgetClass
             {...props}
-            rxntProps={rxntProps}
+            widgetData={widgetData}
           />
         );
       }

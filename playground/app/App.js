@@ -3,69 +3,58 @@ import applyExtras from "../../src/index";
 import Form from "react-jsonschema-form";
 
 const schema = {
-  title: "A registration form",
+  title: "A medley of complex form widgets",
   type: "object",
-  required: ["firstName"],
+  required: ["typeaheadExample"],
   properties: {
-    allergies: {
+    typeaheadExample: {
       type: "string",
-      title: "Allergies",
+      title: "Typeahead Example",
     },
-    medications: {
+    tableExample: {
       type: "string",
-      title: "Medications",
-    },
-    allergyList: {
-      type: "string",
-      title: "Allergy List"
+      title: "Table Example",
     }
   },
 };
 
 const uiSchema = {
-  allergies: {
-    classNames: "col-md-4 col-xs-4 success",
+  typeaheadExample: {
     "ui:autofocus": true,
     "ui:emptyValue": "",
-    "ui:widget": "allergyWidget"
+    "ui:widget": "asyncTypeaheadWidget"
   },
-  medications: {
-    classNames: "col-md-4 col-xs-4 success",
+  tableExample: {
     "ui:autofocus": false,
     "ui:emptyValue": "",
-    "ui:widget": "medicationWidget"
-  },
-  allergyList: {
-    "ui:autofocus": false,
-    "ui:emptyValue": "",
-    "ui:widget": "allergyTableWidget"
+    "ui:widget": "asyncTableWidget"
   }
 };
 
 const formData = {
-  firstName: ""
 };
 
-const rxntProps = {
-  doctorGroupId: 4,
-  doctorCompanyId: 2824,
-  token: "OMITTED",
-  requestInfoHeader: "OMITTED",
-  allergyList: [{name: "drug1", dosage: "120"}, {name: "drug2", dosage: "60"}]
+const widgetData = {
+  asyncTableWidgetData: {
+    list: [{col1: "row1, item1", col2: "row1, item2", col3: "row1, col3"}, {col1: "row2, item1", col2: "row2, item2", col3: "row2, col3"}]
+  },
+  asyncTypeaheadWidgetData: {}
 }
 
 let FormWithExtras = applyExtras(Form);
 
 export function App() {
   return (
-    <FormWithExtras
-      liveValidate={false}
-      safeRenderCompletion={true}
-      noHtml5Validate={true}
-      formData={formData}
-      schema={schema}
-      uiSchema={uiSchema}
-      rxntProps={rxntProps}
-    />
+    <div className="col-md-12">
+      <FormWithExtras
+        liveValidate={false}
+        safeRenderCompletion={true}
+        noHtml5Validate={true}
+        formData={formData}
+        schema={schema}
+        uiSchema={uiSchema}
+        widgetData={widgetData}
+      />
+  </div>
   );
 }
