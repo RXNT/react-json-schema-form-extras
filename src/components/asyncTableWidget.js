@@ -5,8 +5,14 @@ class AsyncTableWidget extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      list: this.props.widgetData.list
+      list: props.widgetData.list
     };
+
+
+  }
+
+  componentWillMount(){
+    this.props.onChange(JSON.stringify(this.state.list));
   }
 
   render() {
