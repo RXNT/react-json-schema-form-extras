@@ -32,6 +32,7 @@ const uiSchema = {
 };
 
 const formData = {
+  typeaheadExample: ""
 };
 
 const widgetData = {
@@ -49,7 +50,7 @@ export function App() {
   return (
     <div className="col-md-12">
       <FormWithExtras
-        liveValidate={false}
+        liveValidate={true}
         safeRenderCompletion={true}
         noHtml5Validate={true}
         formData={formData}

@@ -18,6 +18,7 @@ class AsyncTypeaheadWidget extends React.Component{
     return (
       <div>
         <AsyncTypeahead
+          required={this.props.required}
           selected={this.state.selected}
           options={this.state.options}
           labelKey="name"
@@ -67,7 +68,9 @@ class AsyncTypeaheadWidget extends React.Component{
 
     console.log('event is: ' + JSON.stringify(event, null, '\t'));
 
-    this.props.onChange(JSON.stringify(event));
+    if(event.length === 0) this.props.onChange("");
+    else this.props.onChange(JSON.stringify(event));
+
     this.setState({selected: event});
   }
 }
