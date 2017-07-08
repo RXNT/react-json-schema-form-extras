@@ -43,6 +43,8 @@ const widgetData = {
 
 let FormWithExtras = applyExtras(Form);
 
+const onSubmit = ({formData}) => console.log("form data: " + JSON.stringify(formData, null, '\t'));
+
 export function App() {
   return (
     <div className="col-md-12">
@@ -54,6 +56,7 @@ export function App() {
         schema={schema}
         uiSchema={uiSchema}
         widgetData={widgetData}
+        onSubmit={onSubmit}
       />
   </div>
   );

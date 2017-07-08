@@ -5,23 +5,28 @@ class AsyncTypeaheadWidget extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      options: []
+      options: [],
+      selected: []
     };
 
     this._renderMenuItemChildren = this._renderMenuItemChildren.bind(this);
     this._handleSearch = this._handleSearch.bind(this);
+    this._handleSelectionChange = this._handleSelectionChange.bind(this);
   }
 
   render() {
     return (
       <div>
         <AsyncTypeahead
-          {...this.state}
+          selected={this.state.selected}
+          options={this.state.options}
           labelKey="name"
           minLength={3}
           onSearch={this._handleSearch}
           placeholder="Search..."
           renderMenuItemChildren={this._renderMenuItemChildren}
+          onChange={this._handleSelectionChange}
+          multiple={true}
         />
       </div>
     );
@@ -53,6 +58,17 @@ class AsyncTypeaheadWidget extends React.Component{
     fetch(asyncRequest)
       .then(resp => resp.json())
       .then(json => {this.setState({options: json.ItemList}); });
+  }
+
+  _handleSelectionChange(event){
+    if(!event){
+      return;
+    }
+
+    console.log('event is: ' + JSON.stringify(event, null, '\t'));
+
+    this.props.onChange(JSON.stringify(event));
+    this.setState({selected: event});
   }
 }
 
