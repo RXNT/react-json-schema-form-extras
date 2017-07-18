@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { isDevelopment} from "./utils";
 import AsyncTypeaheadWidget from './components/asyncTypeaheadWidget';
 import AsyncTableWidget from './components/asyncTableWidget';
+import AsyncComplexTypeaheadWidget from './components/asyncComplexTypeaheadWidget';
 
 export default function applyExtras(FormComponent) {
 
@@ -32,7 +33,8 @@ export default function applyExtras(FormComponent) {
     createWidgetObject(widgetData){
       const widgets = {
         asyncTypeaheadWidget: this.widgetObjFactory(AsyncTypeaheadWidget, widgetData.asyncTypeaheadWidgetData),
-        asyncTableWidget: this.widgetObjFactory(AsyncTableWidget, widgetData.asyncTableWidgetData)
+        asyncTableWidget: this.widgetObjFactory(AsyncTableWidget, widgetData.asyncTableWidgetData),
+        asyncComplexTypeaheadWidget: this.widgetObjFactory(AsyncComplexTypeaheadWidget, widgetData.asyncComplexTypeaheadWidgetData)
       };
 
       return widgets;

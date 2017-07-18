@@ -9,11 +9,15 @@ const schema = {
   properties: {
     typeaheadExample: {
       type: "string",
-      title: "Typeahead Example",
+      title: "Type-ahead Example",
     },
     tableExample: {
       type: "string",
       title: "Table Example",
+    },
+    typeaheadTableExample: {
+      type: "string",
+      title: "Type-ahead Table Example"
     }
   },
 };
@@ -28,6 +32,11 @@ const uiSchema = {
     "ui:autofocus": false,
     "ui:emptyValue": "",
     "ui:widget": "asyncTableWidget"
+  },
+  typeaheadTableExample: {
+    "ui:autofocus": false,
+    "ui:emptyValue": "",
+    "ui:widget": "asyncComplexTypeaheadWidget"
   }
 };
 
@@ -37,9 +46,18 @@ const formData = {
 
 const widgetData = {
   asyncTableWidgetData: {
-    list: [{col1: "row1, item1", col2: "row1, item2", col3: "row1, col3"}, {col1: "row2, item1", col2: "row2, item2", col3: "row2, col3"}]
+    list: [{ name: "row1, item1", test: "row1, item2", another: "row1, item3", dateEx: "2017-07-10"}, {name: "row2, item1", test: "row2, item2", another: "row2, item3"}],
+    tableCols: [{field: "name", displayName: "Col 1", editable: false}, {field: "test", displayName: "Col 2", editable: { type: 'select', options: { values: ['a', 'b', 'c'] } }}, {field: "another", displayName: "Col 3", editable: false}, {field: "dateEx", displayName: "Col 4", customFieldType: "date"}],
+    keyField: "name"
   },
-  asyncTypeaheadWidgetData: {}
+  asyncTypeaheadWidgetData: {},
+  asyncComplexTypeaheadWidgetData: {
+    tableData: {
+      list: [{ name: "row1, item1", test: "row1, item2", another: "row1, item3", dateEx: "2017-07-10"}, {name: "row2, item1", test: "row2, item2", another: "row2, item3"}],
+      tableCols: [{field: "name", displayName: "Col 1", editable: false}, {field: "test", displayName: "Col 2", editable: { type: 'select', options: { values: ['a', 'b', 'c'] } }}, {field: "another", displayName: "Col 3", editable: false}, {field: "dateEx", displayName: "Col 4", customFieldType: "date"}],
+      keyField: "name"
+    }
+  }
 }
 
 let FormWithExtras = applyExtras(Form);

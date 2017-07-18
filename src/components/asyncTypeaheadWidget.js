@@ -27,7 +27,6 @@ class AsyncTypeaheadWidget extends React.Component{
           placeholder="Search..."
           renderMenuItemChildren={this._renderMenuItemChildren}
           onChange={this._handleSelectionChange}
-          multiple={true}
         />
       </div>
     );
@@ -68,10 +67,15 @@ class AsyncTypeaheadWidget extends React.Component{
 
     console.log('event is: ' + JSON.stringify(event, null, '\t'));
 
-    if(event.length === 0) this.props.onChange("");
-    else this.props.onChange(JSON.stringify(event));
+    if(event.length === 0){
+      this.props.onChange("");
+    }
+    else{
+      this.props.onChange(JSON.stringify(event));
+      if(this.props.onAddition) this.props.onAddition(event);
+      this.setState({selected: []}); //SHOULD CLEAR TYPEAHEAD INPUT. MAY NEED TO IMPROVISE, ISN'T WORKING.
+    }
 
-    this.setState({selected: event});
   }
 }
 
