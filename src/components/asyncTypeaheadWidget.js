@@ -52,7 +52,7 @@ class AsyncTypeaheadWidget extends React.Component{
        }
      };
 
-    var asyncRequest = new Request('http://www.mocky.io/v2/595ff1500f0000f00d0eadf0', asyncRequestObj);
+    var asyncRequest = new Request(this.props.widgetData.queryURL, asyncRequestObj);
 
     fetch(asyncRequest)
       .then(resp => resp.json())

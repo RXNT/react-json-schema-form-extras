@@ -21,6 +21,7 @@ class AsyncComplexTypeaheadWidget extends React.Component{
         <AsyncTypeaheadWidget
           {...configs}
           onChange={this._appendToItemList}
+          widgetData={this.props.widgetData.typeaheadData}
         />
         <AsyncTableWidget
           {...configs}
