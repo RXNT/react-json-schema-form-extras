@@ -5,8 +5,7 @@ class AsyncTypeaheadWidget extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      options: [],
-      selected: []
+      options: []
     };
 
     this._renderMenuItemChildren = this._renderMenuItemChildren.bind(this);
@@ -19,7 +18,6 @@ class AsyncTypeaheadWidget extends React.Component{
       <div>
         <AsyncTypeahead
           required={this.props.required}
-          selected={this.state.selected}
           options={this.state.options}
           labelKey="name"
           minLength={3}
@@ -27,6 +25,7 @@ class AsyncTypeaheadWidget extends React.Component{
           placeholder="Search..."
           renderMenuItemChildren={this._renderMenuItemChildren}
           onChange={this._handleSelectionChange}
+          ref="typeahead"
         />
       </div>
     );
@@ -65,17 +64,10 @@ class AsyncTypeaheadWidget extends React.Component{
       return;
     }
 
-    console.log('event is: ' + JSON.stringify(event, null, '\t'));
-
-    if(event.length === 0){
-      this.props.onChange("");
-    }
-    else{
+    if(event.length > 0){
       this.props.onChange(JSON.stringify(event));
-      if(this.props.onAddition) this.props.onAddition(event);
-      this.setState({selected: []}); //SHOULD CLEAR TYPEAHEAD INPUT. MAY NEED TO IMPROVISE, ISN'T WORKING.
+      this.refs.typeahead.getInstance().clear();
     }
-
   }
 }
 

@@ -6,37 +6,38 @@ import AsyncTableWidget from './asyncTableWidget';
 class AsyncComplexTypeaheadWidget extends React.Component{
   constructor(props){
     super(props);
-    console.log("tableData is: " + JSON.stringify(this.props.widgetData.tableData));
-    this.state = {
-      tableData: this.props.widgetData.tableData
-    };
 
     this._appendToItemList = this._appendToItemList.bind(this);
   }
 
   render() {
+    let self = this;
+    let configs = Object.assign({}, this.props);
+    delete configs.onChange;
+
+    console.log('re-rendering complex widget, props: ' + JSON.stringify(this.props.widgetData.tableData));
     return (
       <div>
         <AsyncTypeaheadWidget
-          {...this.props}
-          onAddition={this._appendToItemList}
+          {...configs}
+          onChange={this._appendToItemList}
         />
         <AsyncTableWidget
-          {...this.props}
-          widgetData={this.state.tableData}
+          {...configs}
+          onChange={this.props.onChange}
+          widgetData={this.props.widgetData.tableData}
         />
       </div>
     );
   }
 
-  _appendToItemList(item){
-    let modItemList = this.state.tableData.list;
-    let modTableData = this.state.tableData;
+  _appendToItemList(stringifiedItem){
+    let item = JSON.parse(stringifiedItem);
 
-    modItemList = modItemList.concat(item);
-    modTableData.list = modItemList;
+    let newWidgetData = this.props.widgetData.tableData;
+    newWidgetData.list = newWidgetData.list.concat(item);
 
-    this.setState({tableData: modTableData});
+    this.props.onChange(JSON.stringify(newWidgetData));
   }
 }
 

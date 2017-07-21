@@ -6,10 +6,27 @@ class AsyncTableWidget extends React.Component{
   constructor(props){
     super(props);
 
+    this._handleTableUpdate = this._handleTableUpdate.bind(this);
+    this._handleRowDelete = this._handleRowDelete.bind(this);
   }
 
-  componentWillMount(){
+  _handleTableUpdate(){
     this.props.onChange(JSON.stringify(this.props.widgetData));
+  }
+
+  _handleRowDelete(rowKeys){
+    let filteredRows = [];
+    for(let row of this.props.widgetData.list){
+      let flag = true;
+      for (let key of rowKeys) {
+        if(row[this.props.widgetData.keyField] === key) flag = false;
+      }
+      if(flag) filteredRows = filteredRows.concat(row);
+    }
+
+    let newWidgetData = this.props.widgetData;
+    newWidgetData.list = filteredRows;
+    this.props.onChange(JSON.stringify(newWidgetData));
   }
 
   render() {
@@ -19,7 +36,9 @@ class AsyncTableWidget extends React.Component{
     };
 
     const options = {
-      handleConfirmDeleteRow: this._deleteConfirmation
+      handleConfirmDeleteRow: this._deleteConfirmation,
+      afterTableComplete: this._handleTableUpdate,
+      afterDeleteRow: this._handleRowDelete
     };
 
     const selectRowProp = {
@@ -27,8 +46,6 @@ class AsyncTableWidget extends React.Component{
     };
 
     const dateEditor = (onUpdate, props) => (<DateField onUpdate={ onUpdate } {...props}/>);
-
-    console.log('widget data is: ' + JSON.stringify(this.props.widgetData));
 
     return (
       <BootstrapTable data={this.props.widgetData.list} keyField={this.props.widgetData.keyField} cellEdit={cellEditProp} deleteRow={ true } selectRow={ selectRowProp } options={ options }>
