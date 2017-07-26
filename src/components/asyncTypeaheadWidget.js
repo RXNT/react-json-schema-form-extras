@@ -65,7 +65,7 @@ class AsyncTypeaheadWidget extends React.Component{
     }
 
     if(event.length > 0){
-      this.props.onChange(JSON.stringify(event));
+      this.props.onChange(event);
       this.refs.typeahead.getInstance().clear();
     }
   }

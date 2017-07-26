@@ -65,7 +65,10 @@ const widgetData = {
       keyField: "drugName"
     },
     typeaheadData: {
-      queryURL: 'http://www.mocky.io/v2/595ff1500f0000f00d0eadf0'
+      queryURL: 'http://www.mocky.io/v2/595ff1500f0000f00d0eadf0',
+      responseSchemaMapping: {
+        name: "drugName"
+      }
     }
   }
 }

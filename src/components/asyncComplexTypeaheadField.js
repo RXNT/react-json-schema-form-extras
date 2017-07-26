@@ -33,11 +33,12 @@ class AsyncComplexTypeaheadField extends React.Component{
     );
   }
 
-  _appendToItemList(stringifiedItem){
-    let item = JSON.parse(stringifiedItem);
+  //TODO: handle alternate input scenarios.
+  _appendToItemList(event){
+    let item = event[0];
     let tableObject = this.tableObjFactory(this.props.schema);
 
-    tableObject = this.replaceThisMergeWithExternalDef(tableObject, item);
+    tableObject = this.convertResponseToSchemaFormat(tableObject, item);
     let newTable = this.props.formData.concat(tableObject);
 
     this.props.onChange(newTable);
@@ -58,12 +59,18 @@ class AsyncComplexTypeaheadField extends React.Component{
     return tableCols;
   }
 
-  //merge data retrieved from an external source into
-  //the format used by JSON schema.
-  replaceThisMergeWithExternalDef(defaultObj, retrievedData){
-    defaultObj.drugName = retrievedData[0].name;
-    return defaultObj;
+  //TODO: improve robustness of mapping.
+  convertResponseToSchemaFormat(tableObject, item){
+    for (var field in item) {
+      if (item.hasOwnProperty(field)) {
+        let mappedField = this.props.data.typeaheadData.responseSchemaMapping[field];
+        if(mappedField) tableObject[mappedField] = item[field];
+      }
+    }
+
+    return tableObject;
   }
+
 }
 
 export default AsyncComplexTypeaheadField;
