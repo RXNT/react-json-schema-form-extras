@@ -2,24 +2,35 @@ import React from 'react';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import DateField from './tableComponents/dateInputField';
 
+import update from 'immutability-helper';
+
 class AsyncTableWidget extends React.Component{
   constructor(props){
     super(props);
 
-    this._handleTableUpdate = this._handleTableUpdate.bind(this);
     this._handleRowDelete = this._handleRowDelete.bind(this);
+    this._afterSaveCell = this._afterSaveCell.bind(this);
   }
 
-  _handleTableUpdate(){
-    //this.props.onChange(JSON.stringify(this.props.widgetData));
+  _afterSaveCell(row, cellName, cellValue){
+    const keyField = this.props.widgetData.keyField;
+    const currKey = row[keyField];
+    let updatedTable = this.props.formData.slice();
+
+    let i = 0;
+
+    for(let row of updatedTable){
+      if(row[keyField] === currKey) updatedTable[i] = row;
+      i++;
+    }
+
+    return updatedTable;
   }
 
   _handleRowDelete(rowKeys){
     let filteredRows = [];
 
-    console.log('received value is: ' + JSON.stringify(this.props.value));
-    /*
-    for(let row of this.props.widgetData.list){
+    for(let row of this.props.formData){
       let flag = true;
       for (let key of rowKeys) {
         if(row[this.props.widgetData.keyField] === key) flag = false;
@@ -27,9 +38,7 @@ class AsyncTableWidget extends React.Component{
       if(flag) filteredRows = filteredRows.concat(row);
     }
 
-    let newWidgetData = this.props.widgetData;
-    newWidgetData.list = filteredRows;
-    this.props.onChange(JSON.stringify(newWidgetData));*/
+    this.props.onChange(filteredRows);
   }
 
   render() {
@@ -38,12 +47,12 @@ class AsyncTableWidget extends React.Component{
 
     const cellEditProp = {
       mode: 'click',
-      blurToSave: true
+      blurToSave: true,
+      afterSaveCell: this._afterSaveCell
     };
 
     const options = {
       handleConfirmDeleteRow: this._deleteConfirmation,
-      afterTableComplete: this._handleTableUpdate,
       afterDeleteRow: this._handleRowDelete
     };
 
@@ -53,8 +62,11 @@ class AsyncTableWidget extends React.Component{
 
     const dateEditor = (onUpdate, props) => (<DateField onUpdate={ onUpdate } {...props}/>);
 
+
+    let configs = Object.assign({}, this.props);
+
     return (
-      <BootstrapTable data={this.props.formData} keyField={this.props.widgetData.keyField} cellEdit={cellEditProp} deleteRow={ true } selectRow={ selectRowProp } options={ options }>
+      <BootstrapTable data={configs.formData} keyField={this.props.widgetData.keyField} cellEdit={cellEditProp} deleteRow={ true } selectRow={ selectRowProp } options={ options }>
         {this.props.widgetData.tableCols.map(function(row, i){
             if(row.customFieldType) return <TableHeaderColumn dataField={row.field} customEditor={ { getElement: dateEditor } } key={i} editable={true}> {row.displayName} </TableHeaderColumn>;
             else return <TableHeaderColumn dataField={row.field} key={i} editable={row.editable}> {row.displayName} </TableHeaderColumn>;

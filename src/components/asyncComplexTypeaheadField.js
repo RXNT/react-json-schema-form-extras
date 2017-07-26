@@ -35,11 +35,34 @@ class AsyncComplexTypeaheadField extends React.Component{
 
   _appendToItemList(stringifiedItem){
     let item = JSON.parse(stringifiedItem);
+    let tableObject = this.tableObjFactory(this.props.schema);
 
-    console.log('item received: ' + stringifiedItem);
-    //let newFieldData = this.props.value.concat(item);
+    tableObject = this.replaceThisMergeWithExternalDef(tableObject, item);
+    let newTable = this.props.formData.concat(tableObject);
 
-    //this.props.onChange(JSON.stringify(newWidgetData));
+    this.props.onChange(newTable);
+  }
+
+  tableObjFactory(schema){
+    let tableCols = {};
+    //TODO: define checks or errors around schema format.
+    //TODO: currently we assume this is an array with a single object sub-property
+    let arrItemSchema = schema.items.properties;
+
+    for (var field in arrItemSchema) {
+      if (arrItemSchema.hasOwnProperty(field)) {
+        tableCols[field] = "";
+      }
+    }
+
+    return tableCols;
+  }
+
+  //merge data retrieved from an external source into
+  //the format used by JSON schema.
+  replaceThisMergeWithExternalDef(defaultObj, retrievedData){
+    defaultObj.drugName = retrievedData[0].name;
+    return defaultObj;
   }
 }
 

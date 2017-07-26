@@ -62,7 +62,7 @@ const widgetData = {
   asyncComplexTypeaheadWidgetData: {
     tableData: {
       tableCols: [{field: "drugName", displayName: "Drug Name", editable: false}, {field: "drugUnits", displayName: "Drug Units", editable: { type: 'select', options: { values: ['ml', 'mg', 'oz'] } }}, {field: "drugAmount", displayName: "Drug Amount", editable: false}],
-      keyField: "name"
+      keyField: "drugName"
     },
     typeaheadData: {
       queryURL: 'http://www.mocky.io/v2/595ff1500f0000f00d0eadf0'
