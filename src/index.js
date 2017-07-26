@@ -17,15 +17,15 @@ export default function applyExtras(FormComponent) {
       delete configs.schema;
       delete configs.uiSchema;
 
-      let widgets = this.createWidgetObject(this.props.widgetData);
+      //let widgets = this.createWidgetObject(this.props.widgetData);
       let fields = this.createFieldsObject(this.props.externalFieldInstanceData, registry);
 
+      //removed: widgets={widgets}
       return (
         <FormComponent
           {...configs}
           schema={this.props.schema}
           uiSchema={this.props.uiSchema}
-          widgets={widgets}
           fields={fields}
         />
       );
