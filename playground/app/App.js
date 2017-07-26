@@ -35,13 +35,32 @@ const uiSchema = {
   typeaheadTableExample: {
     "ui:autofocus": false,
     "ui:emptyValue": "",
-    "ui:field": "typeaheadTable"
+    "ui:field": "medicationsField"
   }
 };
 
 const formData = {
   typeaheadTableExample: [ {drugName: "name", drugUnits: "units", drugAmount: "amount"}]
 };
+
+//TODO: load field types from a global directory.
+const externalFieldInstances = {
+  medicationsField: {
+    type: "AsyncComplexTypeaheadField",
+    data: {
+      tableData: {
+        tableCols: [{field: "drugName", displayName: "Drug Name", editable: false}, {field: "drugUnits", displayName: "Drug Units", editable: { type: 'select', options: { values: ['ml', 'mg', 'oz'] } }}, {field: "drugAmount", displayName: "Drug Amount", editable: false}],
+        keyField: "drugName"
+      },
+      typeaheadData: {
+        queryURL: 'http://www.mocky.io/v2/595ff1500f0000f00d0eadf0',
+        responseSchemaMapping: {
+          name: "drugName"
+        }
+      }
+    }
+  }
+}
 
 const widgetData = {
   asyncComplexTypeaheadWidgetData: {
@@ -75,6 +94,7 @@ export function App() {
         schema={schema}
         uiSchema={uiSchema}
         widgetData={widgetData}
+        externalFieldInstanceData={externalFieldInstances}
         onSubmit={onSubmit}
       />
   </div>

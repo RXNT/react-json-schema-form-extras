@@ -15,6 +15,12 @@ export function toError(message) {
   }
 }
 
+export function getRegistry(){
+  return {
+    fields: require('./components/index.js').default
+  };
+}
+
 const concat = (x, y) => x.concat(y);
 export const flatMap = (xs, f) => xs.map(f).reduce(concat, []);
 

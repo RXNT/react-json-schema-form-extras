@@ -1,11 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { isDevelopment} from "./utils";
-import AsyncTypeaheadWidget from './components/asyncTypeaheadWidget';
-import AsyncTableWidget from './components/asyncTableWidget';
-import AsyncComplexTypeaheadWidget from './components/asyncComplexTypeaheadWidget';
-
-import AsyncComplexTypeaheadField from './components/AsyncComplexTypeaheadField';
+import { isDevelopment, getRegistry} from "./utils";
 
 export default function applyExtras(FormComponent) {
 
@@ -15,13 +10,15 @@ export default function applyExtras(FormComponent) {
     }
 
     render() {
+      const registry = getRegistry();
+
       let configs = Object.assign({}, this.props);
 
       delete configs.schema;
       delete configs.uiSchema;
 
       let widgets = this.createWidgetObject(this.props.widgetData);
-      let fields = this.createFieldsObject(this.props.widgetData);
+      let fields = this.createFieldsObject(this.props.externalFieldInstanceData, registry);
 
       return (
         <FormComponent
@@ -34,9 +31,16 @@ export default function applyExtras(FormComponent) {
       );
     }
 
-    createFieldsObject(data){
-      const fields = {
-        typeaheadTable: this.fieldObjFactory(AsyncComplexTypeaheadField, data.asyncComplexTypeaheadWidgetData)
+    createFieldsObject(externalFieldInstanceData, registry){
+      let fields = {};
+
+      for (var externalFieldInstance in externalFieldInstanceData) {
+        if (externalFieldInstanceData.hasOwnProperty(externalFieldInstance)) {
+          const fieldInstanceDefinition = externalFieldInstanceData[externalFieldInstance];
+          const typeClass = registry.fields[fieldInstanceDefinition.type];
+
+          fields[externalFieldInstance] = this.fieldObjFactory(typeClass, fieldInstanceDefinition.data);
+        }
       }
 
       return fields;
@@ -57,12 +61,13 @@ export default function applyExtras(FormComponent) {
     }
 
     createWidgetObject(widgetData){
-      const widgets = {
+      /*const widgets = {
         asyncTypeaheadWidget: this.widgetObjFactory(AsyncTypeaheadWidget, widgetData.asyncTypeaheadWidgetData),
         asyncTableWidget: this.widgetObjFactory(AsyncTableWidget, widgetData.asyncTableWidgetData),
         asyncComplexTypeaheadWidget: this.widgetObjFactory(AsyncComplexTypeaheadWidget, widgetData.asyncComplexTypeaheadWidgetData)
-      };
+      };*/
 
+      const widgets = {};
       return widgets;
     }
 
