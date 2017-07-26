@@ -21,7 +21,7 @@ export default function applyExtras(FormComponent) {
       delete configs.uiSchema;
 
       let widgets = this.createWidgetObject(this.props.widgetData);
-      let fields = this.createFieldsObject();
+      let fields = this.createFieldsObject(this.props.widgetData);
 
       return (
         <FormComponent
@@ -34,9 +34,9 @@ export default function applyExtras(FormComponent) {
       );
     }
 
-    createFieldsObject(){
+    createFieldsObject(data){
       const fields = {
-        typeaheadTable: this.fieldObjFactory(AsyncComplexTypeaheadField)
+        typeaheadTable: this.fieldObjFactory(AsyncComplexTypeaheadField, data.asyncComplexTypeaheadWidgetData)
       }
 
       return fields;

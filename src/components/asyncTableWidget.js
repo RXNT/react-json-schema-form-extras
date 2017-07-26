@@ -11,11 +11,14 @@ class AsyncTableWidget extends React.Component{
   }
 
   _handleTableUpdate(){
-    this.props.onChange(JSON.stringify(this.props.widgetData));
+    //this.props.onChange(JSON.stringify(this.props.widgetData));
   }
 
   _handleRowDelete(rowKeys){
     let filteredRows = [];
+
+    console.log('received value is: ' + JSON.stringify(this.props.value));
+    /*
     for(let row of this.props.widgetData.list){
       let flag = true;
       for (let key of rowKeys) {
@@ -26,10 +29,13 @@ class AsyncTableWidget extends React.Component{
 
     let newWidgetData = this.props.widgetData;
     newWidgetData.list = filteredRows;
-    this.props.onChange(JSON.stringify(newWidgetData));
+    this.props.onChange(JSON.stringify(newWidgetData));*/
   }
 
   render() {
+
+    console.log('formData obj in props is: ' + JSON.stringify(this.props.formData));
+
     const cellEditProp = {
       mode: 'click',
       blurToSave: true
@@ -48,7 +54,7 @@ class AsyncTableWidget extends React.Component{
     const dateEditor = (onUpdate, props) => (<DateField onUpdate={ onUpdate } {...props}/>);
 
     return (
-      <BootstrapTable data={this.props.widgetData.list} keyField={this.props.widgetData.keyField} cellEdit={cellEditProp} deleteRow={ true } selectRow={ selectRowProp } options={ options }>
+      <BootstrapTable data={this.props.formData} keyField={this.props.widgetData.keyField} cellEdit={cellEditProp} deleteRow={ true } selectRow={ selectRowProp } options={ options }>
         {this.props.widgetData.tableCols.map(function(row, i){
             if(row.customFieldType) return <TableHeaderColumn dataField={row.field} customEditor={ { getElement: dateEditor } } key={i} editable={true}> {row.displayName} </TableHeaderColumn>;
             else return <TableHeaderColumn dataField={row.field} key={i} editable={row.editable}> {row.displayName} </TableHeaderColumn>;
