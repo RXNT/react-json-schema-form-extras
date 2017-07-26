@@ -5,6 +5,8 @@ import AsyncTypeaheadWidget from './components/asyncTypeaheadWidget';
 import AsyncTableWidget from './components/asyncTableWidget';
 import AsyncComplexTypeaheadWidget from './components/asyncComplexTypeaheadWidget';
 
+import AsyncComplexTypeaheadField from './components/AsyncComplexTypeaheadField';
+
 export default function applyExtras(FormComponent) {
 
   class FormWithExtras extends Component {
@@ -19,6 +21,7 @@ export default function applyExtras(FormComponent) {
       delete configs.uiSchema;
 
       let widgets = this.createWidgetObject(this.props.widgetData);
+      let fields = this.createFieldsObject();
 
       return (
         <FormComponent
@@ -26,8 +29,31 @@ export default function applyExtras(FormComponent) {
           schema={this.props.schema}
           uiSchema={this.props.uiSchema}
           widgets={widgets}
+          fields={fields}
         />
       );
+    }
+
+    createFieldsObject(){
+      const fields = {
+        typeaheadTable: this.fieldObjFactory(AsyncComplexTypeaheadField)
+      }
+
+      return fields;
+    }
+
+    fieldObjFactory(FieldClass, data){
+
+      function CustomField(props){
+        return (
+          <FieldClass
+            {...props}
+            data={data}
+          />
+        );
+      }
+
+      return CustomField;
     }
 
     createWidgetObject(widgetData){

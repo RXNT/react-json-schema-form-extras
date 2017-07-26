@@ -2,23 +2,6 @@ import React from "react";
 import applyExtras from "../../src/index";
 import Form from "react-jsonschema-form";
 
-// Define a custom component for handling the root position object
-class TypeaheadTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {...props.formData};
-  }
-
-  render() {
-    //const {lat, lon} = this.state;
-    return (
-      <div>
-        <input type="text" />
-      </div>
-    );
-  }
-}
-
 const schema = {
   title: "A medley of complex form widgets",
   type: "object",
@@ -65,8 +48,6 @@ const uiSchema = {
   }
 };
 
-const fields = {typeaheadTable: TypeaheadTable};
-
 const formData = {
   typeaheadExample: "",
   typeaheadTableExample: []
@@ -106,7 +87,6 @@ export function App() {
         uiSchema={uiSchema}
         widgetData={widgetData}
         onSubmit={onSubmit}
-        fields={fields}
       />
   </div>
   );
