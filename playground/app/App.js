@@ -2,6 +2,23 @@ import React from "react";
 import applyExtras from "../../src/index";
 import Form from "react-jsonschema-form";
 
+// Define a custom component for handling the root position object
+class TypeaheadTable extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {...props.formData};
+  }
+
+  render() {
+    //const {lat, lon} = this.state;
+    return (
+      <div>
+        <input type="text" />
+      </div>
+    );
+  }
+}
+
 const schema = {
   title: "A medley of complex form widgets",
   type: "object",
@@ -12,8 +29,25 @@ const schema = {
       title: "Table Example",
     },
     typeaheadTableExample: {
-      type: "string",
-      title: "Type-ahead Table Example"
+      type: "array",
+      title: "Type-ahead Table Example",
+      items: {
+        type:"object",
+        properties: {
+          drugName: {
+            type: "string",
+            title: "Drug Name"
+          },
+          drugUnits: {
+            type: "string",
+            title: "Drug Units"
+          },
+          drugAmount: {
+            type: "string",
+            title: "Drug Amount"
+          }
+        }
+      }
     }
   },
 };
@@ -27,12 +61,15 @@ const uiSchema = {
   typeaheadTableExample: {
     "ui:autofocus": false,
     "ui:emptyValue": "",
-    "ui:widget": "asyncComplexTypeaheadWidget"
+    "ui:field": "typeaheadTable"
   }
 };
 
+const fields = {typeaheadTable: TypeaheadTable};
+
 const formData = {
-  typeaheadExample: ""
+  typeaheadExample: "",
+  typeaheadTableExample: []
 };
 
 const widgetData = {
@@ -69,6 +106,7 @@ export function App() {
         uiSchema={uiSchema}
         widgetData={widgetData}
         onSubmit={onSubmit}
+        fields={fields}
       />
   </div>
   );
