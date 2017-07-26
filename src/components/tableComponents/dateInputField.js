@@ -17,7 +17,7 @@ class DateField extends React.Component {
       <span>
         <input
           className={ ( this.props.editorClass || '') + ' form-control editor edit-text' }
-          style={ { display: 'inline'} }
+          style={ { display: 'inline' } }
           type='date'
           value={ this.state.date }
           onChange={ (ev) => { this.setState({ date: ev.currentTarget.value }); } }

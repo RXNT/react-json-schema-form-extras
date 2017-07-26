@@ -1,5 +1,4 @@
 import React from 'react';
-import {AsyncTypeahead} from 'react-bootstrap-typeahead';
 import AsyncTypeaheadWidget from './asyncTypeaheadWidget';
 import AsyncTableWidget from './asyncTableWidget';
 
@@ -13,7 +12,6 @@ class AsyncComplexTypeaheadField extends React.Component{
   render() {
     console.log('full props obj in parent field is: ' + JSON.stringify(this.props, null, '\t'));
 
-    let self = this;
     let configs = Object.assign({}, this.props);
     delete configs.onChange;
 
@@ -64,7 +62,7 @@ class AsyncComplexTypeaheadField extends React.Component{
     for (var field in item) {
       if (item.hasOwnProperty(field)) {
         let mappedField = this.props.data.typeaheadData.responseSchemaMapping[field];
-        if(mappedField) tableObject[mappedField] = item[field];
+        if (mappedField) {tableObject[mappedField] = item[field];}
       }
     }
 

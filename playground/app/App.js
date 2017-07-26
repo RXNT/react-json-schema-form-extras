@@ -40,7 +40,7 @@ const uiSchema = {
 };
 
 const formData = {
-  typeaheadTableExample: [ {drugName: "name", drugUnits: "units", drugAmount: "amount"}]
+  typeaheadTableExample: [ { drugName: "name", drugUnits: "units", drugAmount: "amount" }]
 };
 
 //TODO: load field types from a global directory.
@@ -49,7 +49,7 @@ const externalFieldInstances = {
     type: "AsyncComplexTypeaheadField",
     data: {
       tableData: {
-        tableCols: [{field: "drugName", displayName: "Drug Name", editable: false}, {field: "drugUnits", displayName: "Drug Units", editable: { type: 'select', options: { values: ['ml', 'mg', 'oz'] } }}, {field: "drugAmount", displayName: "Drug Amount", editable: false}],
+        tableCols: [{ field: "drugName", displayName: "Drug Name", editable: false }, { field: "drugUnits", displayName: "Drug Units", editable: { type: 'select', options: { values: ['ml', 'mg', 'oz'] } } }, { field: "drugAmount", displayName: "Drug Amount", editable: false }],
         keyField: "drugName"
       },
       typeaheadData: {
@@ -60,13 +60,13 @@ const externalFieldInstances = {
       }
     }
   }
-}
+};
 
 //date example temporarily removed from tableCols: , {field: "dateEx", displayName: "Col 4", customFieldType: "date"}
 
 let FormWithExtras = applyExtras(Form);
 
-const onSubmit = ({formData}) => console.log("form data: " + JSON.stringify(formData, null, '\t'));
+const onSubmit = ({ formData }) => console.log("form data: " + JSON.stringify(formData, null, '\t'));
 
 export function App() {
   return (

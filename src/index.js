@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { isDevelopment, getRegistry} from "./utils";
+import { getRegistry } from "./utils";
 
 export default function applyExtras(FormComponent) {
 

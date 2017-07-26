@@ -14,7 +14,7 @@
     "lint": "eslint src test playground",
     "precommit": "lint-staged",
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
-    "publish-to-npm": "npm run build:readme && npm run dist && npm publish",
+    "publish-to-npm": "npm run dist && npm publish",
     "start": "webpack-dev-server",
     "tdd": "jest --watchAll",
     "test": "jest"

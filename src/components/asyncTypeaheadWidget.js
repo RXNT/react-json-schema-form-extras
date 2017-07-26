@@ -1,5 +1,5 @@
 import React from 'react';
-import {AsyncTypeahead} from 'react-bootstrap-typeahead';
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 
 class AsyncTypeaheadWidget extends React.Component{
   constructor(props){
@@ -56,15 +56,15 @@ class AsyncTypeaheadWidget extends React.Component{
 
     fetch(asyncRequest)
       .then(resp => resp.json())
-      .then(json => {this.setState({options: json.ItemList}); });
+      .then(json => {this.setState({ options: json.ItemList }); });
   }
 
   _handleSelectionChange(event){
-    if(!event){
+    if (!event){
       return;
     }
 
-    if(event.length > 0){
+    if (event.length > 0){
       this.props.onChange(event);
     }
 

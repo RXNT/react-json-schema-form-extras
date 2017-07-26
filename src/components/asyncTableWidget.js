@@ -1,8 +1,6 @@
 import React from 'react';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import DateField from './tableComponents/dateInputField';
-
-import update from 'immutability-helper';
 
 class AsyncTableWidget extends React.Component{
   constructor(props){
@@ -19,8 +17,8 @@ class AsyncTableWidget extends React.Component{
 
     let i = 0;
 
-    for(let row of updatedTable){
-      if(row[keyField] === currKey) updatedTable[i] = row;
+    for (let row of updatedTable){
+      if (row[keyField] === currKey) {updatedTable[i] = row;}
       i++;
     }
 
@@ -30,12 +28,12 @@ class AsyncTableWidget extends React.Component{
   _handleRowDelete(rowKeys){
     let filteredRows = [];
 
-    for(let row of this.props.formData){
+    for (let row of this.props.formData){
       let flag = true;
       for (let key of rowKeys) {
-        if(row[this.props.widgetData.keyField] === key) flag = false;
+        if (row[this.props.widgetData.keyField] === key) {flag = false;}
       }
-      if(flag) filteredRows = filteredRows.concat(row);
+      if (flag) {filteredRows = filteredRows.concat(row);}
     }
 
     this.props.onChange(filteredRows);
@@ -68,8 +66,8 @@ class AsyncTableWidget extends React.Component{
     return (
       <BootstrapTable data={configs.formData} keyField={this.props.widgetData.keyField} cellEdit={cellEditProp} deleteRow={ true } selectRow={ selectRowProp } options={ options }>
         {this.props.widgetData.tableCols.map(function(row, i){
-            if(row.customFieldType) return <TableHeaderColumn dataField={row.field} customEditor={ { getElement: dateEditor } } key={i} editable={true}> {row.displayName} </TableHeaderColumn>;
-            else return <TableHeaderColumn dataField={row.field} key={i} editable={row.editable}> {row.displayName} </TableHeaderColumn>;
+            if (row.customFieldType) {return <TableHeaderColumn dataField={row.field} customEditor={ { getElement: dateEditor } } key={i} editable={true}> {row.displayName} </TableHeaderColumn>;}
+            else {return <TableHeaderColumn dataField={row.field} key={i} editable={row.editable}> {row.displayName} </TableHeaderColumn>;}
         })}
       </BootstrapTable>
     );
