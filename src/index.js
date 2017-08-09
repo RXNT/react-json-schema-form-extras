@@ -11,21 +11,14 @@ export default function applyExtras(FormComponent) {
     render() {
       const registry = getRegistry();
 
-      let configs = Object.assign({}, this.props);
-
-      delete configs.schema;
-      delete configs.uiSchema;
-
-      //let widgets = this.createWidgetObject(this.props.widgetData);
       let fields = this.createFieldsObject(this.props.externalFieldInstanceData, registry);
+      let allFields = Object.assign({}, fields, this.props.fields);
 
-      //removed: widgets={widgets}
+      let configs = Object.assign({}, this.props, { fields: allFields });
+
       return (
         <FormComponent
           {...configs}
-          schema={this.props.schema}
-          uiSchema={this.props.uiSchema}
-          fields={fields}
         />
       );
     }
