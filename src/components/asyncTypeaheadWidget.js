@@ -1,11 +1,11 @@
-import React from 'react';
-import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import React from "react";
+import { AsyncTypeahead } from "react-bootstrap-typeahead";
 
-class AsyncTypeaheadWidget extends React.Component{
-  constructor(props){
+class AsyncTypeaheadWidget extends React.Component {
+  constructor(props) {
     super(props);
     this.state = {
-      options: []
+      options: [],
     };
 
     this._renderMenuItemChildren = this._renderMenuItemChildren.bind(this);
@@ -34,7 +34,9 @@ class AsyncTypeaheadWidget extends React.Component{
   _renderMenuItemChildren(option, props, index) {
     return (
       <div key={option.key}>
-        <span>{option.name}</span>
+        <span>
+          {option.name}
+        </span>
       </div>
     );
   }
@@ -45,26 +47,27 @@ class AsyncTypeaheadWidget extends React.Component{
     }
 
     let asyncRequestObj = {
-       method: 'POST',
-       mode: 'cors',
-       body: {
-         test: 'test'
-       }
-     };
+      method: "POST",
+      mode: "cors",
+      body: JSON.stringify({ Name: query }),
+    };
 
-    var asyncRequest = new Request(this.props.widgetData.queryURL, asyncRequestObj);
+    var asyncRequest = new Request(
+      this.props.widgetData.queryURL,
+      asyncRequestObj
+    );
 
-    fetch(asyncRequest)
-      .then(resp => resp.json())
-      .then(json => {this.setState({ options: json.ItemList }); });
+    fetch(asyncRequest).then(resp => resp.json()).then(json => {
+      this.setState({ options: json.ItemList });
+    });
   }
 
-  _handleSelectionChange(event){
-    if (!event){
+  _handleSelectionChange(event) {
+    if (!event) {
       return;
     }
 
-    if (event.length > 0){
+    if (event.length > 0) {
       this.props.onChange(event);
     }
 
