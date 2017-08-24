@@ -3,9 +3,14 @@ import IMOModal from "./IMOModal";
 import Modal from "react-bootstrap-modal";
 
 const AddButton = ({ onAdd }) =>
-  <div className="btn btn-default" onClick={onAdd}>
-    Add
+  <div className="btn btn-success" onClick={onAdd}>
+    <i className="glyphicon glyphicon-plus" /> Add
   </div>;
+
+const FreeTextButton = ({ onAdd }) =>
+  <a className="btn btn-success" onClick={onAdd}>
+    <i className="glyphicon glyphicon-list-alt" /> Free text
+  </a>;
 
 class IMOField extends Component {
   constructor(props) {
@@ -18,6 +23,10 @@ class IMOField extends Component {
     this.setState({ showAdd: false });
   };
 
+  handleFreeTextAdd = () => {
+    this.props.onChange([{}]);
+  };
+
   handleChange = rows => {
     this.props.onChange(rows);
     this.setState({ showAdd: true });
@@ -28,7 +37,10 @@ class IMOField extends Component {
 
     return (
       <div>
-        <AddButton onAdd={this.handleAdd} disabled={!showAdd} />
+        <div className="btn-group pull-right">
+          <AddButton onAdd={this.handleAdd} disabled={!showAdd} />
+          <FreeTextButton onAdd={this.handleFreeTextAdd} disabled={!showAdd} />
+        </div>
         <Modal show={!showAdd} onHide={() => this.setState({ showAdd: true })}>
           <IMOModal {...this.props} onChange={this.handleChange} />
         </Modal>

@@ -98,6 +98,9 @@ class IMOModal extends Component {
       let { uiSchema: { imo: { detail } } } = this.props;
       this.searchDetails(row.query, detail);
     } else {
+      let changedRow = Object.assign(row);
+      delete changedRow.selectable;
+      delete changedRow.modifiers;
       this.props.onChange([row]);
       this.setState(DEFAULT_STATE);
     }
