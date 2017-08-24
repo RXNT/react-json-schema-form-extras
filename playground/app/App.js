@@ -7,66 +7,121 @@ const schema = {
   type: "object",
   required: [],
   properties: {
+    strangeArray: {
+      type: "array",
+      title: "Some table",
+      items: {
+        type: "object",
+        properties: {
+          num: {
+            type: "number",
+          },
+          str: {
+            type: "string",
+          },
+          state: {
+            type: "string",
+            enum: ["active", "passive", "other"],
+          },
+          active: {
+            type: "boolean",
+          },
+          createdTime: {
+            type: "time",
+          },
+          createdDate: {
+            type: "date",
+          },
+          createdDateTime: {
+            type: "date-time",
+          },
+        },
+      },
+    },
     typeaheadTableExample: {
       type: "array",
       title: "Type-ahead Table Example",
       items: {
-        type:"object",
+        type: "object",
         properties: {
           drugName: {
             type: "string",
-            title: "Drug Name"
+            title: "Drug Name",
           },
           drugUnits: {
             type: "string",
-            title: "Drug Units"
+            title: "Drug Units",
           },
           drugAmount: {
             type: "string",
-            title: "Drug Amount"
-          }
-        }
-      }
-    }
+            title: "Drug Amount",
+          },
+        },
+      },
+    },
   },
 };
 
 const uiSchema = {
+  strangeArray: {
+    "ui:field": "table",
+    table: {
+      keyField: "num",
+    },
+  },
   typeaheadTableExample: {
     "ui:autofocus": false,
     "ui:emptyValue": "",
-    "ui:field": "medicationsField"
-  }
+    "ui:field": "medicationsField",
+  },
 };
 
 const formData = {
-  typeaheadTableExample: [ { drugName: "name", drugUnits: "units", drugAmount: "amount" }]
+  strangeArray: [{ num: 1, str: "Some" }],
+  typeaheadTableExample: [
+    { drugName: "name", drugUnits: "units", drugAmount: "amount" },
+  ],
 };
 
 //TODO: load field types from a global directory.
 const externalFieldInstances = {
+  table: {
+    type: "table",
+  },
   medicationsField: {
     type: "AsyncComplexTypeaheadField",
     data: {
       tableData: {
-        tableCols: [{ field: "drugName", displayName: "Drug Name", editable: false }, { field: "drugUnits", displayName: "Drug Units", editable: { type: 'select', options: { values: ['ml', 'mg', 'oz'] } } }, { field: "drugAmount", displayName: "Drug Amount", editable: false }],
-        keyField: "drugName"
+        tableCols: [
+          { field: "drugName", displayName: "Drug Name", editable: false },
+          {
+            field: "drugUnits",
+            displayName: "Drug Units",
+            editable: {
+              type: "select",
+              options: { values: ["ml", "mg", "oz"] },
+            },
+          },
+          { field: "drugAmount", displayName: "Drug Amount", editable: false },
+        ],
+        keyField: "drugName",
       },
       typeaheadData: {
-        queryURL: 'http://www.mocky.io/v2/595ff1500f0000f00d0eadf0',
+        queryURL: "http://www.mocky.io/v2/595ff1500f0000f00d0eadf0",
         responseSchemaMapping: {
-          name: "drugName"
-        }
-      }
-    }
-  }
+          name: "drugName",
+        },
+      },
+    },
+  },
 };
 
 //date example temporarily removed from tableCols: , {field: "dateEx", displayName: "Col 4", customFieldType: "date"}
 
 let FormWithExtras = applyExtras(Form);
 
-const onSubmit = ({ formData }) => console.log("form data: " + JSON.stringify(formData, null, '\t'));
+const onSubmit = ({ formData }) =>
+  console.log("form data: " + JSON.stringify(formData, null, "\t"));
 
 export function App() {
   return (
@@ -81,6 +136,6 @@ export function App() {
         externalFieldInstanceData={externalFieldInstances}
         onSubmit={onSubmit}
       />
-  </div>
+    </div>
   );
 }

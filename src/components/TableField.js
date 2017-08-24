@@ -19,6 +19,22 @@ function toEditable(fieldProp) {
       type: "select",
       options: { values: fieldProp.enum },
     };
+  } else if (fieldProp.type === "boolean") {
+    return {
+      type: "checkbox",
+    };
+  } else if (fieldProp.type === "date-time") {
+    return {
+      type: "datetime",
+    };
+  } else if (fieldProp.type === "date") {
+    return {
+      type: "date",
+    };
+  } else if (fieldProp.type === "time") {
+    return {
+      type: "time",
+    };
   }
   return true;
 }
