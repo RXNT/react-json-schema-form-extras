@@ -27,12 +27,32 @@ function removeIndex(data) {
   });
 }
 
+function toDataFormat(fieldProp) {
+  if (fieldProp.enum && fieldProp.enumNames) {
+    return cell => {
+      return fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
+    };
+  }
+  return undefined;
+}
+
 function toEditable(fieldProp) {
   if (fieldProp.enum) {
-    return {
-      type: "select",
-      options: { values: fieldProp.enum },
-    };
+    if (fieldProp.enumNames) {
+      let values = fieldProp.enum.map((value, i) => {
+        let text = fieldProp.enumNames[i];
+        return { value, text };
+      });
+      return {
+        type: "select",
+        options: { values },
+      };
+    } else {
+      return {
+        type: "select",
+        options: { values: fieldProp.enum },
+      };
+    }
   } else if (fieldProp.type === "boolean") {
     return {
       type: "checkbox",
@@ -59,7 +79,8 @@ export function toTableColumns(schema, tableCols = []) {
   let schemaCols = Object.keys(properties).map(dataField => {
     let { title } = properties[dataField];
     let editable = toEditable(properties[dataField]);
-    return { dataField, displayName: title, editable };
+    let dataFormat = toDataFormat(properties[dataField]);
+    return { dataField, displayName: title, editable, dataFormat };
   });
 
   return schemaCols.map(sCol => {

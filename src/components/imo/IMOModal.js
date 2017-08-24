@@ -101,6 +101,7 @@ class IMOModal extends Component {
       let changedRow = Object.assign(row);
       delete changedRow.selectable;
       delete changedRow.modifiers;
+      delete changedRow.query;
       this.props.onChange([row]);
       this.setState(DEFAULT_STATE);
     }
