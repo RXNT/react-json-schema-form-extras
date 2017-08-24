@@ -13,6 +13,20 @@ const DEFAULT_TABLE_CONF = {
   deleteRow: true,
 };
 
+const POSITION_KEY = "_position";
+
+function addIndex(data) {
+  return data.map((el, i) => Object.assign({}, el, { [POSITION_KEY]: i }));
+}
+
+function removeIndex(data) {
+  return data.map(el => {
+    let newEl = Object.assign({}, el);
+    delete newEl[POSITION_KEY];
+    return newEl;
+  });
+}
+
 function toEditable(fieldProp) {
   if (fieldProp.enum) {
     return {
@@ -55,30 +69,13 @@ export function toTableColumns(schema, tableCols = []) {
 }
 
 class TableField extends Component {
-  handleCellSave = updRow => {
-    const { uiSchema: { table: { keyField } }, formData } = this.props;
-    const targetKey = updRow[keyField];
+  toTableConf = () => {
+    let { uiSchema: { table = {} }, formData } = this.props;
 
-    let updTable = formData.map(
-      row => (row[keyField] === targetKey ? updRow : row)
-    );
-
-    this.props.onChange(updTable);
-    return updTable;
-  };
-
-  handleRowsDelete = removedKeys => {
-    const { uiSchema: { table: { keyField } }, formData } = this.props;
-
-    let filteredRows = formData.filter(row => {
-      let rowKey = row[keyField];
-      return !removedKeys.includes(rowKey);
-    });
-    this.props.onChange(filteredRows);
-  };
-
-  render() {
-    let { schema, uiSchema: { table }, formData } = this.props;
+    if (table.keyField === undefined || table.keyField === POSITION_KEY) {
+      table.keyField = POSITION_KEY;
+      formData = addIndex(formData);
+    }
 
     let tableConf = Object.assign({}, DEFAULT_TABLE_CONF, table, {
       data: formData,
@@ -87,7 +84,35 @@ class TableField extends Component {
     tableConf.cellEdit.afterSaveCell = this.handleCellSave;
     tableConf.options.afterDeleteRow = this.handleRowsDelete;
 
-    let columns = toTableColumns(schema, table.tableCols);
+    return tableConf;
+  };
+
+  handleCellSave = updRow => {
+    let { keyField, data } = this.toTableConf();
+
+    const targetKey = updRow[keyField];
+    let updTable = data.map(
+      row => (row[keyField] === targetKey ? updRow : row)
+    );
+
+    this.props.onChange(removeIndex(updTable));
+    return updTable;
+  };
+
+  handleRowsDelete = removedKeys => {
+    const { keyField, data } = this.toTableConf();
+
+    let filteredRows = data.filter(row => {
+      let rowKey = row[keyField];
+      return !removedKeys.includes(rowKey);
+    });
+
+    this.props.onChange(removeIndex(filteredRows));
+  };
+
+  render() {
+    let tableConf = this.toTableConf();
+    let columns = toTableColumns(this.props.schema, tableConf.tableCols);
 
     return (
       <BootstrapTable {...tableConf}>
