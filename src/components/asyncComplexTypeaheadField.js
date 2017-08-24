@@ -1,17 +1,15 @@
-import React from 'react';
-import AsyncTypeaheadWidget from './asyncTypeaheadWidget';
-import AsyncTableWidget from './asyncTableWidget';
+import React from "react";
+import AsyncTypeaheadWidget from "./asyncTypeaheadWidget";
+import AsyncTableWidget from "./asyncTableWidget";
 
-class AsyncComplexTypeaheadField extends React.Component{
-  constructor(props){
+class AsyncComplexTypeaheadField extends React.Component {
+  constructor(props) {
     super(props);
 
     this._appendToItemList = this._appendToItemList.bind(this);
   }
 
   render() {
-    console.log('full props obj in parent field is: ' + JSON.stringify(this.props, null, '\t'));
-
     let configs = Object.assign({}, this.props);
     delete configs.onChange;
 
@@ -32,7 +30,7 @@ class AsyncComplexTypeaheadField extends React.Component{
   }
 
   //TODO: handle alternate input scenarios.
-  _appendToItemList(event){
+  _appendToItemList(event) {
     let item = event[0];
     let tableObject = this.tableObjFactory(this.props.schema);
 
@@ -42,7 +40,7 @@ class AsyncComplexTypeaheadField extends React.Component{
     this.props.onChange(newTable);
   }
 
-  tableObjFactory(schema){
+  tableObjFactory(schema) {
     let tableCols = {};
     //TODO: define checks or errors around schema format.
     //TODO: currently we assume this is an array with a single object sub-property
@@ -58,17 +56,20 @@ class AsyncComplexTypeaheadField extends React.Component{
   }
 
   //TODO: improve robustness of mapping.
-  convertResponseToSchemaFormat(tableObject, item){
+  convertResponseToSchemaFormat(tableObject, item) {
     for (var field in item) {
       if (item.hasOwnProperty(field)) {
-        let mappedField = this.props.data.typeaheadData.responseSchemaMapping[field];
-        if (mappedField) {tableObject[mappedField] = item[field];}
+        let mappedField = this.props.data.typeaheadData.responseSchemaMapping[
+          field
+        ];
+        if (mappedField) {
+          tableObject[mappedField] = item[field];
+        }
       }
     }
 
     return tableObject;
   }
-
 }
 
 export default AsyncComplexTypeaheadField;
