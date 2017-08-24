@@ -52,14 +52,11 @@ class AsyncTypeaheadWidget extends React.Component {
       body: JSON.stringify({ Name: query }),
     };
 
-    var asyncRequest = new Request(
-      this.props.widgetData.queryURL,
-      asyncRequestObj
-    );
-
-    fetch(asyncRequest).then(resp => resp.json()).then(json => {
-      this.setState({ options: json.ItemList });
-    });
+    fetch(this.props.widgetData.queryURL, asyncRequestObj)
+      .then(resp => resp.json())
+      .then(json => {
+        this.setState({ options: json.ItemList });
+      });
   }
 
   _handleSelectionChange(event) {
