@@ -1,6 +1,7 @@
 import React from "react";
 import applyExtras from "../../src/index";
 import Form from "react-jsonschema-form";
+import hx from "./hx";
 
 const schema = {
   title: "A medley of complex form widgets",
@@ -125,17 +126,25 @@ const onSubmit = ({ formData }) =>
 
 export function App() {
   return (
-    <div className="col-md-12">
-      <FormWithExtras
-        liveValidate={true}
-        safeRenderCompletion={true}
-        noHtml5Validate={true}
-        formData={formData}
-        schema={schema}
-        uiSchema={uiSchema}
-        externalFieldInstanceData={externalFieldInstances}
-        onSubmit={onSubmit}
-      />
+    <div>
+      <div className="col-md-12">
+        <FormWithExtras
+          {...hx}
+          onChange={({ formData }) => console.log(JSON.stringify(formData))}
+        />
+      </div>
+      <div className="col-md-12">
+        <FormWithExtras
+          liveValidate={true}
+          safeRenderCompletion={true}
+          noHtml5Validate={true}
+          formData={formData}
+          schema={schema}
+          uiSchema={uiSchema}
+          externalFieldInstanceData={externalFieldInstances}
+          onSubmit={onSubmit}
+        />
+      </div>
     </div>
   );
 }
