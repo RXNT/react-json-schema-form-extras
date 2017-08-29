@@ -9,8 +9,7 @@ import Modifiers, { ANY_CODE } from "./Modifiers";
 import SelectTable from "./SelectTable";
 import Modal from "react-bootstrap-modal";
 
-const isSelectable = option =>
-  option["ALT_LEX_TEXT_IMO_CODE"] === option["IMO_LEXICAL_CODE"];
+const isSelectable = option => option["POST_COORD_LEX_FLAG"] === 3;
 
 const parseOption = (json, root, mapping) => {
   let options = selectn(root, json);
