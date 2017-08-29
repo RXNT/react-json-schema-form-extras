@@ -1,4 +1,3 @@
-
 export function isObject(obj) {
   return typeof obj === "object" && obj !== null;
 }
@@ -15,9 +14,9 @@ export function toError(message) {
   }
 }
 
-export function getRegistry(){
+export function getRegistry() {
   return {
-    fields: require('./components/index.js').default
+    fields: require("./components/index.js").default,
   };
 }
 
