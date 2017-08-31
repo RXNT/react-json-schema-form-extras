@@ -13,9 +13,37 @@
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
     <link rel="stylesheet" href="https://npmcdn.com/react-bootstrap-table/dist/react-bootstrap-table-all.min.css"></link>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #app {
+            min-height: 100%;
+        }
+
+        .modal{
+            display:block;
+        }
+
+        .modal-dialog {
+            width: 90%;
+            height: 100%;
+            margin: 5%;
+            padding: 0;
+        }
+
+        .modal-content {
+            height: auto;
+            min-height: 100%;
+            border-radius: 0;
+        }
+    </style>
 </head>
 <body>
     <div id="app"></div>
 
+    <script src="/auth.js"></script>
     <script src="/static/bundle.js"></script>
 </body>

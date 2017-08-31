@@ -40,6 +40,16 @@ module.exports = {
     overlay: {
       warnings: true,
       errors: true
+    },
+    proxy: {
+      '/PMV2API': {
+        target: 'http://localhost:7171/',
+        secure: false
+      },
+      '/IMOAPIServices': {
+        target: 'https://localhost:7171/',
+        secure: false
+      }
     }
   },
 };

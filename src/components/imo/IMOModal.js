@@ -3,6 +3,8 @@ import LoadingScreen from "./LoadingScreen";
 
 import selectn from "selectn";
 
+import auth from "./auth";
+
 import Error from "./Error";
 import SearchField from "./SearchField";
 import Modifiers, { ANY_CODE } from "./Modifiers";
@@ -42,6 +44,7 @@ const parseModifiers = json => {
 };
 
 const DEFAULT_STATE = {
+  isLoading: false,
   isError: false,
   options: [],
   origOptions: [],
@@ -52,19 +55,27 @@ class IMOModal extends Component {
   constructor(props) {
     super(props);
 
-    this.state = DEFAULT_STATE;
+    auth()
+      .then(authObj => this.setState({ authObj, isLoading: true }))
+      .catch(this.handleError);
+    this.state = Object.assign({}, DEFAULT_STATE, { isLoading: true });
   }
+
+  handleError = () => {
+    this.setState({ isError: true, isLoading: false });
+  };
 
   search = (query, { url, root, mapping }) => {
     this.setState({ isLoading: true });
+    let body = Object.assign({}, this.state.authObj, { SearchQuery: query });
     fetch(url, {
       method: "POST",
-      body: JSON.stringify({ SearchQuery: query }),
+      body: JSON.stringify(body),
     })
       .then(resp => resp.json())
       .then(json => parseOption(json, root, mapping))
       .then(options => this.setState({ options, isLoading: false }))
-      .catch(err => this.setState({ isError: true, isLoading: false }));
+      .catch(this.handleError);
   };
 
   handleSearch = ({ formData }) => {
@@ -74,9 +85,10 @@ class IMOModal extends Component {
 
   searchDetails = (code, { url, root, mapping }) => {
     this.setState({ isLoading: true });
+    let body = Object.assign({}, this.state.authObj, { LexicalItemCode: code });
     fetch(url, {
       method: "POST",
-      body: JSON.stringify({ LexicalItemCode: code }),
+      body: JSON.stringify(body),
     })
       .then(resp => resp.json())
       .then(json => {
@@ -89,7 +101,7 @@ class IMOModal extends Component {
           isLoading: false,
         });
       })
-      .catch(err => this.setState({ isError: true, isLoading: false }));
+      .catch(this.handleError);
   };
 
   handleRowClick = row => {
@@ -136,13 +148,15 @@ class IMOModal extends Component {
     return (
       <div>
         <SearchField onSearch={this.handleSearch} />
-        {modifiers.length > 0
-          ? <Modifiers
-              modifiers={modifiers}
-              activeModifiers={activeModifiers}
-              onChange={this.handleModifiersChange}
-            />
-          : <div />}
+        {modifiers.length > 0 ? (
+          <Modifiers
+            modifiers={modifiers}
+            activeModifiers={activeModifiers}
+            onChange={this.handleModifiersChange}
+          />
+        ) : (
+          <div />
+        )}
         <SelectTable
           data={options}
           schema={this.props.schema}
@@ -158,9 +172,7 @@ class IMOModal extends Component {
         <Modal.Header>
           <Modal.Title id="ModalHeader">IMO problem search</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          {this.modalBody()}
-        </Modal.Body>
+        <Modal.Body>{this.modalBody()}</Modal.Body>
       </div>
     );
   }
