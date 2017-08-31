@@ -2,15 +2,17 @@ import React, { Component } from "react";
 import IMOModal from "./IMOModal";
 import Modal from "react-bootstrap-modal";
 
-const AddButton = ({ onAdd }) =>
+const AddButton = ({ onAdd }) => (
   <div className="btn btn-success" onClick={onAdd}>
     <i className="glyphicon glyphicon-plus" /> Add
-  </div>;
+  </div>
+);
 
-const FreeTextButton = ({ onAdd }) =>
+const FreeTextButton = ({ onAdd }) => (
   <a className="btn btn-success" onClick={onAdd}>
     <i className="glyphicon glyphicon-list-alt" /> Free text
-  </a>;
+  </a>
+);
 
 class IMOField extends Component {
   constructor(props) {

@@ -61,8 +61,9 @@ class AsyncTableWidget extends React.Component {
       mode: "checkbox",
     };
 
-    const dateEditor = (onUpdate, props) =>
-      <DateField onUpdate={onUpdate} {...props} />;
+    const dateEditor = (onUpdate, props) => (
+      <DateField onUpdate={onUpdate} {...props} />
+    );
 
     let configs = Object.assign({}, this.props);
 
@@ -82,7 +83,8 @@ class AsyncTableWidget extends React.Component {
                 customEditor={{ getElement: dateEditor }}
                 key={i}
                 editable={true}>
-                {" "}{row.displayName}{" "}
+                {" "}
+                {row.displayName}{" "}
               </TableHeaderColumn>
             );
           } else {
@@ -91,7 +93,8 @@ class AsyncTableWidget extends React.Component {
                 dataField={row.field}
                 key={i}
                 editable={row.editable}>
-                {" "}{row.displayName}{" "}
+                {" "}
+                {row.displayName}{" "}
               </TableHeaderColumn>
             );
           }

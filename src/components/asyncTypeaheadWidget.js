@@ -34,9 +34,7 @@ class AsyncTypeaheadWidget extends React.Component {
   _renderMenuItemChildren(option, props, index) {
     return (
       <div key={option.key}>
-        <span>
-          {option.name}
-        </span>
+        <span>{option.name}</span>
       </div>
     );
   }
