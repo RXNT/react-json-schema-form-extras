@@ -1,5 +1,5 @@
 const ApplicationName = "EHR";
-const URL = "/PMV2API/billing/authentication/AuthenticateUser";
+const URL = "/PMV2API/billing/authentication/AuthenticateExternalUser";
 const SESSION_STORAGE_IMO_AUTH = "RxNT_IMO_SESSION_STORAGE_AUTH";
 
 function credentials() {
@@ -38,7 +38,13 @@ function parseAuthObject(jsonData) {
 
 export default function auth() {
   if (sessionStorage && sessionStorage.getItem(SESSION_STORAGE_IMO_AUTH)) {
-    return Promise.resolve(sessionStorage.getItem(SESSION_STORAGE_IMO_AUTH));
+    let authObj = JSON.parse(sessionStorage.getItem(SESSION_STORAGE_IMO_AUTH));
+    return Promise.resolve(authObj);
   }
-  return authenticate().then(parseAuthObject);
+  return authenticate()
+    .then(parseAuthObject)
+    .then(authObj => {
+      sessionStorage.setItem(SESSION_STORAGE_IMO_AUTH, JSON.stringify(authObj));
+      return authObj;
+    });
 }

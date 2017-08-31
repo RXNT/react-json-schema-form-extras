@@ -43,7 +43,7 @@ module.exports = {
     },
     proxy: {
       '/PMV2API': {
-        target: 'http://localhost:7171/',
+        target: 'https://localhost:7171/',
         secure: false
       },
       '/IMOAPIServices': {

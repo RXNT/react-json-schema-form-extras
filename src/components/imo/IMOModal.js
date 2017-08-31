@@ -56,7 +56,7 @@ class IMOModal extends Component {
     super(props);
 
     auth()
-      .then(authObj => this.setState({ authObj, isLoading: true }))
+      .then(authObj => this.setState({ authObj, isLoading: false }))
       .catch(this.handleError);
     this.state = Object.assign({}, DEFAULT_STATE, { isLoading: true });
   }
@@ -67,9 +67,14 @@ class IMOModal extends Component {
 
   search = (query, { url, root, mapping }) => {
     this.setState({ isLoading: true });
-    let body = Object.assign({}, this.state.authObj, { SearchQuery: query });
+    let { authObj } = this.state;
+    let body = Object.assign({}, authObj, { SearchQuery: query });
     fetch(url, {
       method: "POST",
+      headers: {
+        RequestInfo: `test#test#${authObj.DoctorCompanyId}#${authObj.Signature}#${authObj.Token}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(body),
     })
       .then(resp => resp.json())
@@ -85,9 +90,14 @@ class IMOModal extends Component {
 
   searchDetails = (code, { url, root, mapping }) => {
     this.setState({ isLoading: true });
-    let body = Object.assign({}, this.state.authObj, { LexicalItemCode: code });
+    let { authObj } = this.state;
+    let body = Object.assign({}, authObj, { LexicalItemCode: code });
     fetch(url, {
       method: "POST",
+      headers: {
+        RequestInfo: `test#test#${authObj.DoctorCompanyId}#${authObj.Signature}#${authObj.Token}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(body),
     })
       .then(resp => resp.json())

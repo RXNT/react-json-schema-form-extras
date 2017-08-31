@@ -17,7 +17,7 @@ export default {
     },
     imo: {
       problem: {
-        url: "/proxy/IMOAPIServices/imo/problemit/LexicalSearchProblemIT",
+        url: "/IMOAPIServices/imo/problemit/LexicalSearchProblemIT",
         root: "IMOProblemIT.data.items",
         mapping: {
           description: "title",
@@ -29,7 +29,7 @@ export default {
         },
       },
       detail: {
-        url: "/proxy/IMOAPIServices/imo/problemit/LexicalDetailProblemIT",
+        url: "/IMOAPIServices/imo/problemit/LexicalDetailProblemIT",
         root: "LexicalDetailList",
         mapping: {
           description: "HPCTitle",
