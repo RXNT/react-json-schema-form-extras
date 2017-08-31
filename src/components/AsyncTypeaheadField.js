@@ -5,9 +5,7 @@ import selectn from "selectn";
 const MenuItem = ({ key, name }) => {
   return (
     <div key={key}>
-      <span>
-        {name}
-      </span>
+      <span>{name}</span>
     </div>
   );
 };
