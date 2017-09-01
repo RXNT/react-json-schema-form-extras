@@ -1,47 +1,13 @@
 import React, { Component } from "react";
 import LoadingScreen from "./LoadingScreen";
 
-import selectn from "selectn";
-
-import auth from "./auth";
+import IMOAPI from "./IMOAPI";
 
 import Error from "./Error";
 import SearchField from "./SearchField";
 import Modifiers, { ANY_CODE } from "./Modifiers";
 import SelectTable from "./SelectTable";
 import Modal from "react-bootstrap-modal";
-
-const isSelectable = option => option["POST_COORD_LEX_FLAG"] === "3";
-
-const parseOption = (json, root, mapping) => {
-  let options = selectn(root, json);
-  let mappedOptions = options.map(option => {
-    let mappedOption = Object.keys(mapping).reduce((agg, field) => {
-      let respKey = mapping[field];
-      agg[field] = option[respKey];
-      return agg;
-    }, {});
-    mappedOption.selectable = isSelectable(option);
-    mappedOption.modifiers = option.Modifiers
-      ? option.Modifiers.split(",").map(m => m.trim())
-      : [];
-    return mappedOption;
-  });
-  return mappedOptions;
-};
-
-const parseModifiers = json => {
-  let modifiers = json.ModifierTypeList.map(modifier => {
-    let name = modifier.tITLEField;
-    let options = modifier.mODIFIERSField.map(option => {
-      let code = option.mODIFIER_CODEField;
-      let title = option.mODIFIER_TITLEField;
-      return { code, title };
-    });
-    return { name, options };
-  });
-  return modifiers;
-};
 
 const DEFAULT_STATE = {
   isLoading: false,
@@ -55,30 +21,18 @@ class IMOModal extends Component {
   constructor(props) {
     super(props);
 
-    auth()
-      .then(authObj => this.setState({ authObj, isLoading: false }))
-      .catch(this.handleError);
-    this.state = Object.assign({}, DEFAULT_STATE, { isLoading: true });
+    this.api = new IMOAPI();
+    this.state = DEFAULT_STATE;
   }
 
   handleError = () => {
     this.setState({ isError: true, isLoading: false });
   };
 
-  search = (query, { url, root, mapping }) => {
+  search = (query, conf) => {
     this.setState({ isLoading: true });
-    let { authObj } = this.state;
-    let body = Object.assign({}, authObj, { SearchQuery: query });
-    fetch(url, {
-      method: "POST",
-      headers: {
-        RequestInfo: `test#test#${authObj.DoctorCompanyId}#${authObj.Signature}#${authObj.Token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then(resp => resp.json())
-      .then(json => parseOption(json, root, mapping))
+    this.api
+      .search(query, conf)
       .then(options => this.setState({ options, isLoading: false }))
       .catch(this.handleError);
   };
@@ -88,22 +42,11 @@ class IMOModal extends Component {
     this.search(formData, problem);
   };
 
-  searchDetails = (code, { url, root, mapping }) => {
+  searchDetails = (code, conf) => {
     this.setState({ isLoading: true });
-    let { authObj } = this.state;
-    let body = Object.assign({}, authObj, { LexicalItemCode: code });
-    fetch(url, {
-      method: "POST",
-      headers: {
-        RequestInfo: `test#test#${authObj.DoctorCompanyId}#${authObj.Signature}#${authObj.Token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then(resp => resp.json())
-      .then(json => {
-        let options = parseOption(json, root, mapping);
-        let modifiers = parseModifiers(json);
+    this.api
+      .searchDetails(code, conf)
+      .then(({ options, modifiers }) => {
         this.setState({
           options,
           origOptions: options,
