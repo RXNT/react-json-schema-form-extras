@@ -49,6 +49,10 @@ module.exports = {
       '/IMOAPIServices': {
         target: 'https://localhost:7171/',
         secure: false
+      },
+      '/EHRV8PatientEncounterAPIServices': {
+        target: 'https://localhost:7171/',
+        secure: false
       }
     }
   },
