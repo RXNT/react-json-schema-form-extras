@@ -53,6 +53,10 @@ module.exports = {
       '/EHRV8PatientEncounterAPIServices': {
         target: 'https://localhost:7171/',
         secure: false
+      },
+      '/EHRV8AuthenticateAPIServices': {
+        target: 'https://localhost:7171/',
+        secure: false
       }
     }
   },

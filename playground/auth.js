@@ -37,5 +37,27 @@
     };
   }
 
+  function authenticate() {
+    fetch(
+      "/EHRV8AuthenticateAPIServices/ehrv8/authentication/AuthenticateUser",
+      {
+        method: "POST",
+        headers: {
+          RequestInfo: "TestUser#TestPass###",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          UserName: "internaldev",
+          Password: "Apex@007",
+        }),
+      }
+    )
+      .then(resp => resp.json())
+      .then(auth => {
+        window.encounterTemplateV2User = auth.Login;
+      });
+  }
+
   staticConfigurations();
+  authenticate();
 })();
