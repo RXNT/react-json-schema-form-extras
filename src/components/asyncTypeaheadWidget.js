@@ -44,10 +44,19 @@ class AsyncTypeaheadWidget extends React.Component {
       return;
     }
 
+    let authObj = {
+      DoctorCompanyId: window.encounterTemplateV2User.DoctorCompanyId,
+      Token: window.encounterTemplateV2User.AppLoginTokens[0].Token,
+    };
+
+    let body = Object.assign(authObj, { Name: query });
     let asyncRequestObj = {
       method: "POST",
-      mode: "cors",
-      body: JSON.stringify({ Name: query }),
+      headers: {
+        RequestInfo: `TestUser#TestPass#${authObj.DoctorCompanyId}##${authObj.Token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
     };
 
     fetch(this.props.widgetData.queryURL, asyncRequestObj)

@@ -108,7 +108,8 @@ const externalFieldInstances = {
         keyField: "drugName",
       },
       typeaheadData: {
-        queryURL: "http://www.mocky.io/v2/595ff1500f0000f00d0eadf0",
+        queryURL:
+          "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchAllergies",
         responseSchemaMapping: {
           name: "drugName",
         },
