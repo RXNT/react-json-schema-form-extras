@@ -94,7 +94,7 @@ export default class IMOAPI {
       return fetch(url, {
         method: "POST",
         headers: {
-          RequestInfo: `test#test#${authObj.DoctorCompanyId}#${authObj.Signature}#${authObj.Token}`,
+          RequestInfo: `TestUser#TestPass#${authObj.DoctorCompanyId}#${authObj.Signature}#${authObj.Token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
