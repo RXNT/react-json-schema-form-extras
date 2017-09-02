@@ -2,7 +2,8 @@ import React from "react";
 
 class CompositeArrayField extends React.Component {
   appendToItemList = list => {
-    let newTable = this.props.formData.concat(list);
+    let { formData = [] } = this.props;
+    let newTable = formData.concat(list);
     this.props.onChange(newTable);
   };
 

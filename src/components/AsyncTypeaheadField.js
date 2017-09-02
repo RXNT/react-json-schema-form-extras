@@ -1,50 +1,14 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
-import selectn from "selectn";
-
-const MenuItem = ({ key, name }) => {
-  return (
-    <div key={key}>
-      <span>{name}</span>
-    </div>
-  );
-};
+import { search } from "./AsyncTypeaheadAPI";
+import { isDevelopment, mapSchema } from "../utils";
 
 const DEFAULT_OPTIONS = {
   required: false,
   labelKey: "name",
   minLength: 3,
-  renderMenuItemChildren: MenuItem,
   placeholder: "Search...",
-};
-
-const toDefault = ({ properties }) => {
-  let defVal = Object.keys(properties).reduce((agg, field) => {
-    if (properties[field].default !== undefined) {
-      agg[field] = properties[field].default;
-    }
-    return agg;
-  }, {});
-  return defVal;
-};
-
-const toSchemaEvents = (
-  events,
-  { schema, uiSchema: { typeahead: { responseSchemaMapping } } }
-) => {
-  if (!responseSchemaMapping) {
-    return events;
-  }
-  let defVal = toDefault(schema.properties ? schema : schema.items);
-  let schemaEvents = events.map(event => {
-    let schEvent = Object.keys(responseSchemaMapping).reduce((agg, field) => {
-      let schemaField = responseSchemaMapping[field];
-      agg[schemaField] = event[field];
-      return agg;
-    }, {});
-    return Object.assign({}, defVal, schEvent);
-  });
-  return schemaEvents;
 };
 
 class AsyncTypeaheadField extends Component {
@@ -63,28 +27,18 @@ class AsyncTypeaheadField extends Component {
 
     let { uiSchema: { typeahead: { url, optionsMapping } } } = this.props;
 
-    let authObj = {
-      DoctorCompanyId: window.encounterTemplateV2User.DoctorCompanyId,
-      Token: window.encounterTemplateV2User.AppLoginTokens[0].Token,
-    };
-
-    let body = Object.assign(authObj, { Name: query });
-    fetch(url, {
-      method: "POST",
-      headers: {
-        RequestInfo: `TestUser#TestPass#${authObj.DoctorCompanyId}##${authObj.Token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then(resp => resp.json())
-      .then(json => (optionsMapping ? selectn(optionsMapping, json) : json))
-      .then(options => this.setState({ options }));
+    search(url, query, optionsMapping).then(options =>
+      this.setState({ options })
+    );
   };
 
   handleSelectionChange = events => {
     if (events.length > 0) {
-      let schemaEvents = toSchemaEvents(events, this.props);
+      let schemaEvents = mapSchema(
+        events,
+        this.props.schema,
+        this.props.uiSchema.typeahead.responseSchemaMapping
+      );
       this.props.onChange(schemaEvents);
       setTimeout(() => this.refs.typeahead.getInstance().clear(), 0);
     }
@@ -101,6 +55,19 @@ class AsyncTypeaheadField extends Component {
 
     return <AsyncTypeahead {...typeConf} />;
   }
+}
+
+if (isDevelopment()) {
+  AsyncTypeaheadField.propTypes = {
+    schema: PropTypes.object.isRequired,
+    uiSchema: PropTypes.shape({
+      typeahead: PropTypes.shape({
+        url: PropTypes.string.required,
+        optionsMapping: PropTypes.string,
+        responseSchemaMapping: PropTypes.object,
+      }),
+    }),
+  };
 }
 
 export default AsyncTypeaheadField;

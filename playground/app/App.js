@@ -2,6 +2,7 @@ import React from "react";
 import applyExtras from "../../src/index";
 import Form from "react-jsonschema-form";
 import imo from "./imo";
+import allergies from "./allergies";
 
 const schema = {
   title: "A medley of complex form widgets",
@@ -136,7 +137,7 @@ export function App() {
       </div>
       <div className="col-md-12">
         <FormWithExtras
-          {...imo}
+          {...allergies}
           onChange={({ formData }) => console.log(JSON.stringify(formData))}
         />
       </div>
