@@ -91,7 +91,7 @@ export function toTableColumns(schema, tableCols = []) {
 
 class TableField extends Component {
   toTableConf = () => {
-    let { uiSchema: { table = {} }, formData } = this.props;
+    let { uiSchema: { table = {} }, formData = [] } = this.props;
 
     if (table.keyField === undefined || table.keyField === POSITION_KEY) {
       table.keyField = POSITION_KEY;

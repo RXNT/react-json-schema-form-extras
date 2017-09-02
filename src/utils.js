@@ -1,17 +1,5 @@
-export function isObject(obj) {
-  return typeof obj === "object" && obj !== null;
-}
-
 export function isDevelopment() {
   return process.env.NODE_ENV !== "production";
-}
-
-export function toError(message) {
-  if (isDevelopment()) {
-    throw new ReferenceError(message);
-  } else {
-    console.error(message);
-  }
 }
 
 export function getRegistry() {
@@ -20,22 +8,30 @@ export function getRegistry() {
   };
 }
 
-const concat = (x, y) => x.concat(y);
-export const flatMap = (xs, f) => xs.map(f).reduce(concat, []);
-
-export function mergeObjects(obj1, obj2, concatArrays = false) {
-  // Recursively merge deeply nested objects.
-  var acc = Object.assign({}, obj1); // Prevent mutation of source object.
-  return Object.keys(obj2).reduce((acc, key) => {
-    const left = obj1[key],
-      right = obj2[key];
-    if (obj1.hasOwnProperty(key) && isObject(right)) {
-      acc[key] = mergeObjects(left, right, concatArrays);
-    } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
-      acc[key] = left.concat(right);
-    } else {
-      acc[key] = right;
+export function defaultValue({ properties }) {
+  let defVal = Object.keys(properties).reduce((agg, field) => {
+    if (properties[field].default !== undefined) {
+      agg[field] = properties[field].default;
     }
-    return acc;
-  }, acc);
+    return agg;
+  }, {});
+  return defVal;
+}
+
+export function mapSchema(events, schema, mapping) {
+  if (!mapping) {
+    return events;
+  }
+
+  let defVal = defaultValue(schema.properties ? schema : schema.items);
+  let mappedEvents = events.map(event => {
+    let mappedEvent = Object.keys(mapping).reduce((agg, field) => {
+      let schemaField = mapping[field];
+      agg[schemaField] = event[field];
+      return agg;
+    }, Object.assign({}, defVal));
+    return mappedEvent;
+  });
+
+  return mappedEvents;
 }
