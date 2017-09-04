@@ -48,7 +48,7 @@
     "prop-types": "^15.5.10",
     "react-bootstrap-modal": "^3.0.1",
     "react-bootstrap-table": "^4.0.2",
-    "react-bootstrap-typeahead": "^2.0.0-alpha.3",
+    "react-bootstrap-typeahead": "v1.4.2",
     "react-jsonschema-form": "^0.49.0",
     "selectn": "^1.1.2"
   },
