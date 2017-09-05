@@ -2,9 +2,10 @@ import selectn from "selectn";
 
 /* global encounterTemplateV2User */
 export function search(url, query, optionsMapping) {
+  let user = JSON.parse(encounterTemplateV2User);
   let authObj = {
-    DoctorCompanyId: encounterTemplateV2User.DoctorCompanyId,
-    Token: encounterTemplateV2User.AppLoginTokens[0].Token,
+    DoctorCompanyId: user.DoctorCompanyId,
+    Token: user.AppLoginTokens[0].Token,
   };
 
   let body = Object.assign(authObj, { Name: query });
