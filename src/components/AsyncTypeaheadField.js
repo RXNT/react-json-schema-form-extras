@@ -40,7 +40,11 @@ class AsyncTypeaheadField extends Component {
         this.props.uiSchema.typeahead.responseSchemaMapping
       );
       this.props.onChange(schemaEvents);
-      setTimeout(() => this.refs.typeahead.getInstance().clear(), 0);
+      setTimeout(() => {
+        if (this.refs.typeahead) {
+          this.refs.typeahead.getInstance().clear();
+        }
+      }, 0);
     }
   };
 
