@@ -1,14 +1,13 @@
 import selectn from "selectn";
+/* global encounterTemplateV2User, encounterTemplateV2EncounterInfo */
 
 const ApplicationName = "EHR";
 const URL = "/PMV2API/billing/authentication/AuthenticateExternalUser";
 const SESSION_STORAGE_IMO_AUTH = "RxNT_IMO_SESSION_STORAGE_AUTH";
 
 function credentials() {
-  let ExternalDoctorCompanyId = `${window.parent.encounterTemplateV2User
-    .DoctorCompanyId}`;
-  let ExternalAppLoginId = `${window.parent.encounterTemplateV2EncounterInfo
-    .LoggedInUserId}`;
+  let ExternalDoctorCompanyId = `${encounterTemplateV2User.DoctorCompanyId}`;
+  let ExternalAppLoginId = `${encounterTemplateV2EncounterInfo.LoggedInUserId}`;
   return {
     ApplicationName,
     ExternalDoctorCompanyId,

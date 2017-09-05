@@ -1,5 +1,6 @@
 import React from "react";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
+/* global encounterTemplateV2User */
 
 class AsyncTypeaheadWidget extends React.Component {
   constructor(props) {
@@ -45,8 +46,8 @@ class AsyncTypeaheadWidget extends React.Component {
     }
 
     let authObj = {
-      DoctorCompanyId: window.encounterTemplateV2User.DoctorCompanyId,
-      Token: window.encounterTemplateV2User.AppLoginTokens[0].Token,
+      DoctorCompanyId: encounterTemplateV2User.DoctorCompanyId,
+      Token: encounterTemplateV2User.AppLoginTokens[0].Token,
     };
 
     let body = Object.assign(authObj, { Name: query });
