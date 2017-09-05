@@ -6,8 +6,10 @@ const URL = "/PMV2API/billing/authentication/AuthenticateExternalUser";
 const SESSION_STORAGE_IMO_AUTH = "RxNT_IMO_SESSION_STORAGE_AUTH";
 
 function credentials() {
-  let ExternalDoctorCompanyId = `${encounterTemplateV2User.DoctorCompanyId}`;
-  let ExternalAppLoginId = `${encounterTemplateV2EncounterInfo.LoggedInUserId}`;
+  let user = JSON.parse(encounterTemplateV2User);
+  let encInfo = JSON.parse(encounterTemplateV2EncounterInfo);
+  let ExternalDoctorCompanyId = `${user.DoctorCompanyId}`;
+  let ExternalAppLoginId = `${encInfo.LoggedInUserId}`;
   return {
     ApplicationName,
     ExternalDoctorCompanyId,

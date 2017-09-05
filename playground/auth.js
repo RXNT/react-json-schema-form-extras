@@ -1,6 +1,6 @@
 (function() {
   function staticConfigurations() {
-    window.encounterTemplateV2User = {
+    window.encounterTemplateV2User = JSON.stringify({
       DoctorCompanyId: 17821,
       AppLoginTokens: [
         {
@@ -13,9 +13,9 @@
           Signature: null,
         },
       ],
-    };
+    });
 
-    window.encounterTemplateV2EncounterInfo = {
+    window.encounterTemplateV2EncounterInfo = JSON.stringify({
       PatientId: 40904933,
       DoctorId: 76535,
       EncounterId: 0,
@@ -30,11 +30,11 @@
       IsPreviewEditMode: false,
       SelectedFormId: 0,
       SelectedFormName: null,
-    };
+    });
 
-    window.encounterTemplateV2PageTitle = {
+    window.encounterTemplateV2PageTitle = JSON.stringify({
       PageTitle: "Add Encounter - Mr. Internal 3Staff Test",
-    };
+    });
   }
 
   function authenticate() {
@@ -54,7 +54,7 @@
     )
       .then(resp => resp.json())
       .then(auth => {
-        window.encounterTemplateV2User = auth.Login;
+        window.encounterTemplateV2User = JSON.stringify(auth.Login);
       });
   }
 
