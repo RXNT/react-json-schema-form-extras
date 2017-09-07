@@ -7,9 +7,10 @@ import Error from "./Error";
 import SearchField from "./SearchField";
 import Modifiers, { ANY_CODE } from "./Modifiers";
 import SelectTable from "./SelectTable";
-import Modal from "react-bootstrap-modal";
+import ReactModal from "react-modal";
 
 const DEFAULT_STATE = {
+  isOpen: true,
   isLoading: false,
   isError: false,
   options: [],
@@ -22,7 +23,7 @@ class IMOModal extends Component {
     super(props);
 
     this.api = new IMOAPI();
-    this.state = DEFAULT_STATE;
+    this.state = Object.assign({}, DEFAULT_STATE);
   }
 
   handleError = () => {
@@ -119,14 +120,20 @@ class IMOModal extends Component {
     );
   };
 
+  handleCloseModal = () => {
+    this.setState({ isOpen: false });
+    this.props.onChange([]);
+  };
+
   render() {
+    let { isOpen } = this.state;
     return (
-      <div>
-        <Modal.Header>
-          <Modal.Title id="ModalHeader">IMO problem search</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{this.modalBody()}</Modal.Body>
-      </div>
+      <ReactModal
+        isOpen={isOpen}
+        onRequestClose={this.handleCloseModal}
+        contentLabel={"IMO"}>
+        {this.modalBody()}
+      </ReactModal>
     );
   }
 }

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import IMOModal from "./IMOModal";
-import Modal from "react-bootstrap-modal";
 
 const AddButton = ({ onAdd }) => (
   <div className="btn btn-success btn-sm" onClick={onAdd}>
@@ -18,11 +17,11 @@ class IMOField extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { showAdd: true };
+    this.state = { showModal: false };
   }
 
   handleAdd = () => {
-    this.setState({ showAdd: false });
+    this.setState({ showModal: true });
   };
 
   handleFreeTextAdd = () => {
@@ -31,21 +30,18 @@ class IMOField extends Component {
 
   handleChange = rows => {
     this.props.onChange(rows);
-    this.setState({ showAdd: true });
+    this.setState({ showModal: false });
   };
 
   render() {
-    let { showAdd } = this.state;
-
+    let { showModal } = this.state;
     return (
       <div>
         <div className="btn-group pull-right">
-          <AddButton onAdd={this.handleAdd} disabled={!showAdd} />
-          <FreeTextButton onAdd={this.handleFreeTextAdd} disabled={!showAdd} />
+          <AddButton onAdd={this.handleAdd} disabled={showModal} />
+          <FreeTextButton onAdd={this.handleFreeTextAdd} disabled={showModal} />
         </div>
-        <Modal show={!showAdd} onHide={() => this.setState({ showAdd: true })}>
-          <IMOModal {...this.props} onChange={this.handleChange} />
-        </Modal>
+        {showModal && <IMOModal {...this.props} onChange={this.handleChange} />}
       </div>
     );
   }
