@@ -38,9 +38,9 @@ class IMOModal extends Component {
       .catch(this.handleError);
   };
 
-  handleSearch = ({ formData }) => {
+  handleSearch = query => {
     let { uiSchema: { imo: { problem } } } = this.props;
-    this.search(formData, problem);
+    this.search(query, problem);
   };
 
   searchDetails = (code, conf) => {

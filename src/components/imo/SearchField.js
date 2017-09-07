@@ -1,16 +1,42 @@
-import React from "react";
-import Form from "react-jsonschema-form";
+import React, { Component } from "react";
 
-const SEARCH_SCHEMA = {
-  type: "string",
-};
+class SearchField extends Component {
+  constructor(props) {
+    super(props);
 
-const SearchField = ({ onSearch }) => {
-  return (
-    <Form schema={SEARCH_SCHEMA} onSubmit={onSearch}>
-      <div />
-    </Form>
-  );
-};
+    this.state = { value: "" };
+  }
+
+  handleChange = event => {
+    this.setState({ value: event.target.value });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    this.props.onSearch(this.state.value);
+  };
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <div className="input-group">
+          <input
+            type="text"
+            value={this.state.value}
+            className="form-control"
+            placeholder="Search for..."
+            onChange={this.handleChange}
+          />
+          <span className="input-group-btn">
+            <button className="btn btn-default" type="submit">
+              Search
+            </button>
+          </span>
+        </div>
+        <br />
+      </form>
+    );
+  }
+}
 
 export default SearchField;
