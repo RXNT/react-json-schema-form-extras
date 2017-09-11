@@ -18,23 +18,23 @@ class SearchField extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <div className="input-group">
-          <input
-            type="text"
-            value={this.state.value}
-            className="form-control"
-            placeholder="Search for..."
-            onChange={this.handleChange}
-          />
-          <span className="input-group-btn">
-            <button className="btn btn-default" type="submit">
-              Search
-            </button>
-          </span>
-        </div>
-        <br />
-      </form>
+      <div className="input-group">
+        <input
+          type="text"
+          value={this.state.value}
+          className="form-control"
+          placeholder="Search for..."
+          onChange={this.handleChange}
+        />
+        <span className="input-group-btn">
+          <button
+            className="btn btn-default"
+            type="button"
+            onClick={this.handleSubmit}>
+            Search
+          </button>
+        </span>
+      </div>
     );
   }
 }
