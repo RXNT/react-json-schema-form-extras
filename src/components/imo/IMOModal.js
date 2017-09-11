@@ -102,6 +102,7 @@ class IMOModal extends Component {
     return (
       <div>
         <SearchField onSearch={this.handleSearch} />
+        <br />
         {modifiers.length > 0 ? (
           <Modifiers
             modifiers={modifiers}
