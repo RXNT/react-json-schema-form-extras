@@ -1,0 +1,22 @@
+{
+  "uiSchema": {
+    "ui:order": [
+      "functionalStatus"
+    ],
+    "functionalStatus": {
+      "classNames": "col-md-6",
+      "ui:field": "compositeArray",
+      "inputField": "typeahead",
+      "arrayField": "table",
+      "typeahead": {
+        "url": "EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchFunctionalStatus/",
+        "optionsMapping": "FunctionalStatusList",
+        "responseSchemaMapping": {
+          "Name": "name"
+        },
+        "minLength": 1,
+        "labelKey": "Name"
+      }
+    }
+  }
+}

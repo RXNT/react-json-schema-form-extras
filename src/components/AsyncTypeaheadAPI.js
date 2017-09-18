@@ -1,14 +1,16 @@
 import selectn from "selectn";
 
-/* global encounterTemplateV2User */
+/* global encounterTemplateV2User, encounterTemplateV2EncounterInfo*/
 export function search(url, query, optionsMapping) {
   let user = JSON.parse(encounterTemplateV2User);
+  let encounterInfo = JSON.parse(encounterTemplateV2EncounterInfo);
   let authObj = {
     DoctorCompanyId: user.DoctorCompanyId,
+    DoctorGroupId: encounterInfo.DoctorGroupId,
     Token: user.AppLoginTokens[0].Token,
   };
 
-  let body = Object.assign(authObj, { Name: query });
+  let body = Object.assign({}, authObj, { Name: query });
   return fetch(url, {
     method: "POST",
     headers: {
