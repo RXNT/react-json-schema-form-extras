@@ -73,6 +73,23 @@ function toEditable(fieldProp) {
   return true;
 }
 
+function withColumnCss(columns) {
+  let numCols = columns.length;
+  let colSize = Math.round(12 / numCols);
+  if (colSize == 0) {
+    return columns;
+  }
+
+  let colCss = `col-md-${colSize}`;
+  columns.forEach((col, i) => {
+    if (i != 0) {
+      col.className = colCss;
+      col.columnClassName = colCss;
+    }
+  });
+  return columns;
+}
+
 export function toTableColumns(schema, tableCols = []) {
   let { items: { properties } } = schema;
 
@@ -83,10 +100,12 @@ export function toTableColumns(schema, tableCols = []) {
     return { dataField, displayName: title, editable, dataFormat };
   });
 
-  return schemaCols.map(sCol => {
+  let columnsWithOverrides = schemaCols.map(sCol => {
     let tCol = tableCols.find(col => col.dataField === sCol.dataField);
     return Object.assign(sCol, tCol);
   });
+
+  return withColumnCss(columnsWithOverrides);
 }
 
 class TableField extends Component {

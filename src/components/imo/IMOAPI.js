@@ -52,6 +52,10 @@ function auth() {
   });
 }
 
+function cleanAuth() {
+  sessionStorage.removeItem(SESSION_STORAGE_IMO_AUTH);
+}
+
 export default class IMOAPI {
   constructor() {
     this.auth = auth();
@@ -90,32 +94,37 @@ export default class IMOAPI {
   };
 
   singAndFetch = (url, queryObj) => {
-    return this.auth.then(authObj => {
-      let body = Object.assign({}, authObj, queryObj);
-      return fetch(url, {
-        method: "POST",
-        headers: {
-          RequestInfo: `TestUser#TestPass#${authObj.DoctorCompanyId}#${authObj.Signature}#${authObj.Token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
+    return this.auth
+      .then(authObj => {
+        let body = Object.assign({}, authObj, queryObj);
+        return fetch(url, {
+          method: "POST",
+          headers: {
+            RequestInfo: `TestUser#TestPass#${authObj.DoctorCompanyId}#${authObj.Signature}#${authObj.Token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
+        });
+      })
+      .then(resp => {
+        if (resp.status === 401) {
+          cleanAuth();
+        }
+        return resp.json();
       });
-    });
   };
 
   search = (query, { url, root, mapping }) => {
-    return this.singAndFetch(url, { SearchQuery: query })
-      .then(resp => resp.json())
-      .then(json => this.parseOption(json, root, mapping));
+    return this.singAndFetch(url, { SearchQuery: query }).then(json =>
+      this.parseOption(json, root, mapping)
+    );
   };
 
   searchDetails = (code, { url, root, mapping }) => {
-    return this.singAndFetch(url, { LexicalItemCode: code })
-      .then(resp => resp.json())
-      .then(json => {
-        let options = this.parseOption(json, root, mapping);
-        let modifiers = this.parseModifiers(json);
-        return { options, modifiers };
-      });
+    return this.singAndFetch(url, { LexicalItemCode: code }).then(json => {
+      let options = this.parseOption(json, root, mapping);
+      let modifiers = this.parseModifiers(json);
+      return { options, modifiers };
+    });
   };
 }
