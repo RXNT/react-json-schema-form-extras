@@ -34,12 +34,18 @@ class IMOField extends Component {
   };
 
   render() {
+    let { uiSchema: { imo: { disableFreeText = false } } } = this.props;
     let { showModal } = this.state;
     return (
       <div>
         <div className="btn-group pull-right">
           <AddButton onAdd={this.handleAdd} disabled={showModal} />
-          <FreeTextButton onAdd={this.handleFreeTextAdd} disabled={showModal} />
+          {disableFreeText || (
+            <FreeTextButton
+              onAdd={this.handleFreeTextAdd}
+              disabled={showModal}
+            />
+          )}
         </div>
         {showModal && <IMOModal {...this.props} onChange={this.handleChange} />}
       </div>
