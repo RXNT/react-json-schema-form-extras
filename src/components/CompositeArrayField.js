@@ -1,7 +1,7 @@
 import React from "react";
 
 class CompositeArrayField extends React.Component {
-  appendToItemList = list => {
+  handleAdd = list => {
     let { formData = [] } = this.props;
     let newTable = formData.concat(list);
     this.props.onChange(newTable);
@@ -18,7 +18,7 @@ class CompositeArrayField extends React.Component {
     return (
       <div>
         <div className="form-group">
-          <InputElement {...this.props} onChange={this.appendToItemList} />
+          <InputElement {...this.props} onChange={this.handleAdd} />
         </div>
         <div className="form-group">
           <ArrayElement {...this.props} />

@@ -7,8 +7,6 @@ const formData = {
       icd10Description: "Pain in right knee",
       icd9: "719.46",
       snomed: "30989003",
-      selectable: false,
-      modifiers: ["2010", "230"],
     },
   ],
 };

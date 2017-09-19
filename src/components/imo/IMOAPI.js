@@ -56,6 +56,24 @@ function cleanAuth() {
   sessionStorage.removeItem(SESSION_STORAGE_IMO_AUTH);
 }
 
+const SEARCH_MAPPING = {
+  description: "title",
+  icd10: "ICD10CM_CODE",
+  icd10Description: "ICD10CM_TITLE",
+  icd9: "kndg_code",
+  snomed: "SCT_CONCEPT_ID",
+  query: "code",
+};
+
+const DETAILS_MAPPING = {
+  description: "HPCTitle",
+  icd10: "ICD10Code",
+  icd10Description: "ICD10Title",
+  icd9: "ICD9Code",
+  snomed: "SNOMEDCTCode",
+  query: "code",
+};
+
 export default class IMOAPI {
   constructor() {
     this.auth = auth();
@@ -114,15 +132,25 @@ export default class IMOAPI {
       });
   };
 
-  search = (query, { url, root, mapping }) => {
-    return this.singAndFetch(url, { SearchQuery: query }).then(json =>
-      this.parseOption(json, root, mapping)
+  search = query => {
+    return this.singAndFetch(
+      "/IMOAPIServices/imo/problemit/LexicalSearchProblemIT",
+      { SearchQuery: query }
+    ).then(json =>
+      this.parseOption(json, "IMOProblemIT.data.items", SEARCH_MAPPING)
     );
   };
 
-  searchDetails = (code, { url, root, mapping }) => {
-    return this.singAndFetch(url, { LexicalItemCode: code }).then(json => {
-      let options = this.parseOption(json, root, mapping);
+  searchDetails = code => {
+    return this.singAndFetch(
+      "/IMOAPIServices/imo/problemit/LexicalDetailProblemIT",
+      { LexicalItemCode: code }
+    ).then(json => {
+      let options = this.parseOption(
+        json,
+        "LexicalDetailList",
+        DETAILS_MAPPING
+      );
       let modifiers = this.parseModifiers(json);
       return { options, modifiers };
     });

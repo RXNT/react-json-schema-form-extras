@@ -34,7 +34,7 @@ class IMOField extends Component {
   };
 
   render() {
-    let { uiSchema: { imo: { disableFreeText = false } } } = this.props;
+    let { uiSchema: { imo: { disableFreeText = false } = {} } } = this.props;
     let { showModal } = this.state;
     return (
       <div>
