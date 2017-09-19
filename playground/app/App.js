@@ -4,6 +4,7 @@ import Form from "react-jsonschema-form";
 
 import medications from "./medications";
 import imo from "./imo";
+import dx from "./dx";
 import allergies from "./allergies";
 import functionalStatus from "./functionalStatus";
 
@@ -12,32 +13,14 @@ import functionalStatus from "./functionalStatus";
 let FormWithExtras = applyExtras(Form);
 
 export function App() {
+  let handleChange = ({ formData }) => console.log(JSON.stringify(formData));
   return (
     <div>
-      <div className="col-md-12">
-        <FormWithExtras
-          {...functionalStatus}
-          onChange={({ formData }) => console.log(JSON.stringify(formData))}
-        />
-      </div>
-      <div className="col-md-12">
-        <FormWithExtras
-          {...imo}
-          onChange={({ formData }) => console.log(JSON.stringify(formData))}
-        />
-      </div>
-      <div className="col-md-12">
-        <FormWithExtras
-          {...allergies}
-          onChange={({ formData }) => console.log(JSON.stringify(formData))}
-        />
-      </div>
-      <div className="col-md-12">
-        <FormWithExtras
-          {...medications}
-          onChange={({ formData }) => console.log(JSON.stringify(formData))}
-        />
-      </div>
+      <FormWithExtras {...dx} onChange={handleChange} />
+      <FormWithExtras {...functionalStatus} onChange={handleChange} />
+      <FormWithExtras {...imo} onChange={handleChange} />
+      <FormWithExtras {...allergies} onChange={handleChange} />
+      <FormWithExtras {...medications} onChange={handleChange} />
     </div>
   );
 }
