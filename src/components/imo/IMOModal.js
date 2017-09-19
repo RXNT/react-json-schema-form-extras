@@ -56,20 +56,15 @@ class IMOModal extends Component {
     this.setState({ isError: true, isLoading: false });
   };
 
-  search = (query, conf) => {
+  handleSearch = query => {
     this.setState({ isLoading: true });
     this.api
-      .search(query, conf)
+      .search(query)
       .then(options => this.setState({ options, isLoading: false }))
       .catch(this.handleError);
   };
 
-  handleSearch = query => {
-    let { uiSchema: { imo: { problem } } } = this.props;
-    this.search(query, problem);
-  };
-
-  searchDetails = (code, conf) => {
+  handleSearchDetails = (code, conf) => {
     this.setState({ isLoading: true });
     this.api
       .searchDetails(code, conf)
@@ -86,14 +81,15 @@ class IMOModal extends Component {
 
   handleRowClick = row => {
     if (row.selectable) {
-      let { uiSchema: { imo: { detail } } } = this.props;
-      this.searchDetails(row.query, detail);
+      this.handleSearchDetails(row.query);
     } else {
-      let changedRow = Object.assign(row);
-      delete changedRow.selectable;
-      delete changedRow.modifiers;
-      delete changedRow.query;
-      this.props.onChange([row]);
+      let { schema: { items: { properties } } } = this.props;
+      let schemaRow = Object.keys(properties).reduce((agg, field) => {
+        agg[field] = properties[field].default;
+        agg[field] = row[field];
+        return agg;
+      }, {});
+      this.props.onChange([schemaRow]);
       this.setState(DEFAULT_STATE);
     }
   };

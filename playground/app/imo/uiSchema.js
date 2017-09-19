@@ -15,31 +15,5 @@ export default {
         handleConfirmDeleteRow: next => next(),
       },
     },
-    imo: {
-      problem: {
-        url: "/IMOAPIServices/imo/problemit/LexicalSearchProblemIT",
-        root: "IMOProblemIT.data.items",
-        mapping: {
-          description: "title",
-          icd10: "ICD10CM_CODE",
-          icd10Description: "ICD10CM_TITLE",
-          icd9: "kndg_code",
-          snomed: "SCT_CONCEPT_ID",
-          query: "code",
-        },
-      },
-      detail: {
-        url: "/IMOAPIServices/imo/problemit/LexicalDetailProblemIT",
-        root: "LexicalDetailList",
-        mapping: {
-          description: "HPCTitle",
-          icd10: "ICD10Code",
-          icd10Description: "ICD10Title",
-          icd9: "ICD9Code",
-          snomed: "SNOMEDCTCode",
-          query: "code",
-        },
-      },
-    },
   },
 };
