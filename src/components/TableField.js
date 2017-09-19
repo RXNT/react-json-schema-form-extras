@@ -73,6 +73,11 @@ function toEditable(fieldProp) {
   return true;
 }
 
+function setColumnCSSIfMissing(col, css) {
+  col.className = col.className ? col.className : css;
+  col.columnClassName = col.columnClassName ? col.columnClassName : css;
+}
+
 function withColumnCss(columns) {
   let numCols = columns.length;
   let colSize = Math.round(12 / numCols);
@@ -83,8 +88,7 @@ function withColumnCss(columns) {
   let colCss = `col-md-${colSize}`;
   columns.forEach((col, i) => {
     if (i != 0) {
-      col.className = colCss;
-      col.columnClassName = colCss;
+      setColumnCSSIfMissing(col, colCss);
     }
   });
   return columns;

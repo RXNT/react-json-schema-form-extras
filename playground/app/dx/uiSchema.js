@@ -33,6 +33,7 @@ export default {
           icd9: "ICD9Code",
         },
       },
+      disableFreeText: true,
     },
   },
 };
