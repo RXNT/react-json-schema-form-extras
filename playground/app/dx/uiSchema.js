@@ -15,7 +15,7 @@ export default {
       },
     },
     imo: {
-      disableFreeText: true,
+      freeText: false,
     },
   },
 };
