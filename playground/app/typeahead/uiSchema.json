@@ -1,0 +1,16 @@
+{
+  "uiSchema": {
+    "options": {
+      "classNames": "col-md-12",
+      "ui:field": "compositeArray",
+      "inputField": "typeaheadOptions",
+      "arrayField": "table",
+      "typeaheadConf": {
+        "options": [ "Some", "Other" ],
+        "allowNew": true,
+        "minLength": 1,
+        "mapping": "name"
+      }
+    }
+  }
+}
