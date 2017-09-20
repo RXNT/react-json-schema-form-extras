@@ -2,6 +2,7 @@ import React from "react";
 import applyExtras from "../../src/index";
 import Form from "react-jsonschema-form";
 
+import codes from "./codes";
 import typeahead from "./typeahead";
 import medications from "./medications";
 import imo from "./imo";
@@ -17,6 +18,7 @@ export function App() {
   let handleChange = ({ formData }) => console.log(JSON.stringify(formData));
   return (
     <div>
+      <FormWithExtras {...codes} onChange={handleChange} />
       <FormWithExtras {...typeahead} onChange={handleChange} />
       <FormWithExtras {...dx} onChange={handleChange} />
       <FormWithExtras {...functionalStatus} onChange={handleChange} />
