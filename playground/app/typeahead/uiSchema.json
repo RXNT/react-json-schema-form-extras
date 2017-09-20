@@ -5,7 +5,7 @@
       "ui:field": "compositeArray",
       "inputField": "typeaheadOptions",
       "arrayField": "table",
-      "typeaheadConf": {
+      "typeaheadOptions": {
         "options": [ "Some", "Other" ],
         "allowNew": true,
         "minLength": 1,
