@@ -13,7 +13,7 @@ const DEFAULT_OPTIONS = {
 class TypeaheadField extends Component {
   handleSelectionChange = events => {
     if (events.length > 0) {
-      let { uiSchema: { typeaheadConf: { mapping } } } = this.props;
+      let { uiSchema: { typeaheadOptions: { mapping } } } = this.props;
       let schemaEvents = mapping
         ? events.map(val => {
             return { [mapping]: val };
@@ -29,11 +29,11 @@ class TypeaheadField extends Component {
   };
 
   render() {
-    let { uiSchema: { typeaheadConf } } = this.props;
+    let { uiSchema: { typeaheadOptions } } = this.props;
 
-    let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeaheadConf);
+    let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeaheadOptions);
     typeConf.onChange = this.handleSelectionChange;
-    typeConf.labelKey = mapLabelKey(typeaheadConf.labelKey);
+    typeConf.labelKey = mapLabelKey(typeaheadOptions.labelKey);
     typeConf.ref = "typeahead";
 
     return <Typeahead {...typeConf} />;
