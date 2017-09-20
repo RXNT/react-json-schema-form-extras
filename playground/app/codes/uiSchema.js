@@ -13,7 +13,10 @@ export default {
         Description: "description",
       },
       minLength: 1,
-      labelKey: ["Code", "Description"],
+      labelKey: {
+        fields: ["Code", "Description"],
+        separator: " - ",
+      },
     },
   },
 };
