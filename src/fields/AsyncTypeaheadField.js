@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { search } from "./AsyncTypeaheadAPI";
-import { isDevelopment, mapSchema } from "./utils";
+import { isDevelopment, mapLabelKey, mapSchema } from "./utils";
 
 const DEFAULT_OPTIONS = {
   required: false,
@@ -56,6 +56,7 @@ class AsyncTypeaheadField extends Component {
     typeConf.onSearch = this.handleSearch;
     typeConf.options = this.state.options;
     typeConf.ref = "typeahead";
+    typeConf.labelKey = mapLabelKey(typeahead.labelKey);
 
     return <AsyncTypeahead {...typeConf} />;
   }

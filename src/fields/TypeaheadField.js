@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { isDevelopment } from "./utils";
+import { isDevelopment, mapLabelKey } from "./utils";
 
 const DEFAULT_OPTIONS = {
   required: false,
@@ -33,6 +33,7 @@ class TypeaheadField extends Component {
 
     let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeaheadConf);
     typeConf.onChange = this.handleSelectionChange;
+    typeConf.labelKey = mapLabelKey(typeaheadConf.labelKey);
     typeConf.ref = "typeahead";
 
     return <Typeahead {...typeConf} />;

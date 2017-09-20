@@ -2,6 +2,25 @@ export function isDevelopment() {
   return process.env.NODE_ENV !== "production";
 }
 
+export function mapLabelKey(labelKey) {
+  if (Array.isArray(labelKey)) {
+    return option => {
+      return labelKey
+        .map(field => option[field])
+        .filter(fieldVal => fieldVal)
+        .reduce((agg, fieldVal, i) => {
+          if (i === 0) {
+            return fieldVal;
+          } else {
+            return `${agg} ${fieldVal}`;
+          }
+        }, "");
+    };
+  } else {
+    return labelKey;
+  }
+}
+
 export function defaultValue({ properties }) {
   let defVal = Object.keys(properties).reduce((agg, field) => {
     if (properties[field].default !== undefined) {
