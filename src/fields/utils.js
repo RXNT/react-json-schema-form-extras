@@ -2,20 +2,31 @@ export function isDevelopment() {
   return process.env.NODE_ENV !== "production";
 }
 
+function optionToString(fields, separator) {
+  return option => {
+    return fields
+      .map(field => option[field])
+      .filter(fieldVal => fieldVal)
+      .reduce((agg, fieldVal, i) => {
+        if (i === 0) {
+          return fieldVal;
+        } else {
+          return `${agg}${separator}${fieldVal}`;
+        }
+      }, "");
+  };
+}
+
 export function mapLabelKey(labelKey) {
   if (Array.isArray(labelKey)) {
-    return option => {
-      return labelKey
-        .map(field => option[field])
-        .filter(fieldVal => fieldVal)
-        .reduce((agg, fieldVal, i) => {
-          if (i === 0) {
-            return fieldVal;
-          } else {
-            return `${agg} ${fieldVal}`;
-          }
-        }, "");
-    };
+    return optionToString(labelKey, " ");
+  } else if (
+    typeof labelKey === "object" &&
+    labelKey.fields &&
+    labelKey.separator
+  ) {
+    let { fields, separator } = labelKey;
+    return optionToString(fields, separator);
   } else {
     return labelKey;
   }
