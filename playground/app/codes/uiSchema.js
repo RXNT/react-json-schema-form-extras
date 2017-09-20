@@ -13,7 +13,7 @@ export default {
         Description: "description",
       },
       minLength: 1,
-      labelKey: ({ Code, Description }) => `${Code} - ${Description}`,
+      labelKey: ["Code", "Description"],
     },
   },
 };
