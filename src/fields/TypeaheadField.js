@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { isDevelopment } from "../utils";
+import { isDevelopment } from "./utils";
 
 const DEFAULT_OPTIONS = {
   required: false,

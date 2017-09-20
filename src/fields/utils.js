@@ -2,12 +2,6 @@ export function isDevelopment() {
   return process.env.NODE_ENV !== "production";
 }
 
-export function getRegistry() {
-  return {
-    fields: require("./components/index.js").default,
-  };
-}
-
 export function defaultValue({ properties }) {
   let defVal = Object.keys(properties).reduce((agg, field) => {
     if (properties[field].default !== undefined) {

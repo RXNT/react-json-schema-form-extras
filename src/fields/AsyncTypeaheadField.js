@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { search } from "./AsyncTypeaheadAPI";
-import { isDevelopment, mapSchema } from "../utils";
+import { isDevelopment, mapSchema } from "./utils";
 
 const DEFAULT_OPTIONS = {
   required: false,

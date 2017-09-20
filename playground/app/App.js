@@ -1,5 +1,5 @@
 import React from "react";
-import applyExtras from "../../src/index";
+import fields from "../../src/index";
 import Form from "react-jsonschema-form";
 
 import codes from "./codes";
@@ -10,21 +10,17 @@ import dx from "./dx";
 import allergies from "./allergies";
 import functionalStatus from "./functionalStatus";
 
-//date example temporarily removed from tableCols: , {field: "dateEx", displayName: "Col 4", customFieldType: "date"}
-
-let FormWithExtras = applyExtras(Form);
-
 export function App() {
   let handleChange = ({ formData }) => console.log(JSON.stringify(formData));
   return (
     <div>
-      <FormWithExtras {...codes} onChange={handleChange} />
-      <FormWithExtras {...typeahead} onChange={handleChange} />
-      <FormWithExtras {...dx} onChange={handleChange} />
-      <FormWithExtras {...functionalStatus} onChange={handleChange} />
-      <FormWithExtras {...imo} onChange={handleChange} />
-      <FormWithExtras {...allergies} onChange={handleChange} />
-      <FormWithExtras {...medications} onChange={handleChange} />
+      <Form {...codes} fields={fields} onChange={handleChange} />
+      <Form {...typeahead} fields={fields} onChange={handleChange} />
+      <Form {...dx} fields={fields} onChange={handleChange} />
+      <Form {...functionalStatus} fields={fields} onChange={handleChange} />
+      <Form {...imo} fields={fields} onChange={handleChange} />
+      <Form {...allergies} fields={fields} onChange={handleChange} />
+      <Form {...medications} fields={fields} onChange={handleChange} />
     </div>
   );
 }
