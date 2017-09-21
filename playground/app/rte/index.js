@@ -22,5 +22,9 @@ export default function goalsField() {
     },
   };
 
-  return { schema, uiSchema };
+  let formData = {
+    rte: "This must <b>be rendered</b>",
+  };
+
+  return { schema, uiSchema, formData };
 }
