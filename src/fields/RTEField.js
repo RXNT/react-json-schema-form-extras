@@ -2,9 +2,15 @@ import React, { Component } from "react";
 import RichTextEditor from "react-rte";
 
 export default class RTEField extends Component {
-  state = {
-    value: RichTextEditor.createEmptyValue(),
-  };
+  constructor(props) {
+    super(props);
+
+    let { formData = "" } = props;
+
+    this.state = {
+      value: RichTextEditor.createValueFromString(formData, "html"),
+    };
+  }
 
   handleChange = value => {
     this.setState({ value });
