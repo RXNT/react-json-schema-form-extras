@@ -10,10 +10,8 @@ function altInputField(props) {
   let AltInput = fields[altInput];
 
   let noBorder = {
-    borderBottomStyle: "none",
-    borderTopStyle: "none",
-    borderLeftStyle: "none",
-    borderRightStyle: "none",
+    border: "0",
+    boxShadow: "none",
   };
   return (
     <div className="row">

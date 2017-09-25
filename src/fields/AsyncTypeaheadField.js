@@ -34,12 +34,13 @@ class AsyncTypeaheadField extends Component {
 
   handleSelectionChange = events => {
     if (events.length > 0) {
-      let schemaEvents = mapSchema(
-        events,
-        this.props.schema,
-        this.props.uiSchema.typeahead.responseSchemaMapping
-      );
-      this.props.onChange(schemaEvents);
+      let {
+        schema,
+        uiSchema: { typeahead: { responseSchemaMapping } },
+        onChange,
+      } = this.props;
+      let schemaEvents = mapSchema(events, schema, responseSchemaMapping);
+      onChange(schemaEvents);
       setTimeout(() => {
         if (this.refs.typeahead) {
           this.refs.typeahead.getInstance().clear();

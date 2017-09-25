@@ -12,7 +12,7 @@
         "url": "EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchFunctionalStatus/",
         "optionsMapping": "FunctionalStatusList",
         "responseSchemaMapping": {
-          "Name": "name"
+          "name": "Name"
         },
         "minLength": 1,
         "labelKey": "Name"
