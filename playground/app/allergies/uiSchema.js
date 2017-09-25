@@ -13,7 +13,7 @@ export default {
       url: "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchAllergies",
       optionsMapping: "Allergies",
       responseSchemaMapping: {
-        AllergyName: "allergyName",
+        allergyName: "AllergyName",
       },
       labelKey: "AllergyName",
     },

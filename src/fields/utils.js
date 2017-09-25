@@ -52,8 +52,8 @@ export function mapSchema(events, schema, mapping) {
   let defVal = defaultValue(schema.properties ? schema : schema.items);
   let mappedEvents = events.map(event => {
     let mappedEvent = Object.keys(mapping).reduce((agg, field) => {
-      let schemaField = mapping[field];
-      agg[schemaField] = selectn(field, event);
+      let eventField = mapping[field];
+      agg[field] = selectn(eventField, event);
       return agg;
     }, Object.assign({}, defVal));
     return mappedEvent;

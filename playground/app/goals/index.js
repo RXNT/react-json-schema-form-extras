@@ -36,8 +36,8 @@ export default function goalsField() {
         url: "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchGoals",
         optionsMapping: "Goals",
         responseSchemaMapping: {
-          Name: "goal",
-          "SNOMED.Code": "snomed",
+          goal: "Name",
+          snomed: "SNOMED.Code",
         },
         minLength: 1,
         labelKey: "Name",

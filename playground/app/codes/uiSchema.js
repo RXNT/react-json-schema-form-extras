@@ -12,8 +12,8 @@ export default {
         "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchProcedureCodes",
       optionsMapping: "ProcedureCodes",
       responseSchemaMapping: {
-        Code: "code",
-        Description: "description",
+        code: "Code",
+        description: "Description",
       },
       minLength: 1,
       labelKey: {
@@ -25,8 +25,8 @@ export default {
       options: [{ code: "012", description: "Random" }],
       minLength: 1,
       responseSchemaMapping: {
-        Code: "code",
-        Description: "description",
+        code: "Code",
+        description: "Description",
       },
       labelKey: {
         fields: ["code", "description"],
