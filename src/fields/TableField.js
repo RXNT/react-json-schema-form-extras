@@ -11,6 +11,7 @@ const DEFAULT_TABLE_CONF = {
     mode: "checkbox",
   },
   deleteRow: true,
+  handleConfirmDeleteRow: next => next(),
 };
 
 const POSITION_KEY = "_position";
@@ -79,14 +80,17 @@ function setColumnCSSIfMissing(col, css) {
 }
 
 function withColumnCss(columns) {
-  let numCols = columns.length;
+  let shownColumns = columns.filter(
+    col => col.hidden === undefined || !col.hidden
+  );
+  let numCols = shownColumns.length;
   let colSize = Math.round(12 / numCols);
   if (colSize == 0) {
     return columns;
   }
 
   let colCss = `col-md-${colSize}`;
-  columns.forEach((col, i) => {
+  shownColumns.forEach((col, i) => {
     if (i != 0) {
       setColumnCSSIfMissing(col, colCss);
     }
