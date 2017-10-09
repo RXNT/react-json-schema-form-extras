@@ -1,4 +1,5 @@
-import React from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 function CollapseMenu(props) {
   let { onChange, schema: { title }, collapsed } = props;
@@ -9,9 +10,9 @@ function CollapseMenu(props) {
           enabled = "glyphicon glyphicon-chevron-down",
           disabled = "glyphicon glyphicon-chevron-right",
         } = {},
+        separate = true,
+        wrapClassName = "lead",
       },
-      separate = true,
-      wrapClassName = "lead",
     },
   } = props;
   return (
@@ -25,13 +26,13 @@ function CollapseMenu(props) {
   );
 }
 
-class CollapsibleField extends React.Component {
+class CollapsibleField extends Component {
   constructor(props) {
     super(props);
 
-    let { uiSchema: { collapse: { active = true } = {} } } = props;
+    let { uiSchema: { collapse: { collapsed = true } = {} } } = props;
 
-    this.state = { collapsed: active };
+    this.state = { collapsed };
   }
 
   handleCollapsed = () => {
@@ -61,5 +62,16 @@ class CollapsibleField extends React.Component {
     );
   }
 }
+
+CollapsibleField.propTypes = {
+  uiSchema: PropTypes.shape({
+    collapse: PropTypes.shape({
+      field: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  registry: PropTypes.shape({
+    fields: PropTypes.object.isRequired,
+  }).isRequired,
+};
 
 export default CollapsibleField;
