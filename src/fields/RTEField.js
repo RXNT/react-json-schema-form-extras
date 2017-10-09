@@ -1,24 +1,33 @@
 import React, { Component } from "react";
 import RichTextEditor from "react-rte";
 
+const DEFAULT_FORMAT = "html";
+
 export default class RTEField extends Component {
   constructor(props) {
     super(props);
 
-    let { formData = "" } = props;
+    let {
+      formData = "",
+      uiSchema: { rte: { format = DEFAULT_FORMAT } = {} },
+    } = props;
 
     this.state = {
-      value: RichTextEditor.createValueFromString(formData, "html"),
+      value: RichTextEditor.createValueFromString(formData, format),
     };
   }
 
   handleChange = value => {
+    let {
+      uiSchema: { rte: { format = DEFAULT_FORMAT } = {} },
+      onChange,
+    } = this.props;
     this.setState({ value });
-    if (this.props.onChange) {
+    if (onChange) {
       // Send the changes up to the parent component as an HTML string.
       // This is here to demonstrate using `.toString()` but in a real app it
       // would be better to avoid generating a string on each change.
-      this.props.onChange(value.toString("html"));
+      onChange(value.toString(format));
     }
   };
 

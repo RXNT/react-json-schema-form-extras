@@ -1,9 +1,5 @@
 import selectn from "selectn";
 
-export function isDevelopment() {
-  return process.env.NODE_ENV !== "production";
-}
-
 function optionToString(fields, separator) {
   return option => {
     return fields
@@ -51,12 +47,12 @@ export function mapSchema(events, schema, mapping) {
 
   let defVal = defaultValue(schema.properties ? schema : schema.items);
   let mappedEvents = events.map(event => {
-    let mappedEvent = Object.keys(mapping).reduce((agg, field) => {
+    let schemaEvent = Object.keys(mapping).reduce((agg, field) => {
       let eventField = mapping[field];
       agg[field] = selectn(eventField, event);
       return agg;
     }, Object.assign({}, defVal));
-    return mappedEvent;
+    return schemaEvent;
   });
 
   return mappedEvents;

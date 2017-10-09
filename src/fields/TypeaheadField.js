@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Typeahead } from "react-bootstrap-typeahead";
-import { isDevelopment, mapLabelKey } from "./utils";
+import { mapLabelKey, mapSchema } from "./utils";
 
 const DEFAULT_OPTIONS = {
   required: false,
@@ -13,18 +13,19 @@ const DEFAULT_OPTIONS = {
 class TypeaheadField extends Component {
   handleSelectionChange = events => {
     if (events.length > 0) {
-      let { uiSchema: { typeaheadOptions: { mapping } } } = this.props;
-      let schemaEvents = mapping
-        ? events.map(val => {
-            return { [mapping]: val };
-          })
-        : events;
+      let {
+        schema,
+        uiSchema: { typeaheadOptions: { mapping, cleanAfterSelection = true } },
+      } = this.props;
+      let schemaEvents = mapSchema(events, schema, mapping);
       this.props.onChange(schemaEvents);
-      setTimeout(() => {
-        if (this.refs.typeahead) {
-          this.refs.typeahead.getInstance().clear();
-        }
-      }, 0);
+      if (cleanAfterSelection) {
+        setTimeout(() => {
+          if (this.refs.typeahead) {
+            this.refs.typeahead.getInstance().clear();
+          }
+        }, 0);
+      }
     }
   };
 
@@ -40,15 +41,13 @@ class TypeaheadField extends Component {
   }
 }
 
-if (isDevelopment()) {
-  TypeaheadField.propTypes = {
-    schema: PropTypes.object.isRequired,
-    uiSchema: PropTypes.shape({
-      genTypeahead: PropTypes.shape({
-        options: PropTypes.array.required,
-      }),
+TypeaheadField.propTypes = {
+  schema: PropTypes.object.isRequired,
+  uiSchema: PropTypes.shape({
+    genTypeahead: PropTypes.shape({
+      options: PropTypes.array.required,
     }),
-  };
-}
+  }),
+};
 
 export default TypeaheadField;

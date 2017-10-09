@@ -1,7 +1,5 @@
-import selectn from "selectn";
-
 /* global encounterTemplateV2User, encounterTemplateV2EncounterInfo*/
-export function search(url, query, optionsMapping) {
+export function search(url, query) {
   let user = JSON.parse(encounterTemplateV2User);
   let encounterInfo = JSON.parse(encounterTemplateV2EncounterInfo);
   let authObj = {
@@ -18,7 +16,5 @@ export function search(url, query, optionsMapping) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
-  })
-    .then(resp => resp.json())
-    .then(json => (optionsMapping ? selectn(optionsMapping, json) : json));
+  }).then(resp => resp.json());
 }
