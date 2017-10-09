@@ -1,16 +1,22 @@
 # react-jsonschema-form-extras
+Catalogue of additional configurable fields for mozilla [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form)
 
-## Usage
+# Catalogue
 
-FormWithExtras is a wrapper for Mozilla's JSON Schema Form that adds extra useful components.
+This project provides light integration over established React components, 
+trying to keep configurations compatible with original project. 
+All configurations you can specify in original projects, can be reused here.
 
-Use this project as you would use Mozilla's JSON Schema Form (see their documentation), but to leverage the extra widgets just reference them in the ui:widget parameter.
+- Tables, based on [react-bootstrap-table](https://github.com/AllenFang/react-bootstrap-table)
+- Typeahead, based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead)
+- RTE, based on [react-rte](https://github.com/sstur/react-rte)
+- Collapsible fields
+- Alternative input fields
 
-##List of widgets
 
-As of the current commit, these are not fully functional. The code is changing rapidly.
+## Collapsible fields
 
-- TableWidget: Given a URL for AJAX requests, allows typeahead functionality in string fields.
-https://github.com/ericgio/react-bootstrap-typeahead Any selections are added to the corresponding table. Table columns and rules can be defined via the widget's props.
+In order to make a field collapsible, your need to specify following configurations
 
-- TableWidget: A table widget with editable text fields, date fields, drop down menus, and deletable rows.
+
+

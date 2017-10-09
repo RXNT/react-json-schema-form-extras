@@ -1,7 +1,10 @@
 export default {
   history: {
     classNames: "col-md-12",
-    "ui:field": "compositeArray",
+    "ui:field": "collapsible",
+    collapse: {
+      field: "compositeArray",
+    },
     inputField: "imo",
     arrayField: "table",
     table: {
