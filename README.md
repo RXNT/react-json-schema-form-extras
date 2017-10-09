@@ -1,5 +1,6 @@
-# react-jsonschema-form-extras
-Catalogue of additional configurable fields for mozilla [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form)
+[![Build Status](https://travis-ci.org/RxNT/react-jsonschema-form-extas.svg?branch=master)](https://travis-ci.org/RxNT/react-jsonschema-form-extras)
+[![Coverage Status](https://coveralls.io/repos/github/RxNT/react-jsonschema-form-extras/badge.svg)](https://coveralls.io/github/RxNT/react-jsonschema-form-extras)
+[![npm version](https://badge.fury.io/js/react-jsonschema-form-extras.svg)](https://badge.fury.io/js/react-jsonschema-form-extras)
 
 # Catalogue
 
