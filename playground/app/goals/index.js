@@ -1,3 +1,5 @@
+import { search } from "../AsyncTypeaheadAPI";
+
 export default function goalsField() {
   let schema = {
     type: "object",
@@ -41,6 +43,7 @@ export default function goalsField() {
         },
         minLength: 1,
         labelKey: "Name",
+        search,
       },
       table: {
         keyField: "snomed",
