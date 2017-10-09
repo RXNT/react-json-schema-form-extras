@@ -144,3 +144,83 @@ In order to configure presentation there are few options
 
 ## Typeahead, based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`typeaheadOptions`)
 
+### Purpose
+
+This is a wrap of [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead), which allows you to use this project in your `jsonschema-form`
+
+### Use
+
+The simplest configuration would be
+
+ ```json
+ {
+   "ui:field": "typeaheadOptions",
+   "typeaheadOptions": { 
+      "options": [ { "state": "New York" }, { "code": "Washington" }],
+      "labelKey": "state"
+    }
+ }
+ ```
+ 
+ In this case the typeahead would only have 2 options - `New York` and `Washigton`
+ 
+ ### Properties
+ 
+ All properties that you specify under `typeaheadOptions` will be used in the original project.
+ Additionally, there are few project specific properties
+ - `labelKey` have more flexibility in configuration
+  - `labelKey` `string` used a labelKey in [typeahead](https://github.com/ericgio/react-bootstrap-typeahead) project
+  - `labelKey` `array` in this case array is a list of fields in original object, which are combined in a single string with a space separator
+  - `labelKey` `object` with `fields` `array` of fields to use, `separator` string separator to use between fields 
+ - `cleanAfterSelection` `boolean` clean selection after component was selected
+ - `mapping` `object` that maps selected object to schema object
+ 
+ For complete list of configurations refer to [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead)
+
+Here are some use case examples
+ 
+With following options
+ 
+```json
+[ 
+  {
+    "name": "Adventures of Huckleberry Finn", "author": "Mark Twain"
+  },
+  {
+    "name": "The Adventures of Tom Sawyer", "author": "Mark Twain"
+  }
+]
+```
+
+With labelKey `name` there will be 2 options
+- `Adventures of Huckleberry Finn`
+- `The Adventures of Tom Sawyer`
+
+With labelKey `[ "author", "name" ]`, options will be
+- `Mark Twain Adventures of Huckleberry Finn`
+- `Mark Twain The Adventures of Tom Sawyer`
+
+With lableKey `{ fields: [ "author", "name" ], separator: " - " }`, options will be
+- `Mark Twain - Adventures of Huckleberry Finn`
+- `Mark Twain - The Adventures of Tom Sawyer` 
+
+Mapping can be specified like this
+```json
+{
+  "mapping": {
+    "creator": "author",
+    "book": "name"
+  }
+}
+```
+And it would generate 2 values
+- `{ book: "Adventures of Huckleberry Finn", creator: "Mark Twain" }`
+- `{ book: "The Adventures of Tom Sawyer", creator: "Mark Twain" }`
+ 
+## Async Typeahead based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`typeahead`)
+
+### Purpose 
+
+This is a wrap around `async` functionality of [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead)
+ 
+

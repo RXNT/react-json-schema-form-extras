@@ -44,10 +44,12 @@ class TypeaheadField extends Component {
 TypeaheadField.propTypes = {
   schema: PropTypes.object.isRequired,
   uiSchema: PropTypes.shape({
-    genTypeahead: PropTypes.shape({
-      options: PropTypes.array.required,
-    }),
-  }),
+    typeaheadOptions: PropTypes.shape({
+      options: PropTypes.array.isRequired,
+      mapping: PropTypes.object,
+      cleanAfterSelection: PropTypes.bool,
+    }).isRequired,
+  }).isRequired,
 };
 
 export default TypeaheadField;
