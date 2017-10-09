@@ -1,6 +1,7 @@
-import React from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-class CompositeArrayField extends React.Component {
+class CompositeArrayField extends Component {
   handleAdd = list => {
     let { formData = [] } = this.props;
     let newTable = formData.concat(list);
@@ -27,5 +28,15 @@ class CompositeArrayField extends React.Component {
     );
   }
 }
+
+CompositeArrayField.propTypes = {
+  uiSchema: PropTypes.shape({
+    inputField: PropTypes.string.isRequired,
+    arrayField: PropTypes.string.isRequired,
+  }).isRequired,
+  registry: PropTypes.shape({
+    fields: PropTypes.object.isRequired,
+  }).isRequired,
+};
 
 export default CompositeArrayField;

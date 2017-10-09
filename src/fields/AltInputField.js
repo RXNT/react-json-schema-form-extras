@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 function altInputField(props) {
   let {
@@ -29,5 +30,13 @@ function altInputField(props) {
     </div>
   );
 }
+
+altInputField.propTypes = {
+  uiSchema: PropTypes.shape({
+    defInput: PropTypes.string.isRequired,
+    altInput: PropTypes.string.isRequired,
+    altInputSeparator: PropTypes.string,
+  }),
+};
 
 export default altInputField;
