@@ -9,8 +9,8 @@ import RTEField from "./RTEField";
 
 export default {
   table: TableField,
-  typeahead: AsyncTypeaheadField,
-  typeaheadOptions: TypeaheadField,
+  asyncTypeahead: AsyncTypeaheadField,
+  typeahead: TypeaheadField,
   collapsible: CollapsibleField,
   compositeArray: CompositeArrayField,
   altInput: AltInputField,

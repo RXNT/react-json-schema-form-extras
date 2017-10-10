@@ -15,7 +15,7 @@ class TypeaheadField extends Component {
     if (events.length > 0) {
       let {
         schema,
-        uiSchema: { typeaheadOptions: { mapping, cleanAfterSelection = true } },
+        uiSchema: { typeahead: { mapping, cleanAfterSelection = true } },
       } = this.props;
       let schemaEvents = mapSchema(events, schema, mapping);
       this.props.onChange(schemaEvents);
@@ -30,11 +30,11 @@ class TypeaheadField extends Component {
   };
 
   render() {
-    let { uiSchema: { typeaheadOptions } } = this.props;
+    let { uiSchema: { typeahead } } = this.props;
 
-    let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeaheadOptions);
+    let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead);
     typeConf.onChange = this.handleSelectionChange;
-    typeConf.labelKey = mapLabelKey(typeaheadOptions.labelKey);
+    typeConf.labelKey = mapLabelKey(typeahead.labelKey);
     typeConf.ref = "typeahead";
 
     return <Typeahead {...typeConf} />;
@@ -44,7 +44,7 @@ class TypeaheadField extends Component {
 TypeaheadField.propTypes = {
   schema: PropTypes.object.isRequired,
   uiSchema: PropTypes.shape({
-    typeaheadOptions: PropTypes.shape({
+    typeahead: PropTypes.shape({
       options: PropTypes.array.isRequired,
       mapping: PropTypes.object,
       cleanAfterSelection: PropTypes.bool,

@@ -29,11 +29,13 @@ class AsyncTypeaheadField extends Component {
     }
 
     let {
-      uiSchema: { typeahead: { url, optionsMapping, search = defaultSearch } },
+      uiSchema: {
+        asyncTypeahead: { url, optionsPath, search = defaultSearch },
+      },
     } = this.props;
 
     search(url, query)
-      .then(json => (optionsMapping ? selectn(optionsMapping, json) : json))
+      .then(json => (optionsPath ? selectn(optionsPath, json) : json))
       .then(options => this.setState({ options }));
   };
 
@@ -41,12 +43,10 @@ class AsyncTypeaheadField extends Component {
     if (events.length > 0) {
       let {
         schema,
-        uiSchema: {
-          typeahead: { responseSchemaMapping, cleanAfterSelection = true },
-        },
+        uiSchema: { asyncTypeahead: { mapping, cleanAfterSelection = true } },
         onChange,
       } = this.props;
-      let schemaEvents = mapSchema(events, schema, responseSchemaMapping);
+      let schemaEvents = mapSchema(events, schema, mapping);
       onChange(schemaEvents);
       if (cleanAfterSelection) {
         setTimeout(() => {
@@ -59,14 +59,14 @@ class AsyncTypeaheadField extends Component {
   };
 
   render() {
-    let { uiSchema: { typeahead } } = this.props;
+    let { uiSchema: { asyncTypeahead } } = this.props;
 
-    let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead);
+    let typeConf = Object.assign({}, DEFAULT_OPTIONS, asyncTypeahead);
     typeConf.onChange = this.handleSelectionChange;
     typeConf.onSearch = this.handleSearch;
     typeConf.options = this.state.options;
     typeConf.ref = "typeahead";
-    typeConf.labelKey = mapLabelKey(typeahead.labelKey);
+    typeConf.labelKey = mapLabelKey(asyncTypeahead.labelKey);
 
     return <AsyncTypeahead {...typeConf} />;
   }
@@ -75,11 +75,13 @@ class AsyncTypeaheadField extends Component {
 AsyncTypeaheadField.propTypes = {
   schema: PropTypes.object.isRequired,
   uiSchema: PropTypes.shape({
-    typeahead: PropTypes.shape({
+    asyncTypeahead: PropTypes.shape({
       url: PropTypes.string.required,
-      optionsMapping: PropTypes.string,
-      responseSchemaMapping: PropTypes.object,
-    }),
+      optionsPath: PropTypes.string,
+      mapping: PropTypes.object,
+      cleanAfterSelection: PropTypes.bool,
+      search: PropTypes.func,
+    }).isRequired,
   }),
 };
 

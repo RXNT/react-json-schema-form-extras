@@ -4,8 +4,8 @@ export default {
     "ui:field": "compositeArray",
     inputField: "altInput",
     arrayField: "table",
-    defInput: "typeahead",
-    altInput: "typeaheadOptions",
+    defInput: "asyncTypeahead",
+    altInput: "typeahead",
     altInputSeparator: "OR",
     typeahead: {
       url:
@@ -21,10 +21,10 @@ export default {
         separator: " - ",
       },
     },
-    typeaheadOptions: {
+    asyncTypeahead: {
       options: [{ code: "012", description: "Random" }],
       minLength: 1,
-      responseSchemaMapping: {
+      mapping: {
         code: "Code",
         description: "Description",
       },

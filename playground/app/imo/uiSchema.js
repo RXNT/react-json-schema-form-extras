@@ -14,9 +14,6 @@ export default {
         { dataField: "icd9", editable: false },
         { dataField: "snomed", editable: false },
       ],
-      options: {
-        handleConfirmDeleteRow: next => next(),
-      },
     },
   },
 };

@@ -11,10 +11,10 @@ All configurations you can specify in original projects, can be reused here.
 - Composite array field (`ui:field` > `compositeArray`)
 - Collapsible fields (`ui:field` > `collapsible`)
 - Alternative input fields (`ui:field` > `altInput`)
-- Typeahead, based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`ui:field` > `typeaheadOptions`)
-- Async Typeahead based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`ui:field` > `typeahead`)
-- Tables, based on [react-bootstrap-table](https://github.com/AllenFang/react-bootstrap-table) (`ui:field` > `table`)
+- Typeahead, based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`ui:field` > `typeahead`)
+- Async Typeahead based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`ui:field` > `asyncTypeahead`)
 - RTE, based on [react-rte](https://github.com/sstur/react-rte) (`ui:field` > `rte`)
+- Tables, based on [react-bootstrap-table](https://github.com/AllenFang/react-bootstrap-table) (`ui:field` > `table`)
 
 ## Use
 
@@ -128,9 +128,9 @@ The simplest configuration would look something like this
 {
   "ui:field": "altInput",
   "defInput": "typeahead",
-  "altInput": "typeaheadOptions",
+  "altInput": "asyncTypeahead",
   "typeahead": { },
-  "typeaheadOptions": { }
+  "asyncTypeahead": { }
 }
 ```
 In this case user would be able to enter the same field, either by using async typeahead or regular one.
@@ -142,7 +142,7 @@ In order to configure presentation there are few options
 - `altInput` `string` registry field to use as an alternative input method
 - `altInputSeparator` `string` string to use in between those 2 presentations
 
-## Typeahead, based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`typeaheadOptions`)
+## Typeahead, based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`typeahead`)
 
 ### Purpose
 
@@ -154,8 +154,8 @@ The simplest configuration would be
 
  ```json
  {
-   "ui:field": "typeaheadOptions",
-   "typeaheadOptions": { 
+   "ui:field": "typeahead",
+   "typeahead": { 
       "options": [ { "state": "New York" }, { "code": "Washington" }],
       "labelKey": "state"
     }
@@ -166,7 +166,7 @@ The simplest configuration would be
  
  ### Properties
  
- All properties that you specify under `typeaheadOptions` will be used in the original project.
+ All properties that you specify under `typeahead` will be used in the original project.
  Additionally, there are few project specific properties
  - `labelKey` have more flexibility in configuration
   - `labelKey` `string` used a labelKey in [typeahead](https://github.com/ericgio/react-bootstrap-typeahead) project
@@ -217,10 +217,124 @@ And it would generate 2 values
 - `{ book: "Adventures of Huckleberry Finn", creator: "Mark Twain" }`
 - `{ book: "The Adventures of Tom Sawyer", creator: "Mark Twain" }`
  
-## Async Typeahead based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`typeahead`)
+## Async Typeahead based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`asyncTypeahead`)
 
 ### Purpose 
 
-This is a wrap around `async` functionality of [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead)
+This is a wrap around `async` functionality of [typeahead](https://github.com/ericgio/react-bootstrap-typeahead), supporting some additional defaults.
+
+### Use
+
+The simplest configuration would be
+
+ ```json
+ {
+   "ui:field": "asyncTypeahead",
+   "asyncTypeahead": { 
+      "url": "https://example.com/state"
+    }
+ }
+ ```
  
+ This will result in typeahead search with `https://example.com/state?query=${query}`
+ 
+### Properties
+
+Async typeahead extends default configuration list for `typeahead`, by adding few properties
+- `url` search url, that will be used during autocomplete
+- `search` function that will be querying server for data, which takes 2 parameters, and must return a Promise with a json result
+    - `url` configured URL
+    - `query` typed query string
+-  `optionsPath` path to options array in response
+
+
+For example, let's consider query with `Was` on `url` `https://example.com/state`.
+
+By default field will query results with  - `https://example.com/state?query=Was`.
+
+Let's say we want to override it and query - `https://example.com/state?name=Was&maxSize=1`.
+ 
+Here is how we can do that:
+
+```js
+let uiSchema = {
+  "ui:field": "asyncTypeahead",
+  asyncTypeahead: {
+    url: "https://example.com/state",
+    search: (url, query) => fetch(`${url}?name=${query}&maxSize=1`)
+  }
+}
+```
+That is it.
+
+For complete list of async typeahead configurations refer to [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead)
+
+## RTE, based on [react-rte](https://github.com/sstur/react-rte) (`rte`)
+
+### Purpose
+
+This is a simple field, that allows you to enter RTE text inside your string field.
+
+### Use 
+
+The simplest configuration would be
+
+ ```json
+ {
+   "ui:field": "rte",
+   "rte": {
+      "format": "html"
+   }
+ }
+ ```
+
+### Properties
+
+The only property this field requires is `format`
+- `format` `string` an `rte` output format (default `html`)
+
+As with other projects, all configurations, that you'll configure unser `uiSchema` `rte` field will be transferred to the actual component.
+
+
+## Tables, based on [react-bootstrap-table](https://github.com/AllenFang/react-bootstrap-table) (`table`)
+
+### Purpose
+
+This component wraps [react-bootstrap-table](https://github.com/AllenFang/react-bootstrap-table) for array components, with smart default configurations.
+
+### Use
+ 
+ The simplest configuration would be
+ 
+```json
+{
+"ui:field": "table"
+}
+```
+
+### Properties
+
+You can use `table` field without any predefined configurations, it will generate default table schema with columns. 
+- `tableCols` an array of react-bootstrap-table configurations, that override default generated configurations for the field.
+
+By default table component will generate table columns, based on an array schema, with editables, based on field types.
+
+## Contribute
+
+- Issue Tracker: github.com/RxNT/react-jsonschema-extras/issues
+- Source Code: github.com/RxNT/react-jsonschema-extras
+
+## Support
+
+If you are having issues, please let us know here or on StackOverflow.
+
+## License
+
+The project is licensed under the Apache Licence 2.0.
+
+  
+
+
+ 
+
 

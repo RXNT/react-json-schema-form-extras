@@ -3,9 +3,9 @@
     "options": {
       "classNames": "col-md-12",
       "ui:field": "compositeArray",
-      "inputField": "typeaheadOptions",
+      "inputField": "typeahead",
       "arrayField": "table",
-      "typeaheadOptions": {
+      "typeahead": {
         "options": [ "Some", "Other" ],
         "allowNew": true,
         "minLength": 1,
