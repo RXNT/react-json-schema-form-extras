@@ -1,3 +1,5 @@
+import { search } from "../AsyncTypeaheadAPI";
+
 export default {
   coding: {
     classNames: "col-md-12",
@@ -7,27 +9,24 @@ export default {
     defInput: "asyncTypeahead",
     altInput: "typeahead",
     altInputSeparator: "OR",
-    typeahead: {
+    asyncTypeahead: {
       url:
         "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchProcedureCodes",
-      optionsMapping: "ProcedureCodes",
-      responseSchemaMapping: {
+      optionsPath: "ProcedureCodes",
+      mapping: {
         code: "Code",
         description: "Description",
       },
+      search,
       minLength: 1,
       labelKey: {
         fields: ["Code", "Description"],
         separator: " - ",
       },
     },
-    asyncTypeahead: {
+    typeahead: {
       options: [{ code: "012", description: "Random" }],
       minLength: 1,
-      mapping: {
-        code: "Code",
-        description: "Description",
-      },
       labelKey: {
         fields: ["code", "description"],
         separator: " - ",

@@ -32,12 +32,12 @@ export default function goalsField() {
     goals: {
       classNames: "col-md-12",
       "ui:field": "compositeArray",
-      inputField: "typeahead",
+      inputField: "asyncTypeahead",
       arrayField: "table",
-      typeahead: {
+      asyncTypeahead: {
         url: "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchGoals",
-        optionsMapping: "Goals",
-        responseSchemaMapping: {
+        optionsPath: "Goals",
+        mapping: {
           goal: "Name",
           snomed: "SNOMED.Code",
         },
