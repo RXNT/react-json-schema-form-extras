@@ -10,9 +10,6 @@ export default {
         { dataField: "icd10", editable: false },
         { dataField: "icd9", editable: false },
       ],
-      options: {
-        handleConfirmDeleteRow: next => next(),
-      },
     },
     imo: {
       freeText: false,

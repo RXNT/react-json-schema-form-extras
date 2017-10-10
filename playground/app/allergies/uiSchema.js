@@ -2,17 +2,12 @@ export default {
   allergies: {
     classNames: "col-md-12",
     "ui:field": "compositeArray",
-    inputField: "typeahead",
+    inputField: "asyncTypeahead",
     arrayField: "table",
-    table: {
-      options: {
-        handleConfirmDeleteRow: next => next(),
-      },
-    },
-    typeahead: {
+    asyncTypeahead: {
       url: "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchAllergies",
-      optionsMapping: "Allergies",
-      responseSchemaMapping: {
+      optionsPath: "Allergies",
+      mapping: {
         allergyName: "AllergyName",
       },
       labelKey: "AllergyName",

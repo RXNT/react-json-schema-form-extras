@@ -10,13 +10,13 @@ let uiSchema = {
     classNames: "col-md-12",
     "ui:tabID": "medications",
     "ui:field": "compositeArray",
-    inputField: "typeahead",
+    inputField: "asyncTypeahead",
     arrayField: "table",
-    typeahead: {
+    asyncTypeahead: {
       url:
         "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchMedications",
-      optionsMapping: "Drugs",
-      responseSchemaMapping: {
+      optionsPath: "Drugs",
+      mapping: {
         drugName: "DrugName",
       },
       labelKey: "DrugName",
