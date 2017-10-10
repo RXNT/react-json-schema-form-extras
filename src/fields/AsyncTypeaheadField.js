@@ -76,7 +76,7 @@ AsyncTypeaheadField.propTypes = {
   schema: PropTypes.object.isRequired,
   uiSchema: PropTypes.shape({
     asyncTypeahead: PropTypes.shape({
-      url: PropTypes.string.required,
+      url: PropTypes.string.isRequired,
       optionsPath: PropTypes.string,
       mapping: PropTypes.object,
       cleanAfterSelection: PropTypes.bool,
