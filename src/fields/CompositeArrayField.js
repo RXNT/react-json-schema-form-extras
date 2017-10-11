@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { toArray } from "./utils";
 
 class CompositeArrayField extends Component {
   handleAdd = list => {
     let { formData = [] } = this.props;
-    let newTable = formData.concat(list);
+    let newTable = formData.concat(toArray(list));
     this.props.onChange(newTable);
   };
 

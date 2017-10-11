@@ -85,20 +85,20 @@ function withColumnCss(columns) {
   );
   let numCols = shownColumns.length;
   let colSize = Math.round(12 / numCols);
-  if (colSize == 0) {
+  if (colSize === 0) {
     return columns;
   }
 
   let colCss = `col-md-${colSize}`;
   shownColumns.forEach((col, i) => {
-    if (i != 0) {
+    if (i !== 0) {
       setColumnCSSIfMissing(col, colCss);
     }
   });
   return columns;
 }
 
-export function toTableColumns(schema, tableCols = []) {
+export function toTableColumns(schema, tableCols = [], fields = {}) {
   let { items: { properties } } = schema;
 
   let schemaCols = Object.keys(properties).map(dataField => {
@@ -110,6 +110,20 @@ export function toTableColumns(schema, tableCols = []) {
 
   let columnsWithOverrides = schemaCols.map(sCol => {
     let tCol = tableCols.find(col => col.dataField === sCol.dataField);
+    if (tCol && tCol.field && fields[tCol.field]) {
+      let FieldEditor = fields[tCol.field];
+      let fieldUISchema = tCol.uiSchema;
+      let fieldSchema = properties[tCol.dataField];
+      tCol.customEditor = {
+        getElement: (onUpdate, props) => (
+          <FieldEditor
+            schema={fieldSchema}
+            uiSchema={fieldUISchema}
+            onChange={onUpdate}
+          />
+        ),
+      };
+    }
     return Object.assign(sCol, tCol);
   });
 
@@ -160,7 +174,11 @@ class TableField extends Component {
 
   render() {
     let tableConf = this.toTableConf();
-    let columns = toTableColumns(this.props.schema, tableConf.tableCols);
+    let columns = toTableColumns(
+      this.props.schema,
+      tableConf.tableCols,
+      this.props.registry.fields
+    );
 
     return (
       <BootstrapTable {...tableConf}>
