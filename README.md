@@ -319,6 +319,36 @@ You can use `table` field without any predefined configurations, it will generat
 
 By default table component will generate table columns, based on an array schema, with editables, based on field types.
 
+You can reuse react-jsonschema-form Components, in table column editing, to do that, you need to define
+- `field` property in tableCols override section, with `uiSchema` to use for the field. 
+
+For example let's say we have allergy array, with `allergyName` coming from server source, 
+we can enable `asyncTypeahead` on allergyName field in `tableCols` override like this:  
+```js
+let uiSchema = {
+  allergies: {
+    classNames: "col-md-12",
+    "ui:field": "table",
+    table: {
+      tableCols: [
+        {
+          dataField: "allergyName",
+          field: "asyncTypeahead",
+          uiSchema: {
+            "ui:field": "asyncTypeahead",
+            asyncTypeahead: {
+              bodyContainer: true,
+              url: "/allergies/typeahead"
+            },
+          },
+        },
+      ],
+    },
+  },
+};
+```
+
+
 ## Contribute
 
 - Issue Tracker: github.com/RxNT/react-jsonschema-extras/issues
