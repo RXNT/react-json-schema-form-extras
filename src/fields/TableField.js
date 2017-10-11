@@ -115,13 +115,16 @@ export function toTableColumns(schema, tableCols = [], fields = {}) {
       let fieldUISchema = tCol.uiSchema;
       let fieldSchema = properties[tCol.dataField];
       tCol.customEditor = {
-        getElement: (onUpdate, props) => (
-          <FieldEditor
-            schema={fieldSchema}
-            uiSchema={fieldUISchema}
-            onChange={onUpdate}
-          />
-        ),
+        getElement: (onUpdate, props) => {
+          return (
+            <FieldEditor
+              formData={props.defaultValue}
+              schema={fieldSchema}
+              uiSchema={fieldUISchema}
+              onChange={onUpdate}
+            />
+          );
+        },
       };
     }
     return Object.assign(sCol, tCol);

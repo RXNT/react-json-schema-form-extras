@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Typeahead, AsyncTypeahead } from "react-bootstrap-typeahead";
+import { AsyncTypeahead, Typeahead } from "react-bootstrap-typeahead";
 import { isArraySchema, toArray } from "./utils";
 import selectn from "selectn";
 
@@ -55,6 +55,7 @@ function defaultValue({ properties }) {
 
 function mapSchema(events, schema, mapping, labelFunc) {
   if (!mapping) {
+    events = events.map(labelFunc);
     return isArraySchema(events) ? events : events[0];
   }
 
@@ -72,14 +73,10 @@ function mapSchema(events, schema, mapping, labelFunc) {
 }
 
 class BaseTypeaheadField extends Component {
-  handleSelectionChange = events => {
+  handleSelectionChange = conf => events => {
     if (events.length > 0) {
-      let {
-        schema,
-        uiSchema: {
-          typeahead: { mapping, cleanAfterSelection = false, labelKey },
-        },
-      } = this.props;
+      let { mapping, cleanAfterSelection = false, labelKey } = conf;
+      let { schema } = this.props;
       let schemaEvents = mapSchema(
         events,
         schema,
@@ -103,7 +100,7 @@ export class TypeaheadField extends BaseTypeaheadField {
     let { uiSchema: { typeahead }, formData } = this.props;
 
     let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead);
-    typeConf.onChange = this.handleSelectionChange;
+    typeConf.onChange = this.handleSelectionChange(typeahead);
     typeConf.labelKey = mapLabelKey(typeahead.labelKey);
     typeConf.selected = formData ? toArray(formData) : [];
     typeConf.ref = "typeahead";
@@ -157,7 +154,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
     let { uiSchema: { asyncTypeahead }, formData } = this.props;
 
     let typeConf = Object.assign({}, DEFAULT_OPTIONS, asyncTypeahead);
-    typeConf.onChange = this.handleSelectionChange;
+    typeConf.onChange = this.handleSelectionChange(asyncTypeahead);
     typeConf.onSearch = this.handleSearch;
     typeConf.options = this.state.options;
     typeConf.ref = "typeahead";
