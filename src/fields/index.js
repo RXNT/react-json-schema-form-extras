@@ -3,7 +3,6 @@ import { AsyncTypeaheadField, TypeaheadField } from "./TypeaheadField";
 import CompositeArrayField from "./CompositeArrayField";
 import AltInputField from "./AltInputField";
 import CollapsibleField from "./CollapsibleField";
-import IMOTypeaheadField from "./imo/IMOField";
 import RTEField from "./RTEField";
 
 export default {
@@ -14,5 +13,4 @@ export default {
   compositeArray: CompositeArrayField,
   altInput: AltInputField,
   rte: RTEField,
-  imo: IMOTypeaheadField,
 };
