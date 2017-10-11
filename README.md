@@ -172,7 +172,7 @@ The simplest configuration would be
   - `labelKey` `string` used a labelKey in [typeahead](https://github.com/ericgio/react-bootstrap-typeahead) project
   - `labelKey` `array` in this case array is a list of fields in original object, which are combined in a single string with a space separator
   - `labelKey` `object` with `fields` `array` of fields to use, `separator` string separator to use between fields 
- - `cleanAfterSelection` `boolean` clean selection after component was selected
+ - `cleanAfterSelection` `boolean` clean selection after component was selected (default false)
  - `mapping` `object` that maps selected object to schema object
  
  For complete list of configurations refer to [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead)

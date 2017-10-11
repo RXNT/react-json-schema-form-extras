@@ -6,6 +6,12 @@ export function toArray(el) {
   }
 }
 
+export function isObjectSchema(schema) {
+  return (
+    schema.type === "object" || (schema.items && schema.items.type === "object")
+  );
+}
+
 export function isArraySchema(schema) {
   return schema.items;
 }
