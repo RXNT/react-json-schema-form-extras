@@ -37,10 +37,17 @@ function mapLabelKey(labelKey) {
   ) {
     let { fields, separator } = labelKey;
     return optionToString(fields, separator);
-  } else if (labelKey) {
-    return obj => obj[labelKey];
+  }
+  return labelKey;
+}
+
+function applyLabelKey(obj, labelKey) {
+  if (typeof labelKey === "function") {
+    return labelKey(obj);
+  } else if (typeof labelKey === "string") {
+    return obj[labelKey];
   } else {
-    return obj => obj;
+    return obj;
   }
 }
 
@@ -54,15 +61,18 @@ function defaultValue({ properties = {} }) {
   return defVal;
 }
 
-export function mapSchema(events, schema, mapping, labelFunc) {
+function mapObjectSchema(events, schema, mapping) {
   if (!mapping) {
-    if (!isObjectSchema(schema) && labelFunc) {
-      events = events.map(labelFunc);
-    }
-    return isArraySchema(schema) ? events : events[0];
+    return events;
   }
 
   let defVal = defaultValue(schema.properties ? schema : schema.items);
+  if (typeof mapping === "string") {
+    return events.map(event => {
+      return Object.assign({}, defVal, { [mapping]: event });
+    });
+  }
+
   let mappedEvents = events.map(event => {
     let schemaEvent = Object.keys(mapping).reduce((agg, field) => {
       let eventField = mapping[field];
@@ -72,13 +82,29 @@ export function mapSchema(events, schema, mapping, labelFunc) {
     return schemaEvent;
   });
 
-  return isArraySchema(schema) ? mappedEvents : mappedEvents[0];
+  return mappedEvents;
 }
 
-function toSelected(formData, schema, labelF) {
+function mapGeneralSchema(events, mapping, labelFunc) {
+  if (!mapping) {
+    return events.map(event => applyLabelKey(event, labelFunc));
+  } else {
+    return events.map(event => event[mapping]);
+  }
+}
+
+export function mapSchema(events, schema, mapping, labelFunc) {
+  let schemaEvents = isObjectSchema(schema)
+    ? mapObjectSchema(events, schema, mapping)
+    : mapGeneralSchema(events, mapping, labelFunc);
+
+  return isArraySchema(schema) ? schemaEvents : schemaEvents[0];
+}
+
+function toSelected(formData, schema, labelKey) {
   let normFormData = formData ? toArray(formData) : [];
   if (isObjectSchema(schema)) {
-    return normFormData.map(selected => labelF(selected));
+    return normFormData.map(selected => applyLabelKey(selected, labelKey));
   }
   return normFormData;
 }

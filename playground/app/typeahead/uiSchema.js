@@ -3,6 +3,7 @@ const fieldProps = {
   "ui:field": "typeahead",
   typeahead: {
     options: [{ name: "some" }, { name: "other" }],
+    allowNew: true,
     labelKey: "name",
     minLength: 1,
   },
