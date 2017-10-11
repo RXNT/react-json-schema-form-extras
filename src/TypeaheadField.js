@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { AsyncTypeahead, Typeahead } from "react-bootstrap-typeahead";
-import { isArraySchema, toArray } from "./utils";
+import { isArraySchema, isObjectSchema, toArray } from "./utils";
 import selectn from "selectn";
 
 const DEFAULT_OPTIONS = {
@@ -44,7 +44,7 @@ function mapLabelKey(labelKey) {
   }
 }
 
-function defaultValue({ properties }) {
+function defaultValue({ properties = {} }) {
   let defVal = Object.keys(properties).reduce((agg, field) => {
     if (properties[field].default !== undefined) {
       agg[field] = properties[field].default;
@@ -54,9 +54,11 @@ function defaultValue({ properties }) {
   return defVal;
 }
 
-function mapSchema(events, schema, mapping, labelFunc) {
+export function mapSchema(events, schema, mapping, labelFunc) {
   if (!mapping) {
-    events = events.map(labelFunc);
+    if (!isObjectSchema(schema) && labelFunc) {
+      events = events.map(labelFunc);
+    }
     return isArraySchema(events) ? events : events[0];
   }
 
