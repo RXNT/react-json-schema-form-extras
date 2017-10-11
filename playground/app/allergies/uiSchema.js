@@ -12,13 +12,11 @@ export default {
           uiSchema: {
             "ui:field": "asyncTypeahead",
             asyncTypeahead: {
+              bodyContainer: true,
               url:
                 "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchAllergies",
               optionsPath: "Allergies",
               search,
-              mapping: {
-                allergyName: "AllergyName",
-              },
               labelKey: "AllergyName",
             },
           },
