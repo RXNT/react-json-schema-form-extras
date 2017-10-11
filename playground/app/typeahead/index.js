@@ -7,5 +7,6 @@ export default Object.assign({}, schema, uiSchema, {
     strArr: ["some"],
     obj: { name: "other" },
     objArr: [{ name: "other" }],
+    compArr: [{ name: "other" }],
   },
 });

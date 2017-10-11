@@ -15,12 +15,14 @@ class CompositeArrayField extends Component {
       registry: { fields },
     } = this.props;
 
+    let inputProps = Object.assign({}, this.props, { formData: undefined });
+
     let InputElement = fields[inputField];
     let ArrayElement = fields[arrayField];
     return (
       <div>
         <div className="form-group">
-          <InputElement {...this.props} onChange={this.handleAdd} />
+          <InputElement {...inputProps} onChange={this.handleAdd} />
         </div>
         <div className="form-group">
           <ArrayElement {...this.props} />
