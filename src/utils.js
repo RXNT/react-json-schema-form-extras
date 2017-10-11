@@ -13,5 +13,5 @@ export function isObjectSchema(schema) {
 }
 
 export function isArraySchema(schema) {
-  return schema.items;
+  return schema.type === "array";
 }

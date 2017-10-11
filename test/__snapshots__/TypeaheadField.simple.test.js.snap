@@ -1,0 +1,316 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Typeahead render 1`] = `
+<form
+  acceptCharset={undefined}
+  action={undefined}
+  autoComplete={undefined}
+  className="rjsf"
+  encType={undefined}
+  id={undefined}
+  method={undefined}
+  name={undefined}
+  noValidate={false}
+  onSubmit={[Function]}
+  target={undefined}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset>
+      <div
+        className="form-group field field-string"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_str"
+        >
+          str
+        </label>
+        <div />
+        <input
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root_str"
+          label="str"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value="some"
+        />
+        <div />
+        <div />
+      </div>
+      <div
+        className="form-group field field-array"
+      >
+        <fieldset
+          className="field field-array field-array-of-string"
+        >
+          <legend
+            id="root_strArr__title"
+          >
+            strArr
+          </legend>
+          <div
+            className="row array-item-list"
+          >
+            <div
+              className="array-item"
+            >
+              <div
+                className="col-xs-9"
+              >
+                <div
+                  className="form-group field field-string"
+                >
+                  <div />
+                  <div />
+                  <input
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_strArr_0"
+                    label={undefined}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={true}
+                    type="text"
+                    value="some"
+                  />
+                  <div />
+                  <div />
+                </div>
+              </div>
+              <div
+                className="col-xs-3 array-item-toolbox"
+              >
+                <div
+                  className="btn-group"
+                  style={
+                    Object {
+                      "display": "flex",
+                      "justifyContent": "space-around",
+                    }
+                  }
+                >
+                  <button
+                    className="btn btn-danger array-item-remove"
+                    disabled={false}
+                    onClick={[Function]}
+                    style={
+                      Object {
+                        "flex": 1,
+                        "fontWeight": "bold",
+                        "paddingLeft": 6,
+                        "paddingRight": 6,
+                      }
+                    }
+                    tabIndex="-1"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-remove"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 array-item-add text-right"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={false}
+                onClick={[Function]}
+                tabIndex="0"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+        <div />
+        <div />
+      </div>
+      <div
+        className="form-group field field-object"
+      >
+        <fieldset>
+          <legend
+            id="root_obj__title"
+          >
+            obj
+          </legend>
+          <div
+            className="form-group field field-string"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_obj_name"
+            >
+              name
+            </label>
+            <div />
+            <input
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_obj_name"
+              label="name"
+              onBlur={[Function]}
+              onChange={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value="other"
+            />
+            <div />
+            <div />
+          </div>
+        </fieldset>
+        <div />
+        <div />
+      </div>
+      <div
+        className="form-group field field-array"
+      >
+        <fieldset
+          className="field field-array field-array-of-object"
+        >
+          <legend
+            id="root_objArr__title"
+          >
+            objArr
+          </legend>
+          <div
+            className="row array-item-list"
+          >
+            <div
+              className="array-item"
+            >
+              <div
+                className="col-xs-9"
+              >
+                <div
+                  className="form-group field field-object"
+                >
+                  <fieldset>
+                    <div
+                      className="form-group field field-string"
+                    >
+                      <label
+                        className="control-label"
+                        htmlFor="root_objArr_0_name"
+                      >
+                        name
+                      </label>
+                      <div />
+                      <input
+                        autoFocus={false}
+                        className="form-control"
+                        disabled={false}
+                        id="root_objArr_0_name"
+                        label="name"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={false}
+                        type="text"
+                        value="other"
+                      />
+                      <div />
+                      <div />
+                    </div>
+                  </fieldset>
+                  <div />
+                  <div />
+                </div>
+              </div>
+              <div
+                className="col-xs-3 array-item-toolbox"
+              >
+                <div
+                  className="btn-group"
+                  style={
+                    Object {
+                      "display": "flex",
+                      "justifyContent": "space-around",
+                    }
+                  }
+                >
+                  <button
+                    className="btn btn-danger array-item-remove"
+                    disabled={false}
+                    onClick={[Function]}
+                    style={
+                      Object {
+                        "flex": 1,
+                        "fontWeight": "bold",
+                        "paddingLeft": 6,
+                        "paddingRight": 6,
+                      }
+                    }
+                    tabIndex="-1"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-remove"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 array-item-add text-right"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={false}
+                onClick={[Function]}
+                tabIndex="0"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+        <div />
+        <div />
+      </div>
+    </fieldset>
+    <div />
+    <div />
+  </div>
+  <p>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </p>
+</form>
+`;
