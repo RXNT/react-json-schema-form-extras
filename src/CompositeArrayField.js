@@ -33,6 +33,9 @@ class CompositeArrayField extends Component {
 }
 
 CompositeArrayField.propTypes = {
+  schema: PropTypes.shape({
+    type: PropTypes.oneOf("array").isRequired,
+  }).isRequired,
   uiSchema: PropTypes.shape({
     inputField: PropTypes.string.isRequired,
     arrayField: PropTypes.string.isRequired,
