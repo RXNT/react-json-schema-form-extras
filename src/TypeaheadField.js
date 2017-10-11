@@ -59,7 +59,7 @@ export function mapSchema(events, schema, mapping, labelFunc) {
     if (!isObjectSchema(schema) && labelFunc) {
       events = events.map(labelFunc);
     }
-    return isArraySchema(events) ? events : events[0];
+    return isArraySchema(schema) ? events : events[0];
   }
 
   let defVal = defaultValue(schema.properties ? schema : schema.items);
@@ -73,6 +73,14 @@ export function mapSchema(events, schema, mapping, labelFunc) {
   });
 
   return isArraySchema(schema) ? mappedEvents : mappedEvents[0];
+}
+
+function toSelected(formData, schema, labelF) {
+  let normFormData = formData ? toArray(formData) : [];
+  if (isObjectSchema(schema)) {
+    return normFormData.map(selected => labelF(selected));
+  }
+  return normFormData;
 }
 
 class BaseTypeaheadField extends Component {
@@ -100,12 +108,10 @@ class BaseTypeaheadField extends Component {
 
 export class TypeaheadField extends BaseTypeaheadField {
   render() {
-    let { uiSchema: { typeahead }, formData } = this.props;
+    let { uiSchema: { typeahead }, formData, schema } = this.props;
 
     let labelKey = mapLabelKey(typeahead.labelKey);
-    let selected = (formData ? toArray(formData) : []).map(selected =>
-      labelKey(selected)
-    );
+    let selected = toSelected(formData, schema, labelKey);
 
     let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead, {
       onChange: this.handleSelectionChange(typeahead),
@@ -159,12 +165,10 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
   };
 
   render() {
-    let { uiSchema: { asyncTypeahead }, formData } = this.props;
+    let { schema, uiSchema: { asyncTypeahead }, formData } = this.props;
 
     let labelKey = mapLabelKey(asyncTypeahead.labelKey);
-    let selected = (formData ? toArray(formData) : []).map(selected =>
-      labelKey(selected)
-    );
+    let selected = toSelected(formData, schema, labelKey);
 
     let typeConf = Object.assign(DEFAULT_OPTIONS, asyncTypeahead, {
       selected,
