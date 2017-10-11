@@ -14,5 +14,10 @@ export default {
     strArr: fieldProps,
     obj: fieldProps,
     objArr: fieldProps,
+    compArr: Object.assign({}, fieldProps, {
+      "ui:field": "compositeArray",
+      inputField: "typeahead",
+      arrayField: "table",
+    }),
   },
 };
