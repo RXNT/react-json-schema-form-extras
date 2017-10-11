@@ -16,15 +16,15 @@ export function App() {
   let handleChange = ({ formData }) => console.log(JSON.stringify(formData));
   return (
     <div>
+      <Form {...allergies} fields={fields} onChange={handleChange} />
+      <Form {...typeahead} fields={fields} onChange={handleChange} />
       <Form {...medications} fields={fields} onChange={handleChange} />
       <Form {...rte()} fields={fields} onChange={handleChange} />
       <Form {...goals()} fields={fields} onChange={handleChange} />
       <Form {...codes} fields={fields} onChange={handleChange} />
-      <Form {...typeahead} fields={fields} onChange={handleChange} />
       <Form {...dx} fields={fields} onChange={handleChange} />
       <Form {...functionalStatus} fields={fields} onChange={handleChange} />
       <Form {...imo} fields={fields} onChange={handleChange} />
-      <Form {...allergies} fields={fields} onChange={handleChange} />
     </div>
   );
 }

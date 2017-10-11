@@ -2,18 +2,8 @@
   "schema": {
     "type": "object",
     "properties": {
-      "options": {
-        "type": "array",
-        "title": "Medications",
-        "items": {
-          "type": "object",
-          "properties": {
-            "name": {
-              "type": "string",
-              "title": "Name"
-            }
-          }
-        }
+      "str": {
+        "type": "string"
       }
     }
   }
