@@ -9,6 +9,7 @@ const DEFAULT_OPTIONS = {
   labelKey: "name",
   minLength: 3,
   placeholder: "Search...",
+  ref: "typeahead",
 };
 
 function optionToString(fields, separator) {
@@ -99,11 +100,16 @@ export class TypeaheadField extends BaseTypeaheadField {
   render() {
     let { uiSchema: { typeahead }, formData } = this.props;
 
-    let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead);
-    typeConf.onChange = this.handleSelectionChange(typeahead);
-    typeConf.labelKey = mapLabelKey(typeahead.labelKey);
-    typeConf.selected = formData ? toArray(formData) : [];
-    typeConf.ref = "typeahead";
+    let labelKey = mapLabelKey(typeahead.labelKey);
+    let selected = (formData ? toArray(formData) : []).map(selected =>
+      labelKey(selected)
+    );
+
+    let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead, {
+      onChange: this.handleSelectionChange(typeahead),
+      labelKey,
+      selected,
+    });
 
     return <Typeahead {...typeConf} />;
   }
@@ -153,13 +159,19 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
   render() {
     let { uiSchema: { asyncTypeahead }, formData } = this.props;
 
-    let typeConf = Object.assign({}, DEFAULT_OPTIONS, asyncTypeahead);
-    typeConf.onChange = this.handleSelectionChange(asyncTypeahead);
-    typeConf.onSearch = this.handleSearch;
-    typeConf.options = this.state.options;
-    typeConf.ref = "typeahead";
-    typeConf.selected = formData ? toArray(formData) : [];
-    typeConf.labelKey = mapLabelKey(asyncTypeahead.labelKey);
+    let labelKey = mapLabelKey(asyncTypeahead.labelKey);
+    let selected = (formData ? toArray(formData) : []).map(selected =>
+      labelKey(selected)
+    );
+
+    let typeConf = Object.assign(DEFAULT_OPTIONS, asyncTypeahead, {
+      selected,
+      labelKey,
+      onChange: this.handleSelectionChange(asyncTypeahead),
+      onSearch: this.handleSearch,
+      options: this.state.options,
+      ref: "typeahead",
+    });
 
     return <AsyncTypeahead {...typeConf} />;
   }
