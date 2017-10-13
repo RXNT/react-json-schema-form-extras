@@ -9,12 +9,17 @@ export default {
         required: [],
         type: "object",
         properties: {
-          drugId: {
-            type: "string",
-          },
-          drugName: {
-            type: "string",
-            title: "Drug Name",
+          drug: {
+            type: "object",
+            properties: {
+              drugId: {
+                type: "string",
+              },
+              drugName: {
+                type: "string",
+                title: "Drug Name",
+              },
+            },
           },
           dosage: {
             type: "string",
