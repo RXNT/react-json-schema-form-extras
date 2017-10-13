@@ -46,6 +46,24 @@ export default {
             },
           },
         },
+        {
+          dataField: "dosage",
+        },
+        {
+          dataField: "quantity",
+        },
+        {
+          dataField: "unit",
+        },
+        {
+          dataField: "refills",
+        },
+        {
+          dataField: "useGeneric",
+        },
+        {
+          dataField: "startDate",
+        },
       ],
     },
     typeahead: {

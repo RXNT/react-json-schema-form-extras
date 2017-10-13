@@ -9,6 +9,15 @@ export default {
         required: [],
         type: "object",
         properties: {
+          useGeneric: {
+            default: true,
+            type: "boolean",
+            title: "Use Generic",
+          },
+          quantity: {
+            type: "string",
+            title: "Quantity",
+          },
           drug: {
             type: "object",
             properties: {
@@ -25,26 +34,17 @@ export default {
             type: "string",
             title: "Dosage",
           },
-          quantity: {
-            type: "string",
-            title: "Quantity",
-          },
-          unit: {
-            type: "string",
-            title: "Units",
+          startDate: {
+            type: "date",
+            title: "Start Date",
           },
           refills: {
             type: "string",
             title: "Refills",
           },
-          useGeneric: {
-            default: true,
-            type: "boolean",
-            title: "Use Generic",
-          },
-          startDate: {
-            type: "date",
-            title: "Start Date",
+          unit: {
+            type: "string",
+            title: "Units",
           },
         },
       },
