@@ -390,6 +390,97 @@ let uiSchema = {
 };
 ```
 
+#### Columns order
+
+By default order of columns is defined by `schema` properties field order.
+It might be not always reliable, so there is a way to override it.
+By default the order will follow order of columns in `tableCols` configuration. 
+
+
+```js
+let schema = {
+  type: 'object',
+  properties: {
+    medications: {
+      type: 'array',
+      items: {
+        type: "object",
+        properties: {
+          dosage: { type: "number" },
+          name: { type: "string" }
+        }
+      }
+    }
+  }
+};
+
+let uiSchema = {
+  medications: {
+    "ui:field": "table",
+    table: {
+      tableCols: [
+        {
+          dataField: "name",
+        },
+        {
+          dataField: "dosage",
+        },
+      ],
+    },
+  },
+};
+```
+
+Here although in medications property schema `dosage` goes before `name`, it will be shown first due to `tableCols` order of columns. 
+
+#### Cell dataFormat
+
+react-bootstrap-table provides custom [dataFormat](https://allenfang.github.io/react-bootstrap-table/docs.html#dataFormat) for rendering data in columns.
+We needed to support serialized configuration, so we extended native functionality, with string configuration, which translates into field name in the object.
+
+For example, let's say we have an allergies table, with identifier, which consists of some numeric id and string name. When showing to the user, we want to show only name. Here is how we can do this:
+
+```js
+let schema = {
+   type: 'object',
+    properties: {
+      allergies: {
+        type: 'array',
+        items: {
+          type: "object",
+          properties: {
+            identified: { 
+              type: "object",
+              properties: {
+                id: { type: "string"},
+                name: { type: "string" }
+              }
+            },
+            added: { type: "date-time" }
+          }
+        }
+      }
+    }
+}
+
+let uiSchema = {
+  medications: {
+    "ui:field": "table",
+    table: {
+      tableCols: [
+        {
+          dataField: "identifier",
+          dataFormat: "name"
+        },
+        {
+          dataField: "dosage",
+        },
+      ],
+    },
+  },
+};
+```
+In this case dataFormat on identifier field, will translate into selecting name field in identifier object. 
 
 ## Contribute
 
