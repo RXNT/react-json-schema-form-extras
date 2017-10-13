@@ -116,7 +116,7 @@ export function toTableColumns(schema, tableCols = [], fields = {}) {
     if (tCol && typeof tCol.dataFormat === "string") {
       let field = tCol.dataFormat;
       tCol.dataFormat = (cell, row) => {
-        return row[sCol.dataField][field];
+        return row[sCol.dataField] ? row[sCol.dataField][field] : undefined;
       };
     }
     if (tCol && tCol.field && fields[tCol.field]) {

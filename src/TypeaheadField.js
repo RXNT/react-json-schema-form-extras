@@ -61,6 +61,19 @@ function defaultValue(properties) {
   return defVal;
 }
 
+function mapToObject(event, mapping, defVal) {
+  let schemaEvent = Object.keys(mapping).reduce((agg, field) => {
+    let eventField = mapping[field];
+    if (typeof eventField === "object") {
+      agg[field] = mapToObject(event, eventField, {});
+    } else {
+      agg[field] = selectn(eventField, event);
+    }
+    return agg;
+  }, Object.assign({}, defVal));
+  return schemaEvent;
+}
+
 function mapEvents(events, { properties, items }, mapping) {
   if (!mapping || mapping === null) {
     return events;
@@ -75,12 +88,7 @@ function mapEvents(events, { properties, items }, mapping) {
         : items && items.properties ? items.properties : {}
     );
     let mappedEvents = events.map(event => {
-      let schemaEvent = Object.keys(mapping).reduce((agg, field) => {
-        let eventField = mapping[field];
-        agg[field] = selectn(eventField, event);
-        return agg;
-      }, Object.assign({}, defVal));
-      return schemaEvent;
+      return mapToObject(event, mapping, defVal);
     });
 
     return mappedEvents;
@@ -92,17 +100,25 @@ export function mapToSchema(events, schema, mapping) {
   return isArraySchema(schema) ? schemaEvents : schemaEvents[0];
 }
 
+function mapFromObject(data, mapping, defVal) {
+  return Object.keys(mapping).reduce((agg, field) => {
+    let eventField = mapping[field];
+    if (typeof eventField === "object") {
+      Object.assign(agg, mapFromObject(data[field], mapping, {}));
+    } else {
+      agg[eventField] = data[field];
+    }
+    return agg;
+  }, defVal);
+}
+
 export function mapFromSchema(data, mapping) {
   if (!mapping || mapping === null) {
     return data;
   } else if (typeof mapping === mapping) {
     return { [mapping]: data };
   } else if (typeof mapping === "object") {
-    return Object.keys(mapping).reduce((agg, field) => {
-      let eventField = mapping[field];
-      agg[eventField] = data[field];
-      return agg;
-    }, {});
+    return mapFromObject(data, mapping, {});
   } else {
     return data;
   }

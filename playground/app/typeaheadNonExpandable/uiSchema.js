@@ -1,7 +1,9 @@
 export default {
   medications: {
     classNames: "col-md-12",
-    "ui:field": "table",
+    "ui:field": "compositeArray",
+    inputField: "typeahead",
+    arrayField: "table",
     table: {
       tableCols: [
         {
@@ -45,6 +47,38 @@ export default {
           },
         },
       ],
+    },
+    typeahead: {
+      options: [
+        {
+          DrugId: 6963,
+          DrugName: "dexibuprofen",
+          DrugType: { Id: 6, Name: null },
+        },
+        {
+          DrugId: 2377,
+          DrugName: "ibuprofen",
+          DrugType: { Id: 6, Name: null },
+        },
+        {
+          DrugId: 10936,
+          DrugName: "ibuproxam",
+          DrugType: { Id: 6, Name: null },
+        },
+        {
+          DrugId: 110394,
+          DrugName: "NeoProfen (ibuprofen lysn)(PF)",
+          DrugType: { Id: 2, Name: null },
+        },
+      ],
+      labelKey: "DrugName",
+      bodyContainer: true,
+      mapping: {
+        drug: {
+          drugName: "DrugName",
+          drugId: "DrugId",
+        },
+      },
     },
   },
 };
