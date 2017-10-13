@@ -113,6 +113,12 @@ export function toTableColumns(schema, tableCols = [], fields = {}) {
 
   let columnsWithOverrides = schemaCols.map(sCol => {
     let tCol = tableCols.find(col => col.dataField === sCol.dataField);
+    if (tCol && typeof tCol.dataFormat === "string") {
+      let field = tCol.dataFormat;
+      tCol.dataFormat = (cell, row) => {
+        return row[sCol.dataField][field];
+      };
+    }
     if (tCol && tCol.field && fields[tCol.field]) {
       let FieldEditor = fields[tCol.field];
       let fieldUISchema = tCol.uiSchema;

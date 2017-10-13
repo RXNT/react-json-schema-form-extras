@@ -51,7 +51,7 @@ function applyLabelKey(obj, labelKey) {
   }
 }
 
-function defaultValue({ properties = {} }) {
+function defaultValue(properties) {
   let defVal = Object.keys(properties).reduce((agg, field) => {
     if (properties[field].default !== undefined) {
       agg[field] = properties[field].default;
@@ -61,50 +61,59 @@ function defaultValue({ properties = {} }) {
   return defVal;
 }
 
-function mapObjectSchema(events, schema, mapping) {
-  if (!mapping) {
+function mapEvents(events, { properties, items }, mapping) {
+  if (!mapping || mapping === null) {
     return events;
-  }
-
-  let defVal = defaultValue(schema.properties ? schema : schema.items);
-  if (typeof mapping === "string") {
-    return events.map(event => {
-      return Object.assign({}, defVal, { [mapping]: event });
-    });
-  }
-
-  let mappedEvents = events.map(event => {
-    let schemaEvent = Object.keys(mapping).reduce((agg, field) => {
-      let eventField = mapping[field];
-      agg[field] = selectn(eventField, event);
-      return agg;
-    }, Object.assign({}, defVal));
-    return schemaEvent;
-  });
-
-  return mappedEvents;
-}
-
-function mapGeneralSchema(events, mapping, labelFunc) {
-  if (!mapping) {
-    return events.map(event => applyLabelKey(event, labelFunc));
-  } else {
+  } else if (typeof mapping === "string") {
     return events.map(event => event[mapping]);
+  } else if (typeof mapping === "function") {
+    return events.map(event => mapping(event));
+  } else if (typeof mapping === "object") {
+    let defVal = defaultValue(
+      properties
+        ? properties
+        : items && items.properties ? items.properties : {}
+    );
+    let mappedEvents = events.map(event => {
+      let schemaEvent = Object.keys(mapping).reduce((agg, field) => {
+        let eventField = mapping[field];
+        agg[field] = selectn(eventField, event);
+        return agg;
+      }, Object.assign({}, defVal));
+      return schemaEvent;
+    });
+
+    return mappedEvents;
   }
 }
 
-export function mapSchema(events, schema, mapping, labelFunc) {
-  let schemaEvents = isObjectSchema(schema)
-    ? mapObjectSchema(events, schema, mapping)
-    : mapGeneralSchema(events, mapping, labelFunc);
-
+export function mapToSchema(events, schema, mapping) {
+  let schemaEvents = mapEvents(events, schema, mapping);
   return isArraySchema(schema) ? schemaEvents : schemaEvents[0];
 }
 
-function toSelected(formData, schema, labelKey) {
+export function mapFromSchema(data, mapping) {
+  if (!mapping || mapping === null) {
+    return data;
+  } else if (typeof mapping === mapping) {
+    return { [mapping]: data };
+  } else if (typeof mapping === "object") {
+    return Object.keys(mapping).reduce((agg, field) => {
+      let eventField = mapping[field];
+      agg[eventField] = data[field];
+      return agg;
+    }, {});
+  } else {
+    return data;
+  }
+}
+
+function toSelected(formData, schema, mapping, labelKey) {
   let normFormData = formData ? toArray(formData) : [];
   if (isObjectSchema(schema)) {
-    return normFormData.map(selected => applyLabelKey(selected, labelKey));
+    return normFormData.map(selected =>
+      applyLabelKey(mapFromSchema(selected, mapping), labelKey)
+    );
   }
   return normFormData;
 }
@@ -112,14 +121,9 @@ function toSelected(formData, schema, labelKey) {
 class BaseTypeaheadField extends Component {
   handleSelectionChange = conf => events => {
     if (events.length > 0) {
-      let { mapping, cleanAfterSelection = false, labelKey } = conf;
+      let { mapping, cleanAfterSelection = false } = conf;
       let { schema } = this.props;
-      let schemaEvents = mapSchema(
-        events,
-        schema,
-        mapping,
-        mapLabelKey(labelKey)
-      );
+      let schemaEvents = mapToSchema(events, schema, mapping);
       this.props.onChange(schemaEvents);
       if (cleanAfterSelection) {
         setTimeout(() => {
@@ -137,7 +141,7 @@ export class TypeaheadField extends BaseTypeaheadField {
     let { uiSchema: { typeahead }, formData, schema } = this.props;
 
     let labelKey = mapLabelKey(typeahead.labelKey);
-    let selected = toSelected(formData, schema, labelKey);
+    let selected = toSelected(formData, schema, typeahead.mapping, labelKey);
 
     let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead, {
       onChange: this.handleSelectionChange(typeahead),
@@ -194,7 +198,12 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
     let { schema, uiSchema: { asyncTypeahead }, formData } = this.props;
 
     let labelKey = mapLabelKey(asyncTypeahead.labelKey);
-    let selected = toSelected(formData, schema, labelKey);
+    let selected = toSelected(
+      formData,
+      schema,
+      asyncTypeahead.mapping,
+      labelKey
+    );
 
     let typeConf = Object.assign(DEFAULT_OPTIONS, asyncTypeahead, {
       selected,

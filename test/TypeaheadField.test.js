@@ -1,17 +1,17 @@
-import { mapSchema } from "../src/TypeaheadField";
+import { mapToSchema } from "../src/TypeaheadField";
 
 let strSchema = {
   type: "string",
 };
 
 test("map simple string", () => {
-  expect(mapSchema(["test"], strSchema)).toEqual("test");
+  expect(mapToSchema(["test"], strSchema)).toEqual("test");
 });
 
 test("map string with label", () => {
-  expect(
-    mapSchema([{ name: "test" }], strSchema, undefined, obj => obj.name)
-  ).toEqual("test");
+  expect(mapToSchema([{ name: "test" }], strSchema, obj => obj.name)).toEqual(
+    "test"
+  );
 });
 
 let objSchema = {
@@ -22,14 +22,14 @@ let objSchema = {
 };
 
 test("map any obj", () => {
-  expect(
-    mapSchema([{ name: "test" }], objSchema, undefined, obj => obj.name)
-  ).toEqual({ name: "test" });
+  expect(mapToSchema([{ name: "test" }], objSchema, undefined)).toEqual({
+    name: "test",
+  });
 });
 
 test("map obj with mapping", () => {
   expect(
-    mapSchema([{ lastName: "Woo", firstName: "Woo" }], objSchema, {
+    mapToSchema([{ lastName: "Woo", firstName: "Woo" }], objSchema, {
       name: "firstName",
     })
   ).toEqual({ name: "Woo" });
