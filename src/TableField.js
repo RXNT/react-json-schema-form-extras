@@ -101,6 +101,25 @@ function withColumnCss(columns) {
   return columns;
 }
 
+function orderColumns(columns, order) {
+  if (!order || order.length === 0) {
+    return columns;
+  }
+
+  let orderedColumns = columns
+    .filter(({ dataField }) => order.includes(dataField))
+    .sort((a, b) => order.indexOf(a.dataField) - order.indexOf(b.dataField));
+  if (orderedColumns.length === 0) {
+    return columns;
+  }
+  if (orderedColumns.length === columns.length) {
+    return orderedColumns;
+  }
+
+  let nonOrderedColumns = columns.filter(nav => !orderedColumns.includes(nav));
+  return orderedColumns.concat(nonOrderedColumns);
+}
+
 export function toTableColumns(schema, tableCols = [], fields = {}) {
   let { items: { properties } } = schema;
 
@@ -111,7 +130,12 @@ export function toTableColumns(schema, tableCols = [], fields = {}) {
     return { dataField, displayName: title, editable, dataFormat };
   });
 
-  let columnsWithOverrides = schemaCols.map(sCol => {
+  let orderedSchemaColumns = orderColumns(
+    schemaCols,
+    tableCols.map(({ dataField }) => dataField)
+  );
+
+  let columnsWithOverrides = orderedSchemaColumns.map(sCol => {
     let tCol = tableCols.find(col => col.dataField === sCol.dataField);
     if (tCol && typeof tCol.dataFormat === "string") {
       let field = tCol.dataFormat;
