@@ -78,7 +78,7 @@ function mapEvents(events, { properties, items }, mapping) {
   if (!mapping || mapping === null) {
     return events;
   } else if (typeof mapping === "string") {
-    return events.map(event => event[mapping]);
+    return events.map(event => selectn(mapping, event));
   } else if (typeof mapping === "function") {
     return events.map(event => mapping(event));
   } else if (typeof mapping === "object") {
@@ -174,7 +174,11 @@ TypeaheadField.propTypes = {
   uiSchema: PropTypes.shape({
     typeahead: PropTypes.shape({
       options: PropTypes.array.isRequired,
-      mapping: PropTypes.object,
+      mapping: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.string,
+        PropTypes.object,
+      ]),
       cleanAfterSelection: PropTypes.bool,
     }).isRequired,
   }).isRequired,
@@ -240,7 +244,11 @@ AsyncTypeaheadField.propTypes = {
     asyncTypeahead: PropTypes.shape({
       url: PropTypes.string.isRequired,
       optionsPath: PropTypes.string,
-      mapping: PropTypes.object,
+      mapping: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.string,
+        PropTypes.object,
+      ]),
       cleanAfterSelection: PropTypes.bool,
       search: PropTypes.func,
     }).isRequired,
