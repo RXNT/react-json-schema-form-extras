@@ -192,6 +192,8 @@ With following options
 ]
 ```
 
+#### Label key
+
 With labelKey `name` there will be 2 options
 - `Adventures of Huckleberry Finn`
 - `The Adventures of Tom Sawyer`
@@ -204,7 +206,36 @@ With lableKey `{ fields: [ "author", "name" ], separator: " - " }`, options will
 - `Mark Twain - Adventures of Huckleberry Finn`
 - `Mark Twain - The Adventures of Tom Sawyer` 
 
-Mapping can be specified like this
+#### Mapping
+
+Mapping can be one of
+- not specified, in this case selection is sent to the formData as is
+- `string` which is field name in typeahead selected object  
+- `object` with fields corresponding to final schema fields and values, corresponding to fields in typeahead
+- `function` which will be called with typeahead selected objects, which ever value you specify will be used
+
+Mapping as undefined (we accept values as is)
+```
+{
+  "mapping": undefined
+}
+```
+would result in
+- `{ "name": "Adventures of Huckleberry Finn", "author": "Mark Twain" }`
+- `{ "name": "The Adventures of Tom Sawyer", "author": "Mark Twain" }`
+
+Mapping as string (we want only name of the book)
+```json
+{
+  "mapping": "name"
+}
+```
+would result in
+- `"Adventures of Huckleberry Finn"`
+- `"The Adventures of Tom Sawyer"`
+
+
+Mapping as object (we want to change mapping to creator and book)
 ```json
 {
   "mapping": {
@@ -213,9 +244,20 @@ Mapping can be specified like this
   }
 }
 ```
-And it would generate 2 values
+would result in
 - `{ book: "Adventures of Huckleberry Finn", creator: "Mark Twain" }`
 - `{ book: "The Adventures of Tom Sawyer", creator: "Mark Twain" }`
+ 
+Mapping as function (let's say we want to take a first name of the author)
+```js
+ let uiSchema = {
+    mapping: (event) => event.creator.split(" ")[0]
+ }
+```
+would result in
+- `"Mark"`
+- `"Mark"`
+
  
 ## Async Typeahead based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`asyncTypeahead`)
 
