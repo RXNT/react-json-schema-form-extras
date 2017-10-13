@@ -38,18 +38,16 @@
   ],
   "engineStrict": false,
   "engines": {
-    "npm": "^2.14.7",
-    "node": ">=6"
+    "npm": "^5.0.4",
+    "node": ">=8.0.0"
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",
     "react": "^15.0.0"
   },
   "dependencies": {
-    "prop-types": "^15.6.0",
     "react-bootstrap-table": "^4.0.6",
     "react-bootstrap-typeahead": "v1.4.2",
-    "react-modal": "^2.3.2",
     "react-rte": "^0.15.0",
     "selectn": "^1.1.2"
   },

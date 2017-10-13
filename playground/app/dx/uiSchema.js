@@ -1,9 +1,7 @@
 export default {
   diagnosis: {
     classNames: "col-md-12",
-    "ui:field": "compositeArray",
-    inputField: "ArrayField",
-    arrayField: "table",
+    "ui:field": "table",
     table: {
       tableCols: [
         { dataField: "description", editable: false },
