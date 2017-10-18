@@ -109,8 +109,13 @@ You can customize presentation of collapsible field, with "collapse" object in u
 - `icon` `object` icons configuration in `enabled` and `disabled` state
     - `enabled` `string` icon, when the field is shown (default `glyphicon glyphicon-chevron-down`)
     - `disabled` `string` icon, when field is hidden (default `glyphicon glyphicon-chevron-right`)
+    - `add` `string` icon, to use in place of an add sign (default `glyphicon glyphicon-plus-sign`)
 - `separate` `boolean` enable <hr/> after collapse menu (default `true`)  
 - `wrapClassName` `string` class name to use on a parent collapse menu div (default `lead`)
+- `addTo` `string` array field name, to which icon will be added enables an add icon, that will be shown besides collapsible icon
+
+Additional feature of the Collapsible field is to allow adding empty value to hidden `array`, it's enabled with `addTo` feature, which can
+be either `self` which assumes that Collapsible field is the target array, or it can be a property field. 
 
 Field `schema` `title` used as a header of the collapsible action. 
 
