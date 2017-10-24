@@ -2,7 +2,7 @@ import React from "react";
 import fields from "../../src/index";
 import Form from "react-jsonschema-form";
 
-import typeahead from "./typeahead";
+import typeahead from "./order";
 import typeaheadNonExpandable from "./typeaheadNonExpandable";
 import rte from "./rte";
 import dx from "./dx";

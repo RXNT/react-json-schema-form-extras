@@ -1,0 +1,176 @@
+import React from "react";
+import actionHeaderFrom from "./actionHeaderFactory";
+
+function toDataFormat(fieldProp) {
+  if (fieldProp.enum && fieldProp.enumNames) {
+    return cell => {
+      return fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
+    };
+  }
+  return undefined;
+}
+
+function toEditable(fieldProp) {
+  if (fieldProp.enum) {
+    if (fieldProp.enumNames) {
+      let values = fieldProp.enum.map((value, i) => {
+        let text = fieldProp.enumNames[i];
+        return { value, text };
+      });
+      return {
+        type: "select",
+        options: { values },
+      };
+    } else {
+      return {
+        type: "select",
+        options: { values: fieldProp.enum },
+      };
+    }
+  } else if (fieldProp.type === "boolean") {
+    return {
+      type: "checkbox",
+    };
+  } else if (fieldProp.type === "date-time") {
+    return {
+      type: "datetime",
+    };
+  } else if (fieldProp.type === "date") {
+    return {
+      type: "date",
+    };
+  } else if (fieldProp.type === "time") {
+    return {
+      type: "time",
+    };
+  }
+  return true;
+}
+
+function columnHeadersFromSchema(schema) {
+  let { items: { properties } } = schema;
+  let schemaCols = Object.keys(properties).map(dataField => {
+    let { title } = properties[dataField];
+    let editable = toEditable(properties[dataField]);
+    let dataFormat = toDataFormat(properties[dataField]);
+    return { dataField, displayName: title, editable, dataFormat };
+  });
+
+  return schemaCols;
+}
+
+function overrideColDataFormat(colConf) {
+  if (typeof colConf.dataFormat === "string") {
+    let field = colConf.dataFormat;
+    colConf.dataFormat = (cell, row) => {
+      return row[colConf.dataField] ? row[colConf.dataField][field] : undefined;
+    };
+  }
+}
+
+function overrideColEditable(colConf, { items: { properties } }, fields) {
+  if (colConf.field && fields[colConf.field]) {
+    let FieldEditor = fields[colConf.field];
+    let fieldUISchema = colConf.uiSchema;
+    let fieldSchema = properties[colConf.dataField];
+    colConf.customEditor = {
+      getElement: (onUpdate, props) => {
+        return (
+          <FieldEditor
+            formData={props.defaultValue}
+            schema={fieldSchema}
+            uiSchema={fieldUISchema}
+            onChange={onUpdate}
+          />
+        );
+      },
+    };
+  }
+}
+
+function overrideColumns(columns, schema, uiSchema, fields) {
+  let { table: { tableCols = [] } = {} } = uiSchema;
+
+  let columnsWithOverrides = columns.map(col => {
+    let colConf = tableCols.find(col => col.dataField === col.dataField);
+    if (!colConf) {
+      return col;
+    }
+    overrideColDataFormat(colConf);
+    overrideColEditable(colConf, schema, fields);
+    return Object.assign(col, colConf);
+  });
+
+  return columnsWithOverrides;
+}
+
+function orderColumns(columns, uiSchema) {
+  let { table: { tableCols = [] } = {} } = uiSchema;
+  let order = tableCols.map(({ dataField }) => dataField);
+
+  if (!order || order.length === 0) {
+    return columns;
+  }
+
+  let orderedColumns = columns
+    .filter(({ dataField }) => order.includes(dataField))
+    .sort((a, b) => order.indexOf(a.dataField) - order.indexOf(b.dataField));
+  if (orderedColumns.length === 0) {
+    return columns;
+  }
+  if (orderedColumns.length === columns.length) {
+    return orderedColumns;
+  }
+
+  let nonOrderedColumns = columns.filter(nav => !orderedColumns.includes(nav));
+  return orderedColumns.concat(nonOrderedColumns);
+}
+
+function setColumnCSSIfMissing(col, css) {
+  let {
+    className = css,
+    columnClassName = css,
+    editColumnClassName = css,
+  } = col;
+  Object.assign(col, { className, columnClassName, editColumnClassName });
+}
+
+function withColumnCss(columns) {
+  let shownColumns = columns.filter(({ hidden }) => !hidden);
+  let numCols = shownColumns.length;
+  let colSize = Math.floor(12 / numCols);
+  if (colSize === 0) {
+    return columns;
+  }
+
+  let colCss = `col-md-${colSize}`;
+  shownColumns.forEach((col, i) => {
+    if (i !== 0) {
+      setColumnCSSIfMissing(col, colCss);
+    }
+  });
+  return columns;
+}
+
+export default function columnHeadersFrom(
+  schema,
+  uiSchema,
+  fields = {},
+  formData,
+  onChange
+) {
+  let allColumns = columnHeadersFromSchema(schema);
+  let orderedColumns = orderColumns(allColumns, uiSchema);
+  let withOverrides = overrideColumns(orderedColumns, schema, uiSchema, fields);
+  let columnsWithCSS = withColumnCss(withOverrides);
+  let { rightColumns, leftColumns } = actionHeaderFrom(
+    uiSchema,
+    formData,
+    onChange
+  );
+
+  leftColumns.forEach(col => columnsWithCSS.unshift(col));
+  rightColumns.forEach(col => columnsWithCSS.push(col));
+
+  return columnsWithCSS;
+}

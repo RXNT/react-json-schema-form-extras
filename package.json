@@ -31,10 +31,11 @@
       "git add"
     ]
   },
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "files": [
+    "lib",
     "dist",
-    "lib"
+    "src"
   ],
   "engineStrict": false,
   "engines": {
@@ -63,9 +64,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
-    "babel-preset-jason": "^3.1.0",
     "babel-preset-react": "^6.24.1",
-    "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
     "bootstrap": "^3.3.7",
     "coveralls": "^3.0.0",

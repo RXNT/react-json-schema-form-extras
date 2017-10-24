@@ -487,6 +487,71 @@ let uiSchema = {
 ```
 In this case dataFormat on identifier field, will translate into selecting name field in identifier object. 
 
+### Additional column actions
+
+If you need to define additional column actions to the left or to the right of column content you can do that in
+a standard way with `uiSchema` with `leftActions` or `rightActions` defined
+
+```js
+let uiSchema = {
+    table: {
+      leftActions: [
+        {
+          action: "delete",
+          className: "col-md-1",
+          columnClassName: "col-md-1",
+          editColumnClassName: "col-md-1",
+          icon: "glyphicon glyphicon-minus"
+        }
+      ],
+      rightActions: [
+        {
+          action: "delete",
+          icon: "glyphicon glyphicon-minus",
+          text: "Remove"
+        }
+      ]
+    }
+  }
+```
+
+Both left and right actions can accept full column configuration, that will be appended to the rendered column,
+
+For example, to define delete on each column, you can:
+```js
+let uiSchema = {
+    table: {
+      leftActions: [
+        {
+          dataField: "delete-button",
+          dataFormat: (cell, row, enumObject, rowIndex, formData, onChange) => (
+            <span onClick={() => onChange(formData.filter((el, i) => rowIndex !== i))}>"Remove All"</span>
+          ),
+          editable: false,
+          displayName: "Left Panel"
+        },
+      ],
+      rightActions: [
+        {
+          action: "delete",
+          icon: "glyphicon glyphicon-minus",
+          text: "Delete",
+          displayName: "Right Panel"
+        }
+      ]
+    }
+  }
+``` 
+
+In left panel, we have defined delete with a standard `react-bootstrap-table` format, the only difference is dataFormat signature changed,
+appending original formData and onChange callback to relay changes to the listening component.
+
+Right panel is defined with small syntactic sugar to simpify action defintion
+- `action` can be either `delete` string or function, that is equivalent on onClick function with `cell`, `row`, `enumObject`, `rowIndex`, `formData`, `onChange` parameters
+- `icon` icon to use for the column
+- `text` text to use for the column
+- `displayName` column name
+
 ## Contribute
 
 - Issue Tracker: github.com/RxNT/react-jsonschema-extras/issues
