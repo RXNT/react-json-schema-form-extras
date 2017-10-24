@@ -2,8 +2,8 @@
   "name": "react-jsonschema-form-extras",
   "description": "Extra widgets for Mozilla's react-jsonschema-form",
   "private": false,
-  "author": "zboldyga@gmail.com",
-  "version": "0.8.9",
+  "author": "mavarazy@gmail.com",
+  "version": "0.8.10",
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js --optimize-minimize",
