@@ -45,7 +45,7 @@ const actionToCol = (formData, onChange) => actionConf => {
 };
 
 export default function actionHeadersFrom(uiSchema, formData, onChange) {
-  let { table: { rightActions = [], leftActions = [] } } = uiSchema;
+  let { table: { rightActions = [], leftActions = [] } = {} } = uiSchema;
   let rightColumns = rightActions.map(actionToCol(formData, onChange));
   let leftColumns = leftActions.map(actionToCol(formData, onChange));
   return { rightColumns, leftColumns };
