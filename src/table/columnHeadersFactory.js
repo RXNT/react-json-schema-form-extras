@@ -92,7 +92,9 @@ function overrideColumns(columns, schema, uiSchema, fields) {
   let { table: { tableCols = [] } = {} } = uiSchema;
 
   let columnsWithOverrides = columns.map(col => {
-    let colConf = tableCols.find(col => col.dataField === col.dataField);
+    let colConf = tableCols.find(
+      overrideCol => overrideCol.dataField === col.dataField
+    );
     if (!colConf) {
       return col;
     }

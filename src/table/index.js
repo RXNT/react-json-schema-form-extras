@@ -34,6 +34,7 @@ class TableField extends Component {
       registry: { fields },
       onChange,
     } = this.props;
+
     this.tableConf = tableConfFrom(
       uiSchema,
       formData,
