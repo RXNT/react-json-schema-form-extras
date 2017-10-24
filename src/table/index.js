@@ -4,8 +4,14 @@ import tableConfFrom, { removePosition } from "./tableConfFactory";
 import columnHeadersFrom from "./columnHeadersFactory";
 
 class TableField extends Component {
-  handleCellSave = updRow => {
+  handleCellSave = (updRow, cellName, cellValue) => {
     let { keyField, data } = this.tableConf;
+
+    // Small hack to support object returned from async autocomplete
+    // Don't judge me too hard
+    if (cellValue[cellName]) {
+      Object.assign(updRow, cellValue);
+    }
 
     const targetKey = updRow[keyField];
     let updTable = data.map(

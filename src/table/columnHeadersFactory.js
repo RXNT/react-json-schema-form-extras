@@ -1,16 +1,16 @@
 import React from "react";
 import actionHeaderFrom from "./actionHeaderFactory";
 
-function toDataFormat(fieldProp) {
+const toDataFormat = fieldProp => {
   if (fieldProp.enum && fieldProp.enumNames) {
     return cell => {
       return fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
     };
   }
   return undefined;
-}
+};
 
-function toEditable(fieldProp) {
+const toEditable = fieldProp => {
   if (fieldProp.enum) {
     if (fieldProp.enumNames) {
       let values = fieldProp.enum.map((value, i) => {
@@ -45,9 +45,9 @@ function toEditable(fieldProp) {
     };
   }
   return true;
-}
+};
 
-function columnHeadersFromSchema(schema) {
+const columnHeadersFromSchema = schema => {
   let { items: { properties } } = schema;
   let schemaCols = Object.keys(properties).map(dataField => {
     let { title } = properties[dataField];
@@ -57,38 +57,37 @@ function columnHeadersFromSchema(schema) {
   });
 
   return schemaCols;
-}
+};
 
-function overrideColDataFormat(colConf) {
+export function overrideColDataFormat(colConf) {
   if (typeof colConf.dataFormat === "string") {
-    let field = colConf.dataFormat;
-    colConf.dataFormat = (cell, row) => {
-      return row[colConf.dataField] ? row[colConf.dataField][field] : undefined;
+    const { dataField, dataFormat: field } = colConf;
+    colConf.dataFormat = function(cell, row) {
+      return row[dataField] ? row[dataField][field] : undefined;
     };
+    colConf.dataFormat.bind(this);
   }
 }
 
-function overrideColEditable(colConf, { items: { properties } }, fields) {
+const overrideColEditable = (colConf, { items: { properties } }, fields) => {
   if (colConf.field && fields[colConf.field]) {
     let FieldEditor = fields[colConf.field];
     let fieldUISchema = colConf.uiSchema;
     let fieldSchema = properties[colConf.dataField];
     colConf.customEditor = {
-      getElement: (onUpdate, props) => {
-        return (
-          <FieldEditor
-            formData={props.defaultValue}
-            schema={fieldSchema}
-            uiSchema={fieldUISchema}
-            onChange={onUpdate}
-          />
-        );
-      },
+      getElement: (onUpdate, props) => (
+        <FieldEditor
+          formData={props.defaultValue}
+          schema={fieldSchema}
+          uiSchema={fieldUISchema}
+          onChange={onUpdate}
+        />
+      ),
     };
   }
-}
+};
 
-function overrideColumns(columns, schema, uiSchema, fields) {
+const overrideColumns = (columns, schema, uiSchema, fields) => {
   let { table: { tableCols = [] } = {} } = uiSchema;
 
   let columnsWithOverrides = columns.map(col => {
@@ -104,9 +103,9 @@ function overrideColumns(columns, schema, uiSchema, fields) {
   });
 
   return columnsWithOverrides;
-}
+};
 
-function orderColumns(columns, uiSchema) {
+const orderColumns = (columns, uiSchema) => {
   let { table: { tableCols = [] } = {} } = uiSchema;
   let order = tableCols.map(({ dataField }) => dataField);
 
@@ -126,18 +125,18 @@ function orderColumns(columns, uiSchema) {
 
   let nonOrderedColumns = columns.filter(nav => !orderedColumns.includes(nav));
   return orderedColumns.concat(nonOrderedColumns);
-}
+};
 
-function setColumnCSSIfMissing(col, css) {
+const setColumnCSSIfMissing = (col, css) => {
   let {
     className = css,
     columnClassName = css,
     editColumnClassName = css,
   } = col;
   Object.assign(col, { className, columnClassName, editColumnClassName });
-}
+};
 
-function withColumnCss(columns) {
+const withColumnCss = columns => {
   let shownColumns = columns.filter(({ hidden }) => !hidden);
   let numCols = shownColumns.length;
   let colSize = Math.floor(12 / numCols);
@@ -152,15 +151,15 @@ function withColumnCss(columns) {
     }
   });
   return columns;
-}
+};
 
-export default function columnHeadersFrom(
+const columnHeadersFrom = (
   schema,
   uiSchema,
   fields = {},
   formData,
   onChange
-) {
+) => {
   let allColumns = columnHeadersFromSchema(schema);
   let orderedColumns = orderColumns(allColumns, uiSchema);
   let withOverrides = overrideColumns(orderedColumns, schema, uiSchema, fields);
@@ -175,4 +174,6 @@ export default function columnHeadersFrom(
   rightColumns.forEach(col => columnsWithCSS.push(col));
 
   return columnsWithCSS;
-}
+};
+
+export default columnHeadersFrom;

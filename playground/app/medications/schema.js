@@ -13,17 +13,12 @@ export default {
         required: [],
         type: "object",
         properties: {
-          drug: {
-            type: "object",
-            properties: {
-              drugId: {
-                type: "string",
-              },
-              drugName: {
-                type: "string",
-                title: "Drug Name",
-              },
-            },
+          drugId: {
+            type: "string",
+          },
+          drugName: {
+            type: "string",
+            title: "Drug Name",
           },
           dosage: {
             type: "string",
