@@ -1,6 +1,10 @@
 const fieldProps = {
   classNames: "col-md-12",
-  "ui:field": "typeahead",
+  "ui:field": "collapsible",
+  collapse: {
+    addTo: "self",
+    field: "typeahead",
+  },
   typeahead: {
     options: [{ name: "some" }, { name: "other" }],
     allowNew: true,
@@ -11,12 +15,10 @@ const fieldProps = {
 
 export default {
   uiSchema: {
-    str: Object.assign({}, fieldProps, { mapping: "name" }),
-    strArr: Object.assign({}, fieldProps, { mapping: "name" }),
-    obj: fieldProps,
+    strArr: fieldProps,
     objArr: fieldProps,
     compArr: Object.assign({}, fieldProps, {
-      "ui:field": "compositeArray",
+      "ui:field": "collapsible",
       inputField: "typeahead",
       arrayField: "table",
     }),
