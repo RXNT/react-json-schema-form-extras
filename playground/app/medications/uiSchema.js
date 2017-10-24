@@ -4,6 +4,7 @@ export default {
     "ui:field": "collapsible",
     collapse: {
       field: "table",
+      collapsed: false,
       addTo: "self",
     },
     "ui:options": {
@@ -12,8 +13,11 @@ export default {
     table: {
       tableCols: [
         {
-          dataField: "drug",
-          dataFormat: "drugName",
+          dataField: "drugId",
+          hidden: true,
+        },
+        {
+          dataField: "drugName",
           field: "typeahead",
           uiSchema: {
             typeahead: {
