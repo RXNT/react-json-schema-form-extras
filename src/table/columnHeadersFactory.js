@@ -31,17 +31,21 @@ const toEditable = fieldProp => {
     return {
       type: "checkbox",
     };
-  } else if (fieldProp.type === "date-time") {
+  } else if (fieldProp.format === "date-time") {
     return {
       type: "datetime",
     };
-  } else if (fieldProp.type === "date") {
+  } else if (fieldProp.format === "date") {
     return {
       type: "date",
     };
-  } else if (fieldProp.type === "time") {
+  } else if (fieldProp.format === "time") {
     return {
       type: "time",
+    };
+  } else if (fieldProp.type === "number") {
+    return {
+      type: "number",
     };
   }
   return true;

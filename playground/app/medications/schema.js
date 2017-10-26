@@ -21,11 +21,11 @@ export default {
             title: "Drug Name",
           },
           dosage: {
-            type: "string",
+            type: "number",
             title: "Dosage",
           },
           quantity: {
-            type: "string",
+            type: "number",
             title: "Quantity",
           },
           unit: {
@@ -128,7 +128,8 @@ export default {
             title: "Use Generic",
           },
           startDate: {
-            type: "date",
+            type: "string",
+            format: "date",
             title: "Start Date",
           },
         },
