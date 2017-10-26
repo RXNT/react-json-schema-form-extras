@@ -3,10 +3,23 @@ import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import tableConfFrom, { removePosition } from "./tableConfFactory";
 import columnHeadersFrom from "./columnHeadersFactory";
 
+function convertFields(cellValue, { type }) {
+  if (type === "boolean") {
+    return cellValue === "true";
+  } else if (type === "number") {
+    return parseFloat(cellValue);
+  }
+  return cellValue;
+}
+
 class TableField extends Component {
   handleCellSave = (updRow, cellName, cellValue) => {
     let { keyField, data } = this.tableConf;
 
+    updRow[cellName] = convertFields(
+      cellValue,
+      this.props.schema.items.properties[cellName]
+    );
     // Small hack to support object returned from async autocomplete
     // Don't judge me too hard
     if (cellValue[cellName]) {
@@ -19,6 +32,11 @@ class TableField extends Component {
     );
 
     this.props.onChange(removePosition(updTable));
+  };
+
+  beforeSaveCell = (row, cellName, cellValue) => {
+    console.log(row, cellName, cellValue);
+    return true;
   };
 
   handleRowsDelete = removedKeys => {
@@ -47,6 +65,8 @@ class TableField extends Component {
       this.handleCellSave,
       this.handleRowsDelete
     );
+
+    this.tableConf.cellEdit.beforeSaveCell = this.beforeSaveCell;
     let columns = columnHeadersFrom(
       schema,
       uiSchema,
