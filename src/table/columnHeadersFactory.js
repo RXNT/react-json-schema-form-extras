@@ -10,6 +10,7 @@ const toDataFormat = fieldProp => {
         <input
           type="checkbox"
           checked={cell}
+          onChange={() => {}}
           style={{ position: "relative" }}
         />
       </div>
