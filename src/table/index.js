@@ -13,13 +13,18 @@ function convertFields(cellValue, { type }) {
 }
 
 class TableField extends Component {
-  handleCellSave = (updRow, cellName, cellValue) => {
+  constructor(props) {
+    super(props);
+
+    this.handleCellSave = this.handleCellSave.bind(this);
+    this.handleRowsDelete = this.handleRowsDelete.bind(this);
+  }
+
+  handleCellSave(updRow, cellName, cellValue) {
     let { keyField, data } = this.tableConf;
 
-    updRow[cellName] = convertFields(
-      cellValue,
-      this.props.schema.items.properties[cellName]
-    );
+    let fieldSchema = this.props.schema.items.properties[cellName];
+    updRow[cellName] = convertFields(cellValue, fieldSchema);
     // Small hack to support object returned from async autocomplete
     // Don't judge me too hard
     if (cellValue[cellName]) {
@@ -32,14 +37,9 @@ class TableField extends Component {
     );
 
     this.props.onChange(removePosition(updTable));
-  };
+  }
 
-  beforeSaveCell = (row, cellName, cellValue) => {
-    console.log(row, cellName, cellValue);
-    return true;
-  };
-
-  handleRowsDelete = removedKeys => {
+  handleRowsDelete(removedKeys) {
     const { keyField, data } = this.tableConf;
 
     let filteredRows = data.filter(row => {
@@ -48,7 +48,7 @@ class TableField extends Component {
     });
 
     this.props.onChange(removePosition(filteredRows));
-  };
+  }
 
   render() {
     let {

@@ -3,9 +3,17 @@ import actionHeaderFrom from "./actionHeaderFactory";
 
 const toDataFormat = fieldProp => {
   if (fieldProp.enum && fieldProp.enumNames) {
-    return cell => {
-      return fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
-    };
+    return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
+  } else if (fieldProp.type === "boolean") {
+    return cell => (
+      <div style={{ textAlign: "right" }}>
+        <input
+          type="checkbox"
+          checked={cell}
+          style={{ position: "relative" }}
+        />
+      </div>
+    );
   }
   return undefined;
 };

@@ -21,10 +21,10 @@ class CompositeArrayField extends Component {
     let ArrayElement = fields[arrayField];
     return (
       <div>
-        <div className="form-group">
+        <div className="form-group col-md-12">
           <InputElement {...inputProps} onChange={this.handleAdd} />
         </div>
-        <div className="form-group">
+        <div className="form-group col-md-12">
           <ArrayElement {...this.props} />
         </div>
       </div>
