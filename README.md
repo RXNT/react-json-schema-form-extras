@@ -2,6 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/RxNT/react-jsonschema-form-extras/badge.svg)](https://coveralls.io/github/RxNT/react-jsonschema-form-extras)
 [![npm version](https://badge.fury.io/js/react-jsonschema-form-extras.svg)](https://badge.fury.io/js/react-jsonschema-form-extras)
 
+
 # Catalogue
 
 This project provides light integration over established React components, 
@@ -15,6 +16,48 @@ All configurations you can specify in original projects, can be reused here.
 - Async Typeahead based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`ui:field` > `asyncTypeahead`)
 - RTE, based on [react-rte](https://github.com/sstur/react-rte) (`ui:field` > `rte`)
 - Tables, based on [react-bootstrap-table](https://github.com/AllenFang/react-bootstrap-table) (`ui:field` > `table`)
+
+## Table of Contents
+
+  - [Use](#use)
+  - [Composite array field (compositeArray)](#composite-array-field-compositearray)
+     - [Purpose](#purpose)
+     - [Use](#use)
+     - [Properties](#properties)
+  - [Collapsible fields (collapsible)](#collapsible-fields-collapsible)
+     - [Purpose](#purpose)
+     - [Use](#use)
+     - [Properties](#properties)
+  - [Alternative input fields (altInput)](#alternative-input-fields-altinput)
+     - [Purpose](#purpose)
+     - [Use](#use)
+     - [Properties](#properties)
+  - [Typeahead, based on react-bootstrap-typeahead (typeahead)](#typeahead-based-on-react-bootstrap-typeahead-typeahead)
+     - [Purpose](#purpose)
+     - [Use](#use)
+     - [Properties](#properties)
+        - [Label key](#label-key)
+        - [Mapping](#mapping)
+  - [Async Typeahead based on react-bootstrap-typeahead (asyncTypeahead)](#async-typeahead-based-on-react-bootstrap-typeahead-asynctypeahead)
+     - [Purpose](#purpose)
+     - [Use](#use)
+     - [Properties](#properties)
+  - [RTE, based on react-rte (rte)](#rte-based-on-react-rte-rte)
+     - [Purpose](#purpose)
+     - [Use](#use)
+     - [Properties](#properties)
+  - [Tables, based on react-bootstrap-table (table)](#tables-based-on-react-bootstrap-table-table)
+     - [Purpose](#purpose)
+     - [Use](#use)
+     - [Properties](#properties)
+        - [Columns order](#columns-order)
+        - [Cell dataFormat](#cell-dataformat)
+     - [Additional column actions](#additional-column-actions)
+  - [Contribute](#contribute)
+  - [Support](#support)
+  - [License](#license)
+
+---
 
 ## Use
 
@@ -113,6 +156,9 @@ You can customize presentation of collapsible field, with "collapse" object in u
 - `separate` `boolean` enable <hr/> after collapse menu (default `true`)  
 - `wrapClassName` `string` class name to use on a parent collapse menu div (default `lead`)
 - `addTo` `string` array field name, to which icon will be added enables an add icon, that will be shown besides collapsible icon
+- `addElement` (experimental) representation element for add function (for example if you want to show modal on add icon press, here where this would be) 
+    - `function(schema, uiSchema, onChange)` that returns React Component to render for add function
+    - `string` `field` definition from `react-jsonschema-form` catalogue
 
 Additional feature of the Collapsible field is to allow adding empty value to hidden `array`, it's enabled with `addTo` feature, which can
 be either `self` which assumes that Collapsible field is the target array, or it can be a property field. 
