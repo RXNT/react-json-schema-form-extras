@@ -46,7 +46,7 @@ class CollapsibleField extends Component {
     this.state = { collapsed };
   }
 
-  appendToArray = (formData, newVal) => {
+  appendToArray = (formData = [], newVal) => {
     if (formData.some(v => deepEquals(v, newVal))) {
       return formData;
     } else {
