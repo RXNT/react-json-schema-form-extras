@@ -46,8 +46,7 @@ class CollapsibleField extends Component {
     this.state = { collapsed };
   }
 
-  appendToArray = ({ items }, formData = []) => {
-    let newVal = getDefaultFormState(items, {});
+  appendToArray = (formData, newVal) => {
     if (formData.some(v => deepEquals(v, newVal))) {
       return formData;
     } else {
@@ -55,24 +54,35 @@ class CollapsibleField extends Component {
     }
   };
 
-  handleAdd = () => {
-    let {
-      schema,
-      formData,
-      onChange,
-      uiSchema: { collapse: { addTo } },
-    } = this.props;
-    if (addTo === "self") {
-      onChange(this.appendToArray(schema, formData));
+  doAdd = (field, formData, newVal) => {
+    if (field === "self") {
+      this.props.onChange(this.appendToArray(formData, newVal));
     } else {
-      formData = formData ? formData : {};
-      let fieldVal = this.appendToArray(
-        schema.properties[addTo],
-        formData[addTo]
-      );
-      let change = Object.assign({}, formData, { [addTo]: fieldVal });
-      onChange(change);
+      let fieldVal = this.appendToArray(formData[field]);
+      let change = Object.assign({}, formData, { [field]: fieldVal });
+      this.props.onChange(change);
     }
+  };
+
+  handleAdd = () => {
+    let { schema, uiSchema, formData } = this.props;
+    let { collapse: { addTo, addElement } } = uiSchema;
+
+    if (addElement) {
+      let onSubmit = newVal => {
+        this.setState({ AddElement: undefined });
+        this.doAdd(addTo, formData, newVal);
+      };
+      let AddElement = addElement(schema, uiSchema, onSubmit);
+      this.setState({ AddElement });
+    } else {
+      let newVal =
+        addTo === "self"
+          ? getDefaultFormState(schema.items, {})
+          : getDefaultFormState(schema.properties[addTo].items, {});
+      this.doAdd(addTo, formData, newVal);
+    }
+
     this.setState({ collapsed: false });
   };
 
@@ -89,7 +99,7 @@ class CollapsibleField extends Component {
       registry: { fields },
       name,
     } = this.props;
-    let { collapsed } = this.state;
+    let { collapsed, AddElement } = this.state;
     let { collapse: { field } } = uiSchema;
     let CollapseElement = fields[field];
 
@@ -105,6 +115,7 @@ class CollapsibleField extends Component {
           onChange={this.handleCollapsed}
         />
         <div className="form-group">
+          {AddElement && <AddElement />}
           {!collapsed && <CollapseElement {...this.props} />}
         </div>
       </div>
@@ -116,6 +127,15 @@ CollapsibleField.propTypes = {
   uiSchema: PropTypes.shape({
     collapse: PropTypes.shape({
       field: PropTypes.string.isRequired,
+      icon: PropTypes.shape({
+        enabled: PropTypes.string,
+        disabled: PropTypes.string,
+        add: PropTypes.string,
+      }),
+      separate: PropTypes.boolean,
+      addTo: PropTypes.string,
+      addElement: PropTypes.function,
+      wrapClassName: PropTypes.string,
     }).isRequired,
   }).isRequired,
   registry: PropTypes.shape({

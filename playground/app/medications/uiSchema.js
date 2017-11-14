@@ -1,3 +1,5 @@
+import React from "react";
+
 export default {
   medications: {
     classNames: "col-md-12",
@@ -6,6 +8,12 @@ export default {
       field: "table",
       collapsed: false,
       addTo: "self",
+      addElement: (schema, uiSchema, onSubmit) => () => (
+        <button className="btn" onClick={() => onSubmit({ refills: "20" })}>
+          {" "}
+          Add new
+        </button>
+      ),
     },
     "ui:options": {
       label: false,
