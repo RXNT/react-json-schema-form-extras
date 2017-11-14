@@ -50,6 +50,7 @@ class CollapsibleField extends Component {
     if (formData.some(v => deepEquals(v, newVal))) {
       return formData;
     } else {
+      // newVal can be either array or a single element, concat flattens value
       return formData.concat(newVal);
     }
   };
@@ -58,7 +59,7 @@ class CollapsibleField extends Component {
     if (field === "self") {
       this.props.onChange(this.appendToArray(formData, newVal));
     } else {
-      let fieldVal = this.appendToArray(formData[field]);
+      let fieldVal = this.appendToArray(formData[field], newVal);
       let change = Object.assign({}, formData, { [field]: fieldVal });
       this.props.onChange(change);
     }
