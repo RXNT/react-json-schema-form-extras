@@ -65,21 +65,40 @@ class CollapsibleField extends Component {
   };
 
   handleAdd = () => {
-    let { schema, uiSchema, formData } = this.props;
+    let { schema, uiSchema, formData, registry: { fields } } = this.props;
     let { collapse: { addTo, addElement } } = uiSchema;
 
+    let fieldSchema =
+      addTo === "self" ? schema.items : schema.properties[addTo].items;
+    let fieldUiSchema = addTo === "self" ? uiSchema : uiSchema[addTo];
+
     if (addElement) {
-      let onSubmit = newVal => {
-        this.setState({ AddElement: undefined });
-        this.doAdd(addTo, formData, newVal);
-      };
-      let AddElement = addElement(schema, uiSchema, onSubmit);
-      this.setState({ AddElement });
+      if (typeof addElement === "function") {
+        let onSubmit = newVal => {
+          this.setState({ AddElement: undefined });
+          this.doAdd(addTo, formData, newVal);
+        };
+        let AddElement = addElement(fieldSchema, fieldUiSchema, onSubmit);
+        this.setState({ AddElement });
+      } else {
+        let FieldElement = fields[addElement];
+        let onBlur = newVal => {
+          this.setState({ AddElement: undefined });
+          this.doAdd(addTo, formData, newVal);
+        };
+        let AddElement = () => (
+          <FieldElement
+            schema={fieldSchema}
+            uiSchema={fieldUiSchema}
+            onChange={formData => {
+              onBlur(formData);
+            }}
+          />
+        );
+        this.setState({ AddElement });
+      }
     } else {
-      let newVal =
-        addTo === "self"
-          ? getDefaultFormState(schema.items, {})
-          : getDefaultFormState(schema.properties[addTo].items, {});
+      let newVal = getDefaultFormState(fieldSchema, {});
       this.doAdd(addTo, formData, newVal);
     }
 
@@ -134,7 +153,7 @@ CollapsibleField.propTypes = {
       }),
       separate: PropTypes.boolean,
       addTo: PropTypes.string,
-      addElement: PropTypes.function,
+      addElement: PropTypes.oneOfType([PropTypes.string, PropTypes.string]),
       wrapClassName: PropTypes.string,
     }).isRequired,
   }).isRequired,
