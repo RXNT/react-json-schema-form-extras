@@ -11,7 +11,7 @@ export default {
       label: false,
     },
     table: {
-      focusOnAdd: true,
+      focusOnAdd: 7,
       tableCols: [
         {
           dataField: "drugId",
