@@ -53,7 +53,7 @@ class TableField extends Component {
   componentWillReceiveProps(nextProps) {
     let { uiSchema: { table: { focusOnAdd } } } = nextProps;
     this.adding =
-      focusOnAdd &&
+      focusOnAdd !== undefined &&
       nextProps.formData &&
       this.props.formData &&
       nextProps.formData.length > this.props.formData.length;
@@ -61,8 +61,9 @@ class TableField extends Component {
 
   componentDidUpdate() {
     if (this.adding) {
+      let { uiSchema: { table: { focusOnAdd } } } = this.props;
       let { table: { refs: { body } } } = this.refs;
-      body.handleEditCell(this.props.formData.length, 1);
+      body.handleEditCell(this.props.formData.length, focusOnAdd);
     }
   }
 

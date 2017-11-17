@@ -420,7 +420,7 @@ This component wraps [react-bootstrap-table](https://github.com/AllenFang/react-
 
 You can use `table` field without any predefined configurations, it will generate default table schema with columns.
 - `tableCols` an array of react-bootstrap-table configurations, that override default generated configurations for the field.
-- `focusOnAdd` boolean flag, that enables fresh row select, when adding new row to the table, it will focus on a first column by default.   
+- `focusOnAdd` column number, when set, adding new row to the table, it will focus on a specified column.   
 
 By default table component will generate table columns, based on an array schema, with editables, based on field types.
 
