@@ -218,13 +218,16 @@ The simplest configuration would be
  ### Properties
  
  All properties that you specify under `typeahead` will be used in the original project.
- Additionally, there are few project specific properties
- - `labelKey` have more flexibility in configuration
-  - `labelKey` `string` used a labelKey in [typeahead](https://github.com/ericgio/react-bootstrap-typeahead) project
-  - `labelKey` `array` in this case array is a list of fields in original object, which are combined in a single string with a space separator
-  - `labelKey` `object` with `fields` `array` of fields to use, `separator` string separator to use between fields 
- - `cleanAfterSelection` `boolean` clean selection after component was selected (default false)
- - `mapping` `object` that maps selected object to schema object
+ - `focusOnMount` focusOn typeahead, after it was mounted to page
+ - `typeahead` all properties that you specify under `typeahead` will be used in the original project. 
+    Additionally, there are few project specific properties
+     - `labelKey` have more flexibility in configuration
+      - `labelKey` `string` used a labelKey in [typeahead](https://github.com/ericgio/react-bootstrap-typeahead) project
+      - `labelKey` `array` in this case array is a list of fields in original object, which are combined in a single string with a space separator
+      - `labelKey` `object` with `fields` `array` of fields to use, `separator` string separator to use between fields 
+     - `cleanAfterSelection` `boolean` clean selection after component was selected (default false)
+     - `mapping` `object` that maps selected object to schema object
+ 
  
  For complete list of configurations refer to [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead)
 
@@ -333,12 +336,20 @@ The simplest configuration would be
  
 ### Properties
 
-Async typeahead extends default configuration list for `typeahead`, by adding few properties
-- `url` search url, that will be used during autocomplete
-- `search` function that will be querying server for data, which takes 2 parameters, and must return a Promise with a json result
-    - `url` configured URL
-    - `query` typed query string
--  `optionsPath` path to options array in response
+Async typeahead extends default configuration list for `typeahead`, by adding few properties under `asyncTypeahead` 
+ - `focusOnMount` focusOn typeahead, after it was mounted to page
+ - `asyncTypeahead` all properties that you specify under `typeahead` will be used in the original project. 
+    - `url` search url, that will be used during autocomplete
+    - `search` function that will be querying server for data, which takes 2 parameters, and must return a Promise with a json result
+        - `url` configured URL
+        - `query` typed query string
+    -  `optionsPath` path to options array in response
+    - `labelKey` have more flexibility in configuration
+        - `labelKey` `string` used a labelKey in [typeahead](https://github.com/ericgio/react-bootstrap-typeahead) project
+        - `labelKey` `array` in this case array is a list of fields in original object, which are combined in a single string with a space separator
+        - `labelKey` `object` with `fields` `array` of fields to use, `separator` string separator to use between fields 
+    - `cleanAfterSelection` `boolean` clean selection after component was selected (default false)
+    - `mapping` `object` that maps selected object to schema object
 
 
 For example, let's consider query with `Was` on `url` `https://example.com/state`.
@@ -407,8 +418,9 @@ This component wraps [react-bootstrap-table](https://github.com/AllenFang/react-
 
 ### Properties
 
-You can use `table` field without any predefined configurations, it will generate default table schema with columns. 
+You can use `table` field without any predefined configurations, it will generate default table schema with columns.
 - `tableCols` an array of react-bootstrap-table configurations, that override default generated configurations for the field.
+- `focusOnAdd` boolean flag, that enables fresh row select, when adding new row to the table, it will focus on a first column by default.   
 
 By default table component will generate table columns, based on an array schema, with editables, based on field types.
 
