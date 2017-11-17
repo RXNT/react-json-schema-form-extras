@@ -4,14 +4,14 @@ export default {
     "ui:field": "collapsible",
     collapse: {
       field: "table",
-      collapsed: false,
+      collapsed: true,
       addTo: "self",
     },
     "ui:options": {
       label: false,
     },
     table: {
-      focusOnAdd: 7,
+      focusOnAdd: 1,
       tableCols: [
         {
           dataField: "drugId",
