@@ -150,6 +150,13 @@ class BaseTypeaheadField extends Component {
       }
     }
   };
+
+  componentDidMount() {
+    let { uiSchema: { focusOnMount = false } } = this.props;
+    if (focusOnMount) {
+      this.refs.typeahead.getInstance().focus();
+    }
+  }
 }
 
 export class TypeaheadField extends BaseTypeaheadField {
@@ -172,6 +179,7 @@ export class TypeaheadField extends BaseTypeaheadField {
 TypeaheadField.propTypes = {
   schema: PropTypes.object.isRequired,
   uiSchema: PropTypes.shape({
+    focusOnMount: PropTypes.bool,
     typeahead: PropTypes.shape({
       options: PropTypes.array.isRequired,
       mapping: PropTypes.oneOfType([
@@ -231,7 +239,6 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       onChange: this.handleSelectionChange(asyncTypeahead),
       onSearch: this.handleSearch,
       options: this.state.options,
-      ref: "typeahead",
     });
 
     return <AsyncTypeahead {...typeConf} />;
@@ -241,6 +248,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
 AsyncTypeaheadField.propTypes = {
   schema: PropTypes.object.isRequired,
   uiSchema: PropTypes.shape({
+    focusOnMount: PropTypes.bool,
     asyncTypeahead: PropTypes.shape({
       url: PropTypes.string.isRequired,
       optionsPath: PropTypes.string,

@@ -50,6 +50,22 @@ class TableField extends Component {
     this.props.onChange(removePosition(filteredRows));
   }
 
+  componentWillReceiveProps(nextProps) {
+    let { uiSchema: { table: { focusOnAdd } } } = nextProps;
+    this.adding =
+      focusOnAdd &&
+      nextProps.formData &&
+      this.props.formData &&
+      nextProps.formData.length > this.props.formData.length;
+  }
+
+  componentDidUpdate() {
+    if (this.adding) {
+      let { table: { refs: { body } } } = this.refs;
+      body.handleEditCell(this.props.formData.length, 1);
+    }
+  }
+
   render() {
     let {
       uiSchema,
@@ -76,7 +92,7 @@ class TableField extends Component {
     );
 
     return (
-      <BootstrapTable {...this.tableConf}>
+      <BootstrapTable {...this.tableConf} ref="table">
         {columns.map((column, i) => {
           return (
             <TableHeaderColumn key={i} {...column}>
