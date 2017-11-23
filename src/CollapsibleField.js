@@ -37,6 +37,32 @@ function CollapseMenu(props) {
   );
 }
 
+class CollapseLegend extends Component {
+  render() {
+    let {
+      uiSchema: { collapse: { legend } },
+      formContext: { legends = {} } = {},
+    } = this.props;
+    if (!legend) {
+      return null;
+    }
+    if (typeof legend === "string") {
+      return <div>{legend}</div>;
+    } else if (typeof legend === "object") {
+      const Component = legends[legend.component];
+      if (!Component) {
+        return (
+          <h2 className="warning bg-error">
+            Can't find <b>{legend.component}</b> in <b>formContext</b>.<b>legends</b>
+          </h2>
+        );
+      }
+      return <Component {...legend.props} />;
+    }
+    return <div>I'm a legend</div>;
+  }
+}
+
 class CollapsibleField extends Component {
   constructor(props) {
     super(props);
@@ -137,6 +163,7 @@ class CollapsibleField extends Component {
         />
         <div className="form-group">
           {AddElement && <AddElement />}
+          {!collapsed && <CollapseLegend {...this.props} />}
           {!collapsed && <CollapseElement {...this.props} />}
         </div>
       </div>
@@ -156,6 +183,13 @@ CollapsibleField.propTypes = {
       separate: PropTypes.boolean,
       addTo: PropTypes.string,
       addElement: PropTypes.oneOfType([PropTypes.string, PropTypes.string]),
+      legend: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape({
+          component: PropTypes.string.isRequired,
+          props: PropTypes.object,
+        }),
+      ]),
       wrapClassName: PropTypes.string,
     }).isRequired,
   }).isRequired,

@@ -4,7 +4,13 @@ export default {
     "ui:field": "collapsible",
     collapse: {
       field: "table",
-      collapsed: true,
+      collapsed: false,
+      legend: {
+        component: "BPLegend",
+        props: {
+          me: "Me",
+        },
+      },
       addTo: "self",
     },
     "ui:options": {
