@@ -6,9 +6,9 @@ export default {
       field: "table",
       collapsed: false,
       legend: {
-        component: "BPLegend",
+        component: "LanguageLegend",
         props: {
-          me: "Me",
+          language: "English",
         },
       },
       addTo: "self",
