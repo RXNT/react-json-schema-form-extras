@@ -51,8 +51,9 @@ class CollapseLegend extends Component {
     } else if (typeof legend === "object") {
       const Component = legends[legend.component];
       if (!Component) {
+        console.error(`Can't find ${legend.components} in formContext.legends`);
         return (
-          <h2 className="warning bg-error">
+          <h2 className="warning bg-error" style={{ color: "red" }}>
             Can't find <b>{legend.component}</b> in <b>formContext</b>.<b>legends</b>
           </h2>
         );

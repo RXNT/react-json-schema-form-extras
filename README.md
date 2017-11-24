@@ -159,11 +159,64 @@ You can customize presentation of collapsible field, with "collapse" object in u
 - `addElement` (experimental) representation element for add function (for example if you want to show modal on add icon press, here where this would be) 
     - `function(schema, uiSchema, onChange)` that returns React Component to render for add function
     - `string` `field` definition from `react-jsonschema-form` catalogue
+- `legend` (experimental) allows to add additional information under collapsed field
+    - `string` text to be rendered under collapsible field
+    - `object` that allows to render any kind of `legend` you need, which will be sourced from `formContext` `legends` configuration
+        - `component` `string` name of the component, that will be sourced from `formContext.legends` object
+        - `props` `object` additional properties for rendered component 
+     
 
 Additional feature of the Collapsible field is to allow adding empty value to hidden `array`, it's enabled with `addTo` feature, which can
 be either `self` which assumes that Collapsible field is the target array, or it can be a property field. 
 
 Field `schema` `title` used as a header of the collapsible action. 
+
+### Examples
+
+#### Using specific legend in collapsible field.
+
+Task:
+
+We have a `firstName` field, which is collapsible and we need to display a `LanguageLegend`, which would notify user of the language to use.
+
+Solution: 
+
+The simplest configuration with `schema`, `uiSchema` and `formContext` would look something like this
+
+```jsx harmony
+    import React from "react";
+    import fields from "react-jsonschema-form-extras"
+    
+    let schema = {
+      type: "object",
+      properties: {
+        firstName: { type: "string" }
+      }
+    }
+    
+    let uiSchema = {
+      firstName: {
+          "ui:field": "collapsible",
+          collapse: {
+            field: "StringField",
+            legend: {
+              component: "LanguageLegend",
+              props: {
+                language: "EN"
+              }
+            }
+          }
+      }
+    }
+    
+    let formContext = {
+      legends: {
+        LanguageLegend: (props) => (<h1>Expected {props.language} characters</h1>)
+      }
+    }
+    
+    <Form formContext={formContext} schema={schema} uiSchema={uiSchema} fields={fields}>
+```
 
 ## Alternative input fields (`altInput`)
 
