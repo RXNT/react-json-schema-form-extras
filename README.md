@@ -159,6 +159,10 @@ You can customize presentation of collapsible field, with "collapse" object in u
 - `addElement` (experimental) representation element for add function (for example if you want to show modal on add icon press, here where this would be) 
     - `function(schema, uiSchema, onChange)` that returns React Component to render for add function
     - `string` `field` definition from `react-jsonschema-form` catalogue
+- `actions` (experimental) allows to add additional actions to collapsible menu
+    - `object` that allows to render any kind of `action` you need, which will be sourced from `formContext` `allActions` configuration
+        - `component` `string` name of the component, that will be sourced from `formContext.allActions` object
+        - `props` `object` additional properties for rendered component 
 - `legend` (experimental) allows to add additional information under collapsed field
     - `string` text to be rendered under collapsible field
     - `object` that allows to render any kind of `legend` you need, which will be sourced from `formContext` `legends` configuration
