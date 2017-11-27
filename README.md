@@ -160,7 +160,7 @@ You can customize presentation of collapsible field, with "collapse" object in u
     - `function(schema, uiSchema, onChange)` that returns React Component to render for add function
     - `string` `field` definition from `react-jsonschema-form` catalogue
 - `actions` (experimental) allows to add additional actions to collapsible menu
-    - `object` that allows to render any kind of `action` you need, which will be sourced from `formContext` `allActions` configuration
+    - `array` of `objects` that allows to render any kind of `action` you need, which will be sourced from `formContext` `allActions` configuration
         - `component` `string` name of the component, that will be sourced from `formContext.allActions` object
         - `props` `object` additional properties for rendered component 
 - `legend` (experimental) allows to add additional information under collapsed field
