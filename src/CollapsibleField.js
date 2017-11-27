@@ -1,12 +1,36 @@
 import React, { Component } from "react";
 import {
-  getDefaultFormState,
   deepEquals,
+  getDefaultFormState,
 } from "react-jsonschema-form/lib/utils";
 import PropTypes from "prop-types";
 
+class CollapseMenuAction extends Component {
+  render() {
+    let { action, allActions = {} } = this.props;
+    if (!action) {
+      return null;
+    }
+    if (typeof action === "string") {
+      return <div>{action}</div>;
+    } else if (typeof action === "object") {
+      const Component = allActions[action.component];
+      if (!Component) {
+        console.error(
+          `Can't find ${action.component} in formContext.allActions`
+        );
+        return (
+          <h2 className="warning bg-error" style={{ color: "red" }}>
+            Can't find <b>{action.component}</b> in <b>formContext</b>.<b>allActions</b>
+          </h2>
+        );
+      }
+      return <Component {...action.props} />;
+    }
+  }
+}
+
 function CollapseMenu(props) {
-  let { onChange, onAdd, title, name, collapsed } = props;
   let {
     uiSchema: {
       collapse: {
@@ -18,8 +42,15 @@ function CollapseMenu(props) {
         separate = true,
         addTo,
         wrapClassName = "lead",
+        actions = [],
       },
     },
+    formContext = {},
+    onChange,
+    onAdd,
+    title,
+    name,
+    collapsed,
   } = props;
   return (
     <div className={wrapClassName}>
@@ -32,6 +63,13 @@ function CollapseMenu(props) {
       <a onClick={onChange}>
         <i className={collapsed ? disabled : enabled} />
       </a>
+      {actions.map((action, i) => (
+        <CollapseMenuAction
+          key={i}
+          action={action}
+          allActions={formContext.allActions}
+        />
+      ))}
       {separate && <hr />}
     </div>
   );
@@ -146,6 +184,7 @@ class CollapsibleField extends Component {
       uiSchema,
       registry: { fields },
       name,
+      formContext,
     } = this.props;
     let { collapsed, AddElement } = this.state;
     let { collapse: { field } } = uiSchema;
@@ -159,6 +198,7 @@ class CollapsibleField extends Component {
           title={title}
           uiSchema={uiSchema}
           collapsed={collapsed}
+          formContext={formContext}
           onAdd={this.handleAdd}
           onChange={this.handleCollapsed}
         />
@@ -191,6 +231,12 @@ CollapsibleField.propTypes = {
           props: PropTypes.object,
         }),
       ]),
+      actions: PropTypes.arrayOf(
+        PropTypes.shape({
+          component: PropTypes.string.isRequired,
+          props: PropTypes.object,
+        })
+      ),
       wrapClassName: PropTypes.string,
     }).isRequired,
   }).isRequired,

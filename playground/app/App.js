@@ -14,6 +14,11 @@ export default function App() {
     legends: {
       LanguageLegend: props => <h1>Expected {props.language} characters</h1>,
     },
+    allActions: {
+      Button: props => (
+        <a className="btn btn-info pull-right">Update allergies</a>
+      ),
+    },
   };
 
   return (

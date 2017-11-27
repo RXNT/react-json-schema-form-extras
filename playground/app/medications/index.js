@@ -4,5 +4,5 @@ import uiSchema from "./uiSchema";
 export default {
   schema,
   uiSchema,
-  formData: { medications: [{ useGeneric: false }] },
+  formData: { medicationData: { medications: [{ useGeneric: false }] } },
 };
