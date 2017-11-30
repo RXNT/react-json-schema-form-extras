@@ -62,7 +62,13 @@ class TableField extends Component {
   componentDidUpdate() {
     if (this.adding) {
       let { uiSchema: { table: { focusOnAdd } } } = this.props;
-      let { table: { refs: { body } } } = this.refs;
+      let body = this.refs.table.refs.body
+        ? this.refs.table.refs.body
+        : this.refs.table.body;
+      if (!body || !body.handleEditCell) {
+        console.error("Can't find body in the table");
+        return;
+      }
       body.handleEditCell(this.props.formData.length, focusOnAdd);
     }
   }

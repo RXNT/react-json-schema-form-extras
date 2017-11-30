@@ -24,7 +24,8 @@ function actionColumnFrom({ action, icon, text }) {
     dataFormat: (cell, row, enumObject, rowIndex, formData, onChange) => (
       <span
         onClick={() =>
-          handleClick(cell, row, enumObject, rowIndex, formData, onChange)}>
+          handleClick(cell, row, enumObject, rowIndex, formData, onChange)
+        }>
         <i className={icon} />
         {text}
       </span>
