@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import RichTextEditor from "react-rte";
 
 const DEFAULT_FORMAT = "html";
@@ -48,13 +49,21 @@ export default class RTEField extends Component {
     let { uiSchema: { rte } } = this.props;
 
     return (
-      <div onBlur={this.handleBlur}>
-        <RichTextEditor
-          {...rte}
-          value={this.state.value}
-          onChange={this.handleChange}
-        />
-      </div>
+      <RichTextEditor
+        onBlur={this.handleBlur}
+        {...rte}
+        value={this.state.value}
+        onChange={this.handleChange}
+      />
     );
   }
 }
+
+RTEField.propTypes = {
+  uiSchema: PropTypes.shape({
+    updateOnBlur: PropTypes.bool,
+    rte: PropTypes.shape({
+      format: PropTypes.string,
+    }),
+  }),
+};
