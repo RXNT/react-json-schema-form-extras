@@ -16,8 +16,9 @@ export default function goalsField() {
       "ui:field": "collapsible",
       collapse: {
         field: "rte",
-        collapsed: false,
+        collapsed: true,
       },
+      "ui:autofocus": true,
       classNames: "col-md-12",
     },
   };
