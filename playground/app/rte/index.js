@@ -14,10 +14,7 @@ export default function goalsField() {
       classNames: "col-md-12",
       "ui:field": "rte",
       rte: {
-        editorStyle: {
-          minHeight: "183px",
-        },
-        placeholder: "\n\n\n",
+        placeholder: "<br/><br/>",
       },
     },
   };
