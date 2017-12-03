@@ -17,29 +17,44 @@ export default class RTEField extends Component {
     };
   }
 
-  handleChange = value => {
+  updateFormData = () => {
     let {
       uiSchema: { rte: { format = DEFAULT_FORMAT } = {} },
       onChange,
     } = this.props;
-    this.setState({ value });
+    let { value } = this.state;
     if (onChange) {
-      // Send the changes up to the parent component as an HTML string.
-      // This is here to demonstrate using `.toString()` but in a real app it
-      // would be better to avoid generating a string on each change.
       onChange(value.toString(format));
     }
   };
+
+  handleChange = value => {
+    let { uiSchema: { updateOnBlur = false } } = this.props;
+    this.setState({ value }, () => !updateOnBlur && this.updateFormData());
+  };
+
+  handleBlur = () => {
+    let { uiSchema: { updateOnBlur = false } } = this.props;
+    if (updateOnBlur) {
+      this.updateFormData();
+    }
+  };
+
+  componentWillUnmount() {
+    this.handleBlur();
+  }
 
   render() {
     let { uiSchema: { rte } } = this.props;
 
     return (
-      <RichTextEditor
-        {...rte}
-        value={this.state.value}
-        onChange={this.handleChange}
-      />
+      <div onBlur={this.handleBlur}>
+        <RichTextEditor
+          {...rte}
+          value={this.state.value}
+          onChange={this.handleChange}
+        />
+      </div>
     );
   }
 }
