@@ -453,6 +453,7 @@ The simplest configuration would be
 
 The only property this field requires is `format`
 - `format` `string` an `rte` output format (default `html`)
+- `updateOnBlur` `boolean` allows for RTE update parent form only after edit finished, to minimize calculations and redraw (default `false`)
 
 As with other projects, all configurations, that you'll configure unser `uiSchema` `rte` field will be transferred to the actual component.
 
