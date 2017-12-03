@@ -5,17 +5,20 @@ export default function goalsField() {
       rte: {
         type: "string",
         title: "RTE",
+        default: "<p><br></p>",
       },
     },
   };
 
   let uiSchema = {
     rte: {
-      classNames: "col-md-12",
-      "ui:field": "rte",
-      rte: {
-        placeholder: "<br/><br/>",
+      updateOnBlur: true,
+      "ui:field": "collapsible",
+      collapse: {
+        field: "rte",
+        collapsed: false,
       },
+      classNames: "col-md-12",
     },
   };
 
