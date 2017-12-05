@@ -110,9 +110,10 @@ const overrideColumns = (columns, schema, uiSchema, fields) => {
     if (!colConf) {
       return col;
     }
-    overrideColDataFormat(colConf);
-    overrideColEditable(colConf, schema, fields);
-    return Object.assign(col, colConf);
+    let updCol = Object.assign({}, col, colConf);
+    overrideColDataFormat(updCol);
+    overrideColEditable(updCol, schema, fields);
+    return updCol;
   });
 
   return columnsWithOverrides;
@@ -166,7 +167,7 @@ const withColumnCss = columns => {
   return columns;
 };
 
-const columnHeadersFrom = (
+const columnHeadersFactory = (
   schema,
   uiSchema,
   fields = {},
@@ -189,4 +190,4 @@ const columnHeadersFrom = (
   return columnsWithCSS;
 };
 
-export default columnHeadersFrom;
+export default columnHeadersFactory;

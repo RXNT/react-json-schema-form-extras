@@ -29,8 +29,8 @@ export default function tableConfFrom(
   afterSaveCell,
   afterDeleteRow
 ) {
-  if (table.keyField === undefined || table.keyField === POSITION_KEY) {
-    table.keyField = POSITION_KEY;
+  let { keyField = POSITION_KEY } = table;
+  if (keyField === POSITION_KEY) {
     formData = addPosition(formData);
   }
 
@@ -39,7 +39,8 @@ export default function tableConfFrom(
       data: formData,
     },
     DEFAULT_TABLE_CONF,
-    table
+    table,
+    { keyField }
   );
 
   tableConf.cellEdit.afterSaveCell = afterSaveCell;

@@ -6,6 +6,7 @@ import typeahead from "./order";
 import medications from "./medications";
 import typeaheadNonExpandable from "./typeaheadNonExpandable";
 import rte from "./rte";
+import rte2 from "./rte2";
 import dx from "./dx";
 
 export default function App() {
@@ -23,6 +24,12 @@ export default function App() {
 
   return (
     <div>
+      <Form
+        {...rte2}
+        fields={fields}
+        onChange={handleChange}
+        formContext={formContext}
+      />
       <Form
         {...typeaheadNonExpandable}
         fields={fields}
