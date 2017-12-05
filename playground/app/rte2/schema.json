@@ -1,0 +1,18 @@
+{
+  "schema": {
+    "required": [],
+    "type": "object",
+    "properties": {
+      "cc": {
+        "type": "string",
+        "title": "Chief Complaints",
+        "default": "<p><br></p>"
+      },
+      "hpi": {
+        "type": "string",
+        "title": "HPI",
+        "default": "<p><br></p>"
+      }
+    }
+  }
+}
