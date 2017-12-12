@@ -116,7 +116,7 @@ export default {
                   "Milliequivalent",
                   "Needle Free Injection",
                   "Pen Needle",
-                  "Pre-filled Pen Syringe",
+                  "Pre - filled Pen Syringe",
                   "Pump",
                   "Unspecified",
                 ],
@@ -134,6 +134,64 @@ export default {
                 type: "string",
                 format: "date",
                 title: "Start Date",
+              },
+            },
+          },
+        },
+      },
+    },
+    allergyData: {
+      type: "object",
+      title: "Allergies",
+      default: {},
+      required: [],
+      properties: {
+        noKnownAllergies: {
+          type: "boolean",
+          title: "No Known Allergies",
+          default: false,
+          rxnt: "NoKnownAllergies",
+        },
+        noKnownDrugAllergies: {
+          type: "boolean",
+          title: "No Known Drug Allergies",
+          default: false,
+          rxnt: "NoKnownDrugAllergies",
+        },
+        allergies: {
+          type: "array",
+          title: "Allergies",
+          default: [],
+          rxnt: "PatientAllergies",
+          items: {
+            required: ["allergyName", "allergyActive", "allergyDate"],
+            type: "object",
+            properties: {
+              allergyId: {
+                type: "number",
+                title: "Allergy ID",
+              },
+              allergyName: {
+                type: "string",
+                title: "Allergy Name",
+              },
+              allergyReaction: {
+                type: "string",
+                title: "Allergy Reaction",
+              },
+              allergyComments: {
+                type: "string",
+                title: "Allergy Comments",
+              },
+              allergyActive: {
+                type: "boolean",
+                title: "Allergy Active",
+                default: false,
+              },
+              allergyDate: {
+                type: "string",
+                title: "Allergy Identified On",
+                format: "date",
               },
             },
           },

@@ -249,4 +249,68 @@ export default {
       nav: ["medications"],
     },
   },
+  allergyData: {
+    classNames: "col-md-12",
+    nav: "intake",
+    "ui:order": ["noKnownAllergies", "noKnownDrugAllergies", "allergies"],
+    "ui:field": "collapsible",
+    noKnownAllergies: {
+      classNames: "col-md-6",
+    },
+    noKnownDrugAllergies: {
+      classNames: "col-md-6",
+    },
+    allergies: {
+      classNames: "col-md-12",
+      "ui:field": "table",
+      table: {
+        tableCols: [
+          {
+            dataField: "allergyId",
+            hidden: true,
+          },
+          {
+            dataField: "allergyName",
+            field: "asyncTypeahead",
+            uiSchema: {
+              focusOnMount: true,
+              asyncTypeahead: {
+                url:
+                  "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchAllergies",
+                bodyContainer: true,
+                optionsPath: "Allergies",
+                mapping: {
+                  allergyId: "AllergyId",
+                  allergyName: "AllergyName",
+                },
+                labelKey: "AllergyName",
+              },
+            },
+          },
+        ],
+        focusOnAdd: 1,
+        rightActions: [
+          {
+            action: "delete",
+            className: "table-action",
+            columnClassName: "table-action",
+            editColumnClassName: "table-action",
+            icon: "glyphicons glyphicons-remove-circle glyPhiconRedColor",
+          },
+        ],
+      },
+    },
+    "ui:options": {
+      label: false,
+    },
+    collapse: {
+      field: "ObjectField",
+      collapsed: false,
+      icon: {
+        add: "glyphicon glyphicon-plus-sign glyPhiconGreen",
+      },
+      actions: [],
+      addTo: "allergies",
+    },
+  },
 };

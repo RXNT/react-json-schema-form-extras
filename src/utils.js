@@ -15,3 +15,7 @@ export function isObjectSchema(schema) {
 export function isArraySchema(schema) {
   return schema.type === "array";
 }
+
+export function deepCopy(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}

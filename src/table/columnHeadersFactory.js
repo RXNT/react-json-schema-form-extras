@@ -82,11 +82,10 @@ export function overrideColDataFormat(colConf) {
   }
 }
 
-const overrideColEditable = (colConf, { items: { properties } }, fields) => {
+const overrideColEditable = (colConf, fieldSchema, fields) => {
   if (colConf.field && fields[colConf.field]) {
     let FieldEditor = fields[colConf.field];
     let fieldUISchema = colConf.uiSchema;
-    let fieldSchema = properties[colConf.dataField];
     colConf.customEditor = {
       getElement: (onUpdate, props) => (
         <FieldEditor
@@ -100,7 +99,12 @@ const overrideColEditable = (colConf, { items: { properties } }, fields) => {
   }
 };
 
-const overrideColumns = (columns, schema, uiSchema, fields) => {
+const overrideColumns = (
+  columns,
+  { items: { properties } },
+  uiSchema,
+  fields
+) => {
   let { table: { tableCols = [] } = {} } = uiSchema;
 
   let columnsWithOverrides = columns.map(col => {
@@ -112,7 +116,7 @@ const overrideColumns = (columns, schema, uiSchema, fields) => {
     }
     let updCol = Object.assign({}, col, colConf);
     overrideColDataFormat(updCol);
-    overrideColEditable(updCol, schema, fields);
+    overrideColEditable(updCol, properties[col.dataField], fields);
     return updCol;
   });
 
