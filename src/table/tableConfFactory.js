@@ -1,3 +1,5 @@
+import { deepCopy } from "../utils";
+
 const POSITION_KEY = "_position";
 
 const DEFAULT_TABLE_CONF = {
@@ -35,10 +37,8 @@ export default function tableConfFrom(
   }
 
   let tableConf = Object.assign(
-    {
-      data: formData,
-    },
-    DEFAULT_TABLE_CONF,
+    { data: formData },
+    deepCopy(DEFAULT_TABLE_CONF),
     table,
     { keyField }
   );

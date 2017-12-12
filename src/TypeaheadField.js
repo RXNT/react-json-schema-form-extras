@@ -233,7 +233,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       labelKey
     );
 
-    let typeConf = Object.assign(DEFAULT_OPTIONS, asyncTypeahead, {
+    let typeConf = Object.assign({}, DEFAULT_OPTIONS, asyncTypeahead, {
       selected,
       labelKey,
       onChange: this.handleSelectionChange(asyncTypeahead),
