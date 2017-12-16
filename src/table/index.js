@@ -3,11 +3,18 @@ import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import tableConfFrom, { removePosition } from "./tableConfFactory";
 import columnHeadersFrom from "./columnHeadersFactory";
 
-function convertFields(cellValue, { type }) {
+function convertFields(cellValue, { type, format, default: def }) {
   if (type === "boolean") {
     return cellValue === "true";
   } else if (type === "number") {
     return parseFloat(cellValue);
+  } else if (type === "string" && format === "date-time") {
+    if (cellValue === "") {
+      return def;
+    } else {
+      let date = new Date(cellValue);
+      return date.toISOString();
+    }
   }
   return cellValue;
 }
@@ -51,7 +58,7 @@ class TableField extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let { uiSchema: { table: { focusOnAdd } } } = nextProps;
+    let { uiSchema: { table: { focusOnAdd } = {} } } = nextProps;
     this.adding =
       focusOnAdd !== undefined &&
       nextProps.formData &&

@@ -42,7 +42,7 @@ const toEditable = fieldProp => {
     };
   } else if (fieldProp.format === "date-time") {
     return {
-      type: "datetime",
+      type: "datetime-local",
     };
   } else if (fieldProp.format === "date") {
     return {
