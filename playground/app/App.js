@@ -8,6 +8,7 @@ import typeaheadNonExpandable from "./typeaheadNonExpandable";
 import rte from "./rte";
 import rte2 from "./rte2";
 import dx from "./dx";
+import simpleTable from "./simpleTable";
 
 export default function App() {
   let handleChange = ({ formData }) => console.log(JSON.stringify(formData));
@@ -24,6 +25,12 @@ export default function App() {
 
   return (
     <div>
+      <Form
+        {...simpleTable}
+        fields={fields}
+        onChange={handleChange}
+        formContext={formContext}
+      />
       <Form
         {...rte2}
         fields={fields}
