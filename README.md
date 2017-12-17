@@ -455,7 +455,7 @@ The only property this field requires is `format`
 - `format` `string` an `rte` output format (default `html`)
 - `updateOnBlur` `boolean` allows for RTE update parent form only after edit finished, to minimize calculations and redraw (default `false`)
 
-As with other projects, all configurations, that you'll configure unser `uiSchema` `rte` field will be transferred to the actual component.
+As with other projects, all configurations, that you'll configure under `uiSchema` `rte` field will be transferred to the actual component.
 
 
 ## Tables, based on [react-bootstrap-table](https://github.com/AllenFang/react-bootstrap-table) (`table`)
@@ -667,6 +667,40 @@ Right panel is defined with small syntactic sugar to simpify action defintion
 - `icon` icon to use for the column
 - `text` text to use for the column
 - `displayName` column name
+
+## React Day Picker, based on [react-day-picker](https://github.com/gpbl/react-day-picker) (`rdp`)
+
+### Purpose
+
+Allows you to use react-day-picker as input `ui:field`. This component works only with `string` formatted as `date` and `date-time`.  
+
+### Use 
+
+The simplest configuration would be
+
+ ```json
+ {
+   "ui:field": "rdp"
+ }
+ ```
+
+### Properties
+
+All configurations, that you'll configure under `uiSchema` `rdp` field will be transferred to the actual component.
+
+For example to enable `Today` button, you would need to specify following uiSchema  
+```json
+{
+  "ui:field": "rdp",
+  "rdp": {
+    "dayPickerProps": {
+      "todayButton": "Today"
+    }
+  }
+}
+
+```
+For the full list of properties refer to [React Day Picker](http://react-day-picker.js.org).
 
 ## Contribute
 
