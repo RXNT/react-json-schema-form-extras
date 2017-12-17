@@ -42,10 +42,11 @@
     "node": ">=8.0.0"
   },
   "peerDependencies": {
-    "prop-types": "^15.6.0",
-    "react": "^16.0.0",
-    "react-bootstrap-table": "^4.1.0",
-    "react-bootstrap-typeahead": "v1.4.2",
+    "prop-types": "^15.x",
+    "react": "^16.x",
+    "react-bootstrap-table": "^4.x",
+    "react-bootstrap-typeahead": "v2.x",
+    "react-day-picker": "^7.x",
     "react-rte": "^0.15.0"
   },
   "dependencies": {
@@ -86,9 +87,10 @@
     "lint-staged": "^6.0.0",
     "prettier": "^1.7.4",
     "react": "^16.0.0",
-    "react-bootstrap-table": "^4.1.1",
-    "react-bootstrap-typeahead": "v1.4.2",
+    "react-bootstrap-table": "^4.3.0",
+    "react-bootstrap-typeahead": "v2.0.2",
     "react-dom": "^16.0.0",
+    "react-day-picker": "^7.0.5",
     "react-jsonschema-form": "^1.0.0",
     "react-rte": "^0.15.0",
     "react-test-renderer": "^16.0.0",

@@ -1,4 +1,5 @@
 import React from "react";
+
 import fields from "../../src/index";
 import Form from "react-jsonschema-form";
 
@@ -6,6 +7,7 @@ import typeahead from "./order";
 import medications from "./medications";
 import typeaheadNonExpandable from "./typeaheadNonExpandable";
 import rte from "./rte";
+import datePicker from "./react-date-picker";
 import rte2 from "./rte2";
 import dx from "./dx";
 import simpleTable from "./simpleTable";
@@ -25,6 +27,12 @@ export default function App() {
 
   return (
     <div>
+      <Form
+        {...datePicker}
+        fields={fields}
+        onChange={handleChange}
+        formContext={formContext}
+      />
       <Form
         {...simpleTable}
         fields={fields}

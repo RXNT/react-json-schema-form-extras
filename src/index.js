@@ -4,6 +4,7 @@ import CompositeArrayField from "./CompositeArrayField";
 import AltInputField from "./AltInputField";
 import CollapsibleField from "./CollapsibleField";
 import RTEField from "./RTEField";
+import rdp from "./ReactDatePicker";
 
 export default {
   table,
@@ -13,4 +14,5 @@ export default {
   compositeArray: CompositeArrayField,
   altInput: AltInputField,
   rte: RTEField,
+  rdp,
 };
