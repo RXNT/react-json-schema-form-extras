@@ -18,11 +18,16 @@ let schema = {
 let uiSchema = {
   simpleTable: {
     "ui:field": "table",
+    table: {
+      tableCols: [{ dataField: "dateTime", dataFormat: "YYYY-MM-DD" }],
+    },
   },
 };
 
 export default {
   schema,
   uiSchema,
-  formData: { simpleTable: [{ str: "Some" }] },
+  formData: {
+    simpleTable: [{ str: "Some", dateTime: new Date().toISOString() }],
+  },
 };

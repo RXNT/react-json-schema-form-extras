@@ -1,5 +1,6 @@
 import React from "react";
 import actionHeaderFrom from "./actionHeaderFactory";
+import moment from "moment";
 
 const toDataFormat = fieldProp => {
   if (fieldProp.enum && fieldProp.enumNames) {
@@ -72,11 +73,28 @@ const columnHeadersFromSchema = schema => {
   return schemaCols;
 };
 
-export function overrideColDataFormat(colConf) {
-  if (typeof colConf.dataFormat === "string") {
+export function overrideColDataFormat(colConf, fieldSchema) {
+  if (typeof colConf.dataFormat === "string" && fieldSchema.type === "object") {
     const { dataField, dataFormat: field } = colConf;
     colConf.dataFormat = function(cell, row) {
       return row[dataField] ? row[dataField][field] : undefined;
+    };
+    colConf.dataFormat.bind(this);
+  } else if (
+    typeof colConf.dataFormat === "string" &&
+    fieldSchema.type === "string" &&
+    fieldSchema.format === "date-time"
+  ) {
+    const { dataField, dataFormat } = colConf;
+    colConf.dataFormat = function(cell, row) {
+      if (!row[dataField]) {
+        return undefined;
+      }
+      let fieldVal = row[dataField];
+      if (typeof fieldVal === "string") {
+        return moment(fieldVal).format(dataFormat);
+      }
+      return moment(fieldVal.toISOString()).format(dataFormat);
     };
     colConf.dataFormat.bind(this);
   }
@@ -115,7 +133,7 @@ const overrideColumns = (
       return col;
     }
     let updCol = Object.assign({}, col, colConf);
-    overrideColDataFormat(updCol);
+    overrideColDataFormat(updCol, properties[col.dataField]);
     overrideColEditable(updCol, properties[col.dataField], fields);
     return updCol;
   });

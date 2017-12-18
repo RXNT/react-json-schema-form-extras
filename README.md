@@ -28,9 +28,8 @@ All configurations you can specify in original projects, can be reused here.
      - [Purpose](#purpose)
      - [Use](#use)
      - [Properties](#properties)
-  - [Alternative input fields (altInput)](#alternative-input-fields-altinput)
-     - [Purpose](#purpose)
-     - [Use](#use)
+     - [Examples](#examples)
+        - [Using specific legend in collapsible field.](#using-specific-legend-in-collapsible-field)
      - [Properties](#properties)
   - [Typeahead, based on react-bootstrap-typeahead (typeahead)](#typeahead-based-on-react-bootstrap-typeahead-typeahead)
      - [Purpose](#purpose)
@@ -53,6 +52,10 @@ All configurations you can specify in original projects, can be reused here.
         - [Columns order](#columns-order)
         - [Cell dataFormat](#cell-dataformat)
      - [Additional column actions](#additional-column-actions)
+  - [React Day Picker, based on react-day-picker (rdp)](#react-day-picker-based-on-react-day-picker-rdp)
+     - [Purpose](#purpose)
+     - [Use](#use)
+     - [Properties](#properties)
   - [Contribute](#contribute)
   - [Support](#support)
   - [License](#license)
@@ -557,7 +560,9 @@ Here although in medications property schema `dosage` goes before `name`, it wil
 #### Cell dataFormat
 
 react-bootstrap-table provides custom [dataFormat](https://allenfang.github.io/react-bootstrap-table/docs.html#dataFormat) for rendering data in columns.
-We needed to support serialized configuration, so we extended native functionality, with string configuration, which translates into field name in the object.
+We needed to support serialized configuration, so we extended native functionality, with string configuration, 
+- `object` dataFormat can be a `string` which translates into field name in the object.
+- `date-time` & `date` `string` dataFormat is a format of string presentation, that is generated with moment.js
 
 For example, let's say we have an allergies table, with identifier, which consists of some numeric id and string name. When showing to the user, we want to show only name. Here is how we can do this:
 
@@ -595,6 +600,7 @@ let uiSchema = {
         },
         {
           dataField: "dosage",
+          dataFormat: "YYYY-MM-DD"
         },
       ],
     },
