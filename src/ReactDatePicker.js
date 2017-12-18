@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import DayPickerInput from "react-day-picker/DayPickerInput";
+import { formatDate } from "react-day-picker/moment";
 
 export default class ReactDatePicker extends Component {
   handleKeyDown = evt => {
@@ -21,13 +22,15 @@ export default class ReactDatePicker extends Component {
   };
 
   render() {
-    let { uiSchema: { rdp }, formData } = this.props;
+    let { uiSchema: { rdp = {} }, formData } = this.props;
     let dayPickerInputProps = Object.assign(
       {
         onDayChange: this.handleDayChange,
         value: formData ? new Date(formData) : undefined,
         hideOnDayClick: true,
         ref: "datePicker",
+        format: "YYYY-MM-DD",
+        formatDate,
         inputProps: {
           className: "form-control",
         },
