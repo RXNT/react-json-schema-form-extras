@@ -4,6 +4,10 @@ import tableConfFrom, { removePosition } from "./tableConfFactory";
 import columnHeadersFrom from "./columnHeadersFactory";
 
 function convertFields(cellValue, { type, format, default: def }) {
+  if (cellValue === undefined) {
+    return cellValue;
+  }
+
   if (type === "boolean") {
     return cellValue === "true";
   } else if (type === "number") {
@@ -34,7 +38,7 @@ class TableField extends Component {
     updRow[cellName] = convertFields(cellValue, fieldSchema);
     // Small hack to support object returned from async autocomplete
     // Don't judge me too hard
-    if (cellValue[cellName]) {
+    if (cellValue && cellValue[cellName]) {
       Object.assign(updRow, cellValue);
     }
 

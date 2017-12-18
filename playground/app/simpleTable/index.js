@@ -19,7 +19,16 @@ let uiSchema = {
   simpleTable: {
     "ui:field": "table",
     table: {
-      tableCols: [{ dataField: "dateTime", dataFormat: "YYYY-MM-DD" }],
+      tableCols: [
+        {
+          dataField: "dateTime",
+          dataFormat: "YYYY-MM-DD",
+          field: "rdp",
+          uiSchema: {
+            rdp: {},
+          },
+        },
+      ],
     },
   },
 };

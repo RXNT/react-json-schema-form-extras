@@ -16,6 +16,7 @@ let schema = {
 
 let uiSchema = {
   dateTimePicker: {
+    "ui:autofocus": true,
     classNames: "col-md-12",
     "ui:field": "rdp",
     rdp: {
