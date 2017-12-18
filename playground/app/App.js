@@ -12,6 +12,17 @@ import rte2 from "./rte2";
 import dx from "./dx";
 import simpleTable from "./simpleTable";
 
+const ALL_CONFS = [
+  datePicker,
+  simpleTable,
+  rte2,
+  typeaheadNonExpandable,
+  medications,
+  typeahead,
+  rte(),
+  dx,
+];
+
 export default function App() {
   let handleChange = ({ formData }) => console.log(JSON.stringify(formData));
   let formContext = {
@@ -27,54 +38,14 @@ export default function App() {
 
   return (
     <div>
-      <Form
-        {...datePicker}
-        fields={fields}
-        onChange={handleChange}
-        formContext={formContext}
-      />
-      <Form
-        {...simpleTable}
-        fields={fields}
-        onChange={handleChange}
-        formContext={formContext}
-      />
-      <Form
-        {...rte2}
-        fields={fields}
-        onChange={handleChange}
-        formContext={formContext}
-      />
-      <Form
-        {...typeaheadNonExpandable}
-        fields={fields}
-        onChange={handleChange}
-        formContext={formContext}
-      />
-      <Form
-        {...medications}
-        fields={fields}
-        onChange={handleChange}
-        formContext={formContext}
-      />
-      <Form
-        {...typeahead}
-        fields={fields}
-        onChange={handleChange}
-        formContext={formContext}
-      />
-      <Form
-        {...rte()}
-        fields={fields}
-        onChange={handleChange}
-        formContext={formContext}
-      />
-      <Form
-        {...dx}
-        fields={fields}
-        onChange={handleChange}
-        formContext={formContext}
-      />
+      {ALL_CONFS.map(conf => (
+        <Form
+          {...conf}
+          fields={fields}
+          onChange={handleChange}
+          formContext={formContext}
+        />
+      ))}
     </div>
   );
 }

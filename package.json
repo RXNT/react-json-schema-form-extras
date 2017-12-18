@@ -45,7 +45,7 @@
     "prop-types": "^15.x",
     "react": "^16.x",
     "react-bootstrap-table": "^4.x",
-    "react-bootstrap-typeahead": "v2.x",
+    "react-bootstrap-typeahead": "v1.4.2",
     "react-day-picker": "^7.x",
     "react-rte": "^0.15.0",
     "moment": "^2.20.0"

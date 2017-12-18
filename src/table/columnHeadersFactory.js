@@ -103,7 +103,10 @@ export function overrideColDataFormat(colConf, fieldSchema) {
 const overrideColEditable = (colConf, fieldSchema, fields) => {
   if (colConf.field && fields[colConf.field]) {
     let FieldEditor = fields[colConf.field];
-    let fieldUISchema = colConf.uiSchema;
+    let fieldUISchema = Object.assign(
+      { "ui:autofocus": true },
+      colConf.uiSchema
+    );
     colConf.customEditor = {
       getElement: (onUpdate, props) => (
         <FieldEditor
