@@ -38,8 +38,9 @@ export default function App() {
 
   return (
     <div>
-      {ALL_CONFS.map(conf => (
+      {ALL_CONFS.map((conf, i) => (
         <Form
+          key={i}
           {...conf}
           fields={fields}
           onChange={handleChange}
