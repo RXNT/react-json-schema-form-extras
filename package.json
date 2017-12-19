@@ -42,13 +42,13 @@
     "node": ">=8.0.0"
   },
   "peerDependencies": {
+    "moment": "^2.20.0",
     "prop-types": "^15.x",
     "react": "^16.x",
     "react-bootstrap-table": "^4.x",
     "react-bootstrap-typeahead": "v1.4.2",
     "react-day-picker": "^7.x",
-    "react-rte": "^0.15.0",
-    "moment": "^2.20.0"
+    "react-rte": "^0.15.0"
   },
   "dependencies": {
     "selectn": "^1.1.2"
@@ -87,10 +87,11 @@
     "jest": "^21.2.1",
     "jsdom": "^11.3.0",
     "lint-staged": "^6.0.0",
+    "moment": "^2.20.1",
     "prettier": "^1.7.4",
     "react": "^16.0.0",
     "react-bootstrap-table": "^4.3.0",
-    "react-bootstrap-typeahead": "v2.0.2",
+    "react-bootstrap-typeahead": "v1.4.2",
     "react-day-picker": "^7.0.5",
     "react-dom": "^16.0.0",
     "react-jsonschema-form": "^1.0.0",
