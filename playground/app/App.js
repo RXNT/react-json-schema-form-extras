@@ -11,6 +11,7 @@ import datePicker from "./react-date-picker";
 import rte2 from "./rte2";
 import dx from "./dx";
 import simpleTable from "./simpleTable";
+import ros from "./ros";
 
 const ALL_CONFS = [
   datePicker,
@@ -21,6 +22,7 @@ const ALL_CONFS = [
   typeahead,
   rte(),
   dx,
+  ros,
 ];
 
 export default function App() {

@@ -187,6 +187,7 @@ class CollapsibleField extends Component {
       schema: { title },
       uiSchema,
       registry: { fields },
+      idSchema: { $id },
       name,
       formContext,
     } = this.props;
@@ -197,7 +198,7 @@ class CollapsibleField extends Component {
     title = uiSchema["ui:title"] ? uiSchema["ui:title"] : title ? title : name;
 
     return (
-      <div>
+      <div id={$id}>
         <CollapseMenu
           title={title}
           uiSchema={uiSchema}

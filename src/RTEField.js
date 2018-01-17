@@ -42,17 +42,19 @@ export default class RTEField extends Component {
   };
 
   render() {
-    let { uiSchema: { rte } } = this.props;
+    let { uiSchema: { rte }, idSchema: { $id } } = this.props;
     let autoFocus = this.props.uiSchema["ui:autofocus"];
 
     return (
-      <RichTextEditor
-        onBlur={this.handleBlur}
-        {...rte}
-        autoFocus={autoFocus}
-        value={this.state.value}
-        onChange={this.handleChange}
-      />
+      <div id={$id}>
+        <RichTextEditor
+          onBlur={this.handleBlur}
+          {...rte}
+          autoFocus={autoFocus}
+          value={this.state.value}
+          onChange={this.handleChange}
+        />
+      </div>
     );
   }
 }

@@ -58,7 +58,7 @@ export default class ReactDatePicker extends Component {
   };
 
   render() {
-    let { uiSchema = {}, formData } = this.props;
+    let { uiSchema = {}, formData, idSchema: { $id } } = this.props;
     let { rdp = {} } = uiSchema;
     let dayPickerInputProps = Object.assign(
       {
@@ -79,7 +79,7 @@ export default class ReactDatePicker extends Component {
     dayPickerInputProps.inputProps.onBlur = this.handleBlur;
 
     return (
-      <div onKeyDown={this.handleKeyDown}>
+      <div onKeyDown={this.handleKeyDown} id={$id}>
         <DayPickerInput {...dayPickerInputProps} />
       </div>
     );
