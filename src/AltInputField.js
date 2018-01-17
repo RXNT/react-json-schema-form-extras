@@ -5,6 +5,7 @@ function altInputField(props) {
   let {
     uiSchema: { defInput, altInput, altInputSeparator = "" },
     registry: { fields },
+    idSchema: { $id },
   } = props;
 
   let DefInput = fields[defInput];
@@ -15,7 +16,7 @@ function altInputField(props) {
     boxShadow: "none",
   };
   return (
-    <div className="row">
+    <div className="row" id={$id}>
       <div className="col-md-5">
         <DefInput {...props} />
       </div>

@@ -90,6 +90,7 @@ class TableField extends Component {
       schema,
       formData,
       registry: { fields },
+      idSchema: { $id },
       onChange,
     } = this.props;
 
@@ -110,15 +111,17 @@ class TableField extends Component {
     );
 
     return (
-      <BootstrapTable {...this.tableConf} ref="table">
-        {columns.map((column, i) => {
-          return (
-            <TableHeaderColumn key={i} {...column}>
-              {column.displayName}
-            </TableHeaderColumn>
-          );
-        })}
-      </BootstrapTable>
+      <div id={$id}>
+        <BootstrapTable {...this.tableConf} ref="table">
+          {columns.map((column, i) => {
+            return (
+              <TableHeaderColumn key={i} {...column}>
+                {column.displayName}
+              </TableHeaderColumn>
+            );
+          })}
+        </BootstrapTable>
+      </div>
     );
   }
 }
