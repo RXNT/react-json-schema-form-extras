@@ -13,6 +13,7 @@ class CompositeArrayField extends Component {
     let {
       uiSchema: { inputField, arrayField },
       registry: { fields },
+      idSchema: { $id },
     } = this.props;
 
     let inputProps = Object.assign({}, this.props, { formData: undefined });
@@ -20,7 +21,7 @@ class CompositeArrayField extends Component {
     let InputElement = fields[inputField];
     let ArrayElement = fields[arrayField];
     return (
-      <div>
+      <div id={$id}>
         <div className="form-group col-md-12">
           <InputElement {...inputProps} onChange={this.handleAdd} />
         </div>

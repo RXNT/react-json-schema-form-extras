@@ -74,8 +74,11 @@ function mapToObject(event, mapping, defVal) {
   return schemaEvent;
 }
 
-function mapEvents(events, { properties, items }, mapping) {
+function mapEvents(events, { type, properties, items }, mapping) {
   if (!mapping || mapping === null) {
+    if (type === "string") {
+      return events.map(item => (typeof item === "object" ? item.label : item));
+    }
     return events;
   } else if (typeof mapping === "string") {
     return events.map(event => selectn(mapping, event));
