@@ -42,7 +42,7 @@ export default class RTEField extends Component {
   };
 
   render() {
-    let { uiSchema: { rte }, idSchema: { $id } } = this.props;
+    let { uiSchema: { rte }, idSchema: { $id } = {} } = this.props;
     let autoFocus = this.props.uiSchema["ui:autofocus"];
 
     return (
