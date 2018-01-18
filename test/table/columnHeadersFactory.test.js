@@ -5,7 +5,7 @@ test("Create override function", () => {
     dataField: "drug",
     dataFormat: "drugName",
   };
-  overrideColDataFormat(colConf);
+  overrideColDataFormat(colConf, { type: "object" });
 
   let dataF = colConf.dataFormat;
   expect(dataF({}, { drug: { drugName: "Ibuprophen" } })).toEqual("Ibuprophen");
