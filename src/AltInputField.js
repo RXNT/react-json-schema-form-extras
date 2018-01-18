@@ -5,7 +5,7 @@ function altInputField(props) {
   let {
     uiSchema: { defInput, altInput, altInputSeparator = "" },
     registry: { fields },
-    idSchema: { $id },
+    idSchema: { $id } = {},
   } = props;
 
   let DefInput = fields[defInput];

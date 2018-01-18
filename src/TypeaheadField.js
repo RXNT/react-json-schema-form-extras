@@ -164,7 +164,12 @@ class BaseTypeaheadField extends Component {
 
 export class TypeaheadField extends BaseTypeaheadField {
   render() {
-    let { uiSchema: { typeahead }, formData, schema } = this.props;
+    let {
+      uiSchema: { typeahead },
+      formData,
+      schema,
+      idSchema: { $id } = {},
+    } = this.props;
 
     let labelKey = mapLabelKey(typeahead.labelKey);
     let selected = toSelected(formData, schema, typeahead.mapping, labelKey);
@@ -175,7 +180,11 @@ export class TypeaheadField extends BaseTypeaheadField {
       selected,
     });
 
-    return <Typeahead {...typeConf} />;
+    return (
+      <div id={$id}>
+        <Typeahead {...typeConf} />
+      </div>
+    );
   }
 }
 
@@ -226,7 +235,12 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
   };
 
   render() {
-    let { schema, uiSchema: { asyncTypeahead }, formData } = this.props;
+    let {
+      schema,
+      uiSchema: { asyncTypeahead },
+      formData,
+      idSchema: { $id } = {},
+    } = this.props;
 
     let labelKey = mapLabelKey(asyncTypeahead.labelKey);
     let selected = toSelected(
@@ -244,7 +258,11 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       options: this.state.options,
     });
 
-    return <AsyncTypeahead {...typeConf} />;
+    return (
+      <div id={$id}>
+        <AsyncTypeahead {...typeConf} />
+      </div>
+    );
   }
 }
 

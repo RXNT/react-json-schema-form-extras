@@ -187,7 +187,7 @@ class CollapsibleField extends Component {
       schema: { title },
       uiSchema,
       registry: { fields },
-      idSchema: { $id },
+      idSchema: { $id } = {},
       name,
       formContext,
     } = this.props;

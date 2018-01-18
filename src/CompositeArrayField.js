@@ -13,7 +13,7 @@ class CompositeArrayField extends Component {
     let {
       uiSchema: { inputField, arrayField },
       registry: { fields },
-      idSchema: { $id },
+      idSchema: { $id } = {},
     } = this.props;
 
     let inputProps = Object.assign({}, this.props, { formData: undefined });

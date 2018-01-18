@@ -90,7 +90,7 @@ class TableField extends Component {
       schema,
       formData,
       registry: { fields },
-      idSchema: { $id },
+      idSchema: { $id } = {},
       onChange,
     } = this.props;
 

@@ -58,7 +58,7 @@ export default class ReactDatePicker extends Component {
   };
 
   render() {
-    let { uiSchema = {}, formData, idSchema: { $id } } = this.props;
+    let { uiSchema = {}, formData, idSchema: { $id } = {} } = this.props;
     let { rdp = {} } = uiSchema;
     let dayPickerInputProps = Object.assign(
       {
