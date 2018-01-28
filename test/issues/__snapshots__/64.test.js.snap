@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`label rendered for typeahead 1`] = `
+<form
+  acceptCharset={undefined}
+  action={undefined}
+  autoComplete={undefined}
+  className="rjsf"
+  encType={undefined}
+  id={undefined}
+  method={undefined}
+  name={undefined}
+  noValidate={false}
+  onSubmit={[Function]}
+  target={undefined}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <fieldset>
+      <div
+        className="form-group field field-undefined"
+      >
+        <div
+          id="root_student"
+        >
+          <label
+            className="control-label"
+            htmlFor={undefined}
+          >
+            Students First/Last Name
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </label>
+          <div
+            className="bootstrap-typeahead clearfix open"
+            style={
+              Object {
+                "position": "relative",
+              }
+            }
+          >
+            <div
+              className="bootstrap-typeahead-input"
+              onClick={[Function]}
+              onFocus={[Function]}
+              style={
+                Object {
+                  "outline": "none",
+                  "position": "relative",
+                }
+              }
+              tabIndex={-1}
+            >
+              <input
+                autoComplete="off"
+                className="form-control bootstrap-typeahead-input-main"
+                disabled={undefined}
+                name={undefined}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Search Students..."
+                style={
+                  Object {
+                    "backgroundColor": "transparent",
+                    "display": "block",
+                    "position": "relative",
+                    "zIndex": 1,
+                  }
+                }
+                type="text"
+                value=""
+              />
+              <input
+                className="form-control bootstrap-typeahead-input-hint"
+                style={
+                  Object {
+                    "borderColor": "transparent",
+                    "bottom": 0,
+                    "boxShadow": "none",
+                    "color": "#a5a5a5",
+                    "display": "block",
+                    "position": "absolute",
+                    "top": 0,
+                    "width": "100%",
+                    "zIndex": 0,
+                  }
+                }
+                tabIndex={-1}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+        <div />
+        <div />
+      </div>
+    </fieldset>
+    <div />
+    <div />
+  </div>
+  <p>
+    <button
+      className="btn btn-info"
+      type="submit"
+    >
+      Submit
+    </button>
+  </p>
+</form>
+`;
