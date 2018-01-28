@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import { formatDate } from "react-day-picker/moment";
+import { DefaultLabel } from "./Label";
 
 const DEFAULT_UPDATE_DELAY = 100;
 
@@ -80,6 +81,7 @@ export default class ReactDatePicker extends Component {
 
     return (
       <div onKeyDown={this.handleKeyDown} id={$id}>
+        <DefaultLabel {...this.props} />
         <DayPickerInput {...dayPickerInputProps} />
       </div>
     );

@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { AsyncTypeahead, Typeahead } from "react-bootstrap-typeahead";
 import { isArraySchema, isObjectSchema, toArray } from "./utils";
 import selectn from "selectn";
+import { DefaultLabel } from "./Label";
 
 const DEFAULT_OPTIONS = {
   required: false,
@@ -182,6 +183,7 @@ export class TypeaheadField extends BaseTypeaheadField {
 
     return (
       <div id={$id}>
+        <DefaultLabel {...this.props} />
         <Typeahead {...typeConf} />
       </div>
     );
@@ -260,6 +262,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
 
     return (
       <div id={$id}>
+        <DefaultLabel {...this.props} />
         <AsyncTypeahead {...typeConf} />
       </div>
     );
