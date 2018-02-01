@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import RichTextEditor from "react-rte";
+import { DefaultLabel } from "./Label";
 
 const DEFAULT_FORMAT = "html";
 
@@ -47,6 +48,7 @@ export default class RTEField extends Component {
 
     return (
       <div id={$id}>
+        <DefaultLabel {...this.props} />
         <RichTextEditor
           onBlur={this.handleBlur}
           {...rte}
