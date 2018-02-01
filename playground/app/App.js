@@ -10,10 +10,12 @@ import rte from "./rte";
 import datePicker from "./react-date-picker";
 import rte2 from "./rte2";
 import dx from "./dx";
+import label from "./labels";
 import simpleTable from "./simpleTable";
 import ros from "./ros";
 
 const ALL_CONFS = [
+  label,
   datePicker,
   simpleTable,
   rte2,
