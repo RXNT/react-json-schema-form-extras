@@ -7,6 +7,26 @@ function actionFactory(action) {
       newFormData.splice(rowIndex, 1);
       onChange(newFormData);
     };
+  } else if (action === "moveup") {
+    return (cell, row, enumObject, rowIndex, formData, onChange) => {
+      let newFormData = formData.slice(0);
+      let temp = newFormData[rowIndex];
+      if (rowIndex >= 1) {
+        newFormData[rowIndex] = newFormData[rowIndex - 1];
+        newFormData[rowIndex - 1] = temp;
+        onChange(newFormData);
+      }
+    };
+  } else if (action === "movedown") {
+    return (cell, row, enumObject, rowIndex, formData, onChange) => {
+      let newFormData = formData.slice(0);
+      let temp = newFormData[rowIndex];
+      if (rowIndex <= formData.length - 2) {
+        newFormData[rowIndex] = newFormData[rowIndex + 1];
+        newFormData[rowIndex + 1] = temp;
+        onChange(newFormData);
+      }
+    };
   } else if (typeof action === "function") {
     return action;
   } else {
