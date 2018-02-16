@@ -107,11 +107,15 @@ const overrideColEditable = (colConf, fieldSchema, fields) => {
       { "ui:autofocus": true },
       colConf.uiSchema
     );
+    let fieldSchemaWithoutTitle = Object.assign(
+      { ...fieldSchema },
+      { title: "" }
+    );
     colConf.customEditor = {
       getElement: (onUpdate, props) => (
         <FieldEditor
           formData={props.defaultValue}
-          schema={fieldSchema}
+          schema={fieldSchemaWithoutTitle}
           uiSchema={fieldUISchema}
           onChange={onUpdate}
         />
