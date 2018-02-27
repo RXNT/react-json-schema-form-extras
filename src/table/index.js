@@ -19,6 +19,13 @@ function convertFields(cellValue, { type, format, default: def }) {
       let date = new Date(cellValue);
       return date.toISOString();
     }
+  } else if (type === "string" && format === "date") {
+    if (cellValue === "") {
+      return def;
+    } else {
+      let date = new Date(cellValue);
+      return date.toISOString().substr(0, 10);
+    }
   }
   return cellValue;
 }
