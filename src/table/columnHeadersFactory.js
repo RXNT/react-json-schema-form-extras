@@ -97,6 +97,25 @@ export function overrideColDataFormat(colConf, fieldSchema) {
       return moment(fieldVal.toISOString()).format(dataFormat);
     };
     colConf.dataFormat.bind(this);
+  } else if (
+    typeof colConf.dataFormat === "string" &&
+    fieldSchema.type === "string" &&
+    fieldSchema.format === "date"
+  ) {
+    const { dataField, dataFormat } = colConf;
+    colConf.dataFormat = function(cell, row) {
+      if (!row[dataField]) {
+        return undefined;
+      }
+      let fieldVal = row[dataField];
+      if (typeof fieldVal === "string") {
+        return moment(fieldVal).format(dataFormat);
+      }
+      return moment(fieldVal.toISOString())
+        .format(dataFormat)
+        .substr(0, 10);
+    };
+    colConf.dataFormat.bind(this);
   }
 }
 

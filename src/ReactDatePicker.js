@@ -67,7 +67,7 @@ export default class ReactDatePicker extends Component {
         value: formData ? new Date(formData) : undefined,
         hideOnDayClick: true,
         ref: "datePicker",
-        format: "YYYY-MM-DD",
+        format: "MM-DD-YYYY",
         formatDate,
         inputProps: {
           className: "form-control",
