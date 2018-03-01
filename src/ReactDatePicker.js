@@ -13,7 +13,7 @@ function normalizeDay(day, format) {
   } else if (format === "date-time") {
     return day.toISOString();
   } else if (format === "date") {
-    return day.toISOString().substr(0, 10);
+    return moment(day).format("YYYY-MM-DD");
   }
 }
 
@@ -21,14 +21,20 @@ export default class ReactDatePicker extends Component {
   constructor(props) {
     super(props);
 
-    let { formData } = props;
-
-    this.day = formData ? new Date(formData) : undefined;
+    let { schema: { format = "date-time" }, formData } = props;
+    this.day = formData
+      ? format === "date"
+        ? moment(formData).format("MM/DD/YYYY")
+        : new Date(formData)
+      : undefined;
   }
 
-  componentWillReceiveProps({ formData }) {
+  componentWillReceiveProps({ schema: { format = "date-time" }, formData }) {
     if (formData) {
-      this.day = new Date(formData);
+      this.day =
+        format === "date"
+          ? moment(formData).format("MM/DD/YYYY")
+          : new Date(formData);
     }
   }
 
@@ -49,8 +55,11 @@ export default class ReactDatePicker extends Component {
   notifyChange = () => {
     let day = this.day;
     let { schema: { format = "date-time" }, onChange, formData } = this.props;
+    if (formData === "date") {
+      formData = moment(formData).format("MM/DD/YYYY");
+    }
     let event = normalizeDay(day, format);
-    if (event !== formData) {
+    if (event !== formData && event != undefined && event !== "Invalid date") {
       onChange(event);
     }
   };
