@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import DayPickerInput from "react-day-picker/DayPickerInput";
 import { formatDate } from "react-day-picker/moment";
 import { DefaultLabel } from "./Label";
+import moment from "moment";
 
 const DEFAULT_UPDATE_DELAY = 100;
 
@@ -40,9 +41,9 @@ export default class ReactDatePicker extends Component {
 
   handleBlur = () => {
     let {
-      uiSchema: { rdp: { updateDelay = DEFAULT_UPDATE_DELAY } = {} } = {},
+      uiSchema: { rdp: { updateDelay = DEFAULT_UPDATE_DELAY } = {} } = {}, //eslint-disable-line
     } = this.props;
-    setTimeout(this.notifyChange, updateDelay);
+    setTimeout(this.notifyChange, 0);
   };
 
   notifyChange = () => {
@@ -59,15 +60,24 @@ export default class ReactDatePicker extends Component {
   };
 
   render() {
-    let { uiSchema = {}, formData, idSchema: { $id } = {} } = this.props;
+    let {
+      uiSchema = {},
+      formData,
+      idSchema: { $id } = {},
+      schema: { format = "date-time" },
+    } = this.props;
     let { rdp = {} } = uiSchema;
     let dayPickerInputProps = Object.assign(
       {
         onDayChange: this.handleDayChange,
-        value: formData ? new Date(formData) : undefined,
+        value: formData
+          ? format == "date"
+            ? moment(formData).format("MM/DD/YYYY")
+            : new Date(formData)
+          : undefined,
         hideOnDayClick: true,
         ref: "datePicker",
-        format: "MM-DD-YYYY",
+        format: "MM/DD/YYYY",
         formatDate,
         inputProps: {
           className: "form-control",
