@@ -24,7 +24,7 @@ function convertFields(cellValue, { type, format, default: def }) {
     if (cellValue === "") {
       return def;
     } else {
-      let date = moment(cellValue).format("MM/DD/YYYY");
+      let date = moment(cellValue).format("YYYY-MM-DD");
       return date;
     }
   }
