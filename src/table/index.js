@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import tableConfFrom, { removePosition } from "./tableConfFactory";
 import columnHeadersFrom from "./columnHeadersFactory";
+import moment from "moment";
 
 function convertFields(cellValue, { type, format, default: def }) {
   if (cellValue === undefined) {
@@ -23,8 +24,8 @@ function convertFields(cellValue, { type, format, default: def }) {
     if (cellValue === "") {
       return def;
     } else {
-      let date = new Date(cellValue);
-      return date.toISOString().substr(0, 10);
+      let date = moment(cellValue).format("MM/DD/YYYY");
+      return date;
     }
   }
   return cellValue;
