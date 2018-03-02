@@ -59,7 +59,7 @@ export default class ReactDatePicker extends Component {
       formData = moment(formData).format("MM/DD/YYYY");
     }
     let event = normalizeDay(day, format);
-    if (event !== formData && event != undefined && event !== "Invalid date") {
+    if (event !== formData && event != undefined) {
       onChange(event);
     }
   };
@@ -80,8 +80,8 @@ export default class ReactDatePicker extends Component {
       {
         onDayChange: this.handleDayChange,
         value: formData
-          ? format == "date"
-            ? moment(formData).format("MM/DD/YYYY")
+          ? format === "date"
+            ? new Date(formData).toISOString().substr(0, 10)
             : new Date(formData)
           : undefined,
         hideOnDayClick: true,
