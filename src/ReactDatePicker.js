@@ -24,7 +24,7 @@ export default class ReactDatePicker extends Component {
     let { schema: { format = "date-time" }, formData } = props;
     this.day = formData
       ? format === "date"
-        ? moment(formData).format("MM/DD/YYYY")
+        ? new Date(formData).toISOString().substr(0, 10)
         : new Date(formData)
       : undefined;
   }
@@ -33,7 +33,7 @@ export default class ReactDatePicker extends Component {
     if (formData) {
       this.day =
         format === "date"
-          ? moment(formData).format("MM/DD/YYYY")
+          ? new Date(formData).toISOString().substr(0, 10)
           : new Date(formData);
     }
   }
@@ -49,15 +49,13 @@ export default class ReactDatePicker extends Component {
     let {
       uiSchema: { rdp: { updateDelay = DEFAULT_UPDATE_DELAY } = {} } = {}, //eslint-disable-line
     } = this.props;
-    setTimeout(this.notifyChange, 0);
+    setTimeout(this.notifyChange, 0); //do we need a fixed time delay??
   };
 
   notifyChange = () => {
     let day = this.day;
     let { schema: { format = "date-time" }, onChange, formData } = this.props;
-    if (formData === "date") {
-      formData = moment(formData).format("MM/DD/YYYY");
-    }
+
     let event = normalizeDay(day, format);
     if (event !== formData && event != undefined) {
       onChange(event);
@@ -81,9 +79,7 @@ export default class ReactDatePicker extends Component {
         onDayChange: this.handleDayChange,
         value: formData
           ? format === "date"
-            ? moment(formData)
-                .format("MM/DD/YYYY")
-                .toString()
+            ? moment(formData).format("MM/DD/YYYY")
             : new Date(formData)
           : undefined,
         hideOnDayClick: true,
