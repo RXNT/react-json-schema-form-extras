@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import DayPickerInput from "react-day-picker/DayPickerInput";
-import { formatDate } from "react-day-picker/moment";
+import { formatDate, parseDate } from "react-day-picker/moment";
 import { DefaultLabel } from "./Label";
 import moment from "moment";
 
@@ -81,13 +81,16 @@ export default class ReactDatePicker extends Component {
         onDayChange: this.handleDayChange,
         value: formData
           ? format === "date"
-            ? new Date(formData).toISOString().substr(0, 10)
+            ? moment(formData)
+                .format("MM/DD/YYYY")
+                .toString()
             : new Date(formData)
           : undefined,
         hideOnDayClick: true,
         ref: "datePicker",
         format: "MM/DD/YYYY",
-        formatDate,
+        formatDate: formatDate,
+        parseDate: parseDate,
         inputProps: {
           className: "form-control",
           type: "text",
