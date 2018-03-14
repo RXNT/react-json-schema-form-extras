@@ -12,7 +12,9 @@ function convertFields(cellValue, { type, format, default: def }) {
   if (type === "boolean") {
     return cellValue === "true";
   } else if (type === "number") {
-    return parseFloat(cellValue);
+    return cellValue !== undefined && cellValue != ""
+      ? parseFloat(cellValue)
+      : "";
   } else if (type === "string" && format === "date-time") {
     if (cellValue === "") {
       return def;
