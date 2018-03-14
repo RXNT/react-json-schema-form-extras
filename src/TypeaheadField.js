@@ -226,7 +226,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
           url,
           optionsPath,
           search = (url, query) =>
-            fetch(`url?query=${query}`).then(res => res.json()),
+            fetch(`${url}?query=${query}`).then(res => res.json()),
         },
       },
     } = this.props;
