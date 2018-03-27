@@ -8,6 +8,9 @@ const DEFAULT_TABLE_CONF = {
     blurToSave: true,
   },
   options: {},
+  keyBoardNav: {
+    enterToEdit: true
+  },
   handleConfirmDeleteRow: next => next(),
 };
 
