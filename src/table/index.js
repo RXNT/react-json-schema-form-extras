@@ -13,8 +13,8 @@ function convertFields(cellValue, { type, format, default: def }) {
     return cellValue === "true";
   } else if (type === "number") {
     return cellValue !== undefined && cellValue != ""
-      ? parseFloat(cellValue)
-      : "";
+    ? parseFloat(cellValue)
+    : "";
   } else if (type === "string" && format === "date-time") {
     if (cellValue === "") {
       return def;
@@ -38,9 +38,9 @@ class TableField extends Component {
     super(props);
 
     this.handleCellSave = this.handleCellSave.bind(this);
-    this.handleRowsDelete = this.handleRowsDelete.bind(this);
+    this.handleRowsDelete = this.handleRowsDelete.bind(this); 
   }
-
+  
   handleCellSave(updRow, cellName, cellValue) {
     let { keyField, data } = this.tableConf;
 
@@ -57,6 +57,16 @@ class TableField extends Component {
       row => (row[keyField] === targetKey ? updRow : row)
     );
 
+    /* Number field Validation => if Number is Undefined Or Empty, it should removed from the FormData */
+    let {type, format, default: def} = fieldSchema;
+    if(type === 'number'){
+      Object.keys(updTable[targetKey]).map(function (column) {
+        if(column == cellName && updTable[targetKey][column] === undefined || updTable[targetKey][column] == ''){
+          delete updTable[targetKey][column];
+        }
+      });
+    }
+    /* end Number Filed validation  */
     this.props.onChange(removePosition(updTable));
   }
 
@@ -110,7 +120,7 @@ class TableField extends Component {
       this.handleCellSave,
       this.handleRowsDelete
     );
-
+    
     this.tableConf.cellEdit.beforeSaveCell = this.beforeSaveCell;
     let columns = columnHeadersFrom(
       schema,
@@ -119,7 +129,7 @@ class TableField extends Component {
       formData,
       onChange
     );
-
+   
     return (
       <div id={$id}>
         <BootstrapTable {...this.tableConf} ref="table">
