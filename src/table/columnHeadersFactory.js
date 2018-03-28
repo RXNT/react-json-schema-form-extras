@@ -2,18 +2,21 @@ import React from "react";
 import actionHeaderFrom from "./actionHeaderFactory";
 import moment from "moment";
 
+const toDataAlignment = fieldProp => {
+  if (fieldProp.type === "number") {
+    return 'right';
+  }else if(fieldProp.format === "date" || fieldProp.format === "date-time" ){
+    return 'right';
+  }
+};
 const toDataFormat = fieldProp => {
+
   if (fieldProp.enum && fieldProp.enumNames) {
     return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
   } else if (fieldProp.type === "boolean") {
     return cell => (
       <div style={{ textAlign: "right" }}>
-        <input
-          type="checkbox"
-          checked={cell}
-          onChange={() => {}}
-          style={{ position: "relative" }}
-        />
+     <label>{ (cell) ? 'Yes' : 'No'}</label>
       </div>
     );
   }
@@ -67,7 +70,8 @@ const columnHeadersFromSchema = schema => {
     let { title } = properties[dataField];
     let editable = toEditable(properties[dataField]);
     let dataFormat = toDataFormat(properties[dataField]);
-    return { dataField, displayName: title, editable, dataFormat };
+    let dataAlign = toDataAlignment(properties[dataField]);
+    return { dataField, displayName: title, editable, dataFormat, dataAlign };
   });
 
   return schemaCols;
