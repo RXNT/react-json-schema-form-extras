@@ -13,6 +13,7 @@ import dx from "./dx";
 import label from "./labels";
 import simpleTable from "./simpleTable";
 import ros from "./ros";
+import custom from "./custom";
 
 const ALL_CONFS = [
   label,
@@ -25,6 +26,7 @@ const ALL_CONFS = [
   rte(),
   dx,
   ros,
+  custom,
 ];
 
 export default function App() {
