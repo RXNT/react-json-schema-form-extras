@@ -9,7 +9,7 @@ const toDataAlignment = fieldProp => {
     return 'right';
   }
 };
-const toDataFormat = fieldProp => {
+const toDataFormat = (fieldProp, fieldUIProp) => {
 
   if (fieldProp.enum && fieldProp.enumNames) {
     return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
@@ -19,10 +19,16 @@ const toDataFormat = fieldProp => {
      <label>{ (cell) ? 'Yes' : 'No'}</label>
       </div>
     );
-  }
+  } else if ((fieldUIProp !== undefined) && fieldUIProp.columnCustomFormat !== undefined) {
+
+   let columnCustomFormat = JSON.parse(fieldUIProp.columnCustomFormat);
+   let funcBody =  JSON.parse(JSON.stringify(columnCustomFormat.function.body).replace(/&nbsp;/g,' '));
+   let customFunc = new Function(columnCustomFormat.function.arguments, funcBody);
+  return  (cell, row) => ( customFunc(cell,row,fieldProp) );
+ }
   return undefined;
 };
-
+ 
 const toEditable = fieldProp => {
   if (fieldProp.enum) {
     if (fieldProp.enumNames) {
@@ -64,16 +70,17 @@ const toEditable = fieldProp => {
   return true;
 };
 
-const columnHeadersFromSchema = schema => {
+const columnHeadersFromSchema = (schema, uiSchema) => {
   let { items: { properties } } = schema;
+  let { table: { tableCols } } = uiSchema;
   let schemaCols = Object.keys(properties).map(dataField => {
     let { title } = properties[dataField];
     let editable = toEditable(properties[dataField]);
-    let dataFormat = toDataFormat(properties[dataField]);
+    let uiProperties = (tableCols) ? tableCols.find(cols => (cols.dataField === dataField)) : false;
+    let dataFormat = toDataFormat(properties[dataField], uiProperties);
     let dataAlign = toDataAlignment(properties[dataField]);
     return { dataField, displayName: title, editable, dataFormat, dataAlign };
   });
-
   return schemaCols;
 };
 
@@ -207,7 +214,7 @@ const columnHeadersFactory = (
   formData,
   onChange
 ) => {
-  let allColumns = columnHeadersFromSchema(schema);
+  let allColumns = columnHeadersFromSchema(schema, uiSchema);
   let orderedColumns = orderColumns(allColumns, uiSchema);
   let withOverrides = overrideColumns(orderedColumns, schema, uiSchema, fields);
   let columnsWithCSS = withColumnCss(withOverrides);
