@@ -45,6 +45,20 @@ function CollapseMenu(props) {
         addTo,
         wrapClassName = "lead",
         actions = [],
+        classNames = "collapsableHeading",
+        collapseDivStyles: {
+          textColor = "black",
+          background = "",
+          addGlyphColor = "",
+          collapseGlyphColor = "",
+          padding = "14px",
+          margin = "",
+          marginLeft = "-5px",
+          marginBottom = "5px",
+          zIndex = -1,
+          divCursor = "pointer",
+          addCursor = "copy",
+        } = {},
       },
     },
     formContext = {},
@@ -54,24 +68,45 @@ function CollapseMenu(props) {
     name,
     collapsed,
   } = props;
+
+  const handleAdd = event => {
+    event.stopPropagation();
+    onAdd(event);
+  };
+
   return (
-    <div className={wrapClassName}>
-      <span>{title || name}</span>&nbsp;
-      {addTo && (
-        <a onClick={onAdd}>
-          <i className={add} />
+    <div className={`${wrapClassName}`}>
+      <div
+        className={classNames}
+        onClick={onChange}
+        style={{
+          padding,
+          margin,
+          marginLeft,
+          marginBottom,
+          zIndex,
+          cursor: divCursor,
+          background,
+        }}>
+        <span style={{ color: textColor }}>{title || name}</span>&nbsp;
+        {addTo && (
+          <a
+            onClick={handleAdd}
+            style={{ zIndex: 999, cursor: addCursor, color: addGlyphColor }}>
+            <i className={add} />
+          </a>
+        )}
+        <a style={{ color: collapseGlyphColor }}>
+          <i className={collapsed ? disabled : enabled} />
         </a>
-      )}
-      <a onClick={onChange}>
-        <i className={collapsed ? disabled : enabled} />
-      </a>
-      {actions.map((action, i) => (
-        <CollapseMenuAction
-          key={i}
-          action={action}
-          allActions={formContext.allActions}
-        />
-      ))}
+        {actions.map((action, i) => (
+          <CollapseMenuAction
+            key={i}
+            action={action}
+            allActions={formContext.allActions}
+          />
+        ))}
+      </div>
       {separate && <hr />}
     </div>
   );
