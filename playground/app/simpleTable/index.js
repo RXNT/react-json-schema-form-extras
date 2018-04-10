@@ -28,6 +28,10 @@ let uiSchema = {
             rdp: {},
           },
         },
+        {
+          dataField: "str",
+          columnCustomFormat : '{"function":{"arguments":"cell,row,schema","body":"return \'<a >\'+cell+\'<\/a>\' "}}'
+        },
       ],
     },
   },
