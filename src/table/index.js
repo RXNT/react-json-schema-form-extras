@@ -37,6 +37,22 @@ class TableField extends Component {
   constructor(props) {
     super(props);
 
+    // var components = this.props.schema.items.properties;
+    // Object.keys(components).map(item => {
+    //   if (
+    //     components[item].format === "date" ||
+    //     components[item].format === "date-time"
+    //   ) {
+    //     if (components[item].default === "currentDate") {
+    //       components[item].format === "date"
+    //         ? (components[item]["default"] = new Date()
+    //             .toISOString()
+    //             .substr(0, 10))
+    //         : (components[item]["default"] = new Date());
+    //     }
+    //   }
+    // });
+
     this.handleCellSave = this.handleCellSave.bind(this);
     this.handleRowsDelete = this.handleRowsDelete.bind(this);
   }
@@ -84,23 +100,7 @@ class TableField extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let { uiSchema: { table: { focusOnAdd } = {} }, schema } = nextProps;
-    // address issue with default date rendering
-    var components = schema.items.properties;
-    Object.keys(components).map(item => {
-      if (
-        components[item].format === "date" ||
-        components[item].format === "date-time"
-      ) {
-        if (components[item].default === "currentDate") {
-          components[item].format === "date"
-            ? (components[item]["default"] = new Date()
-                .toISOString()
-                .substr(0, 10))
-            : (components[item]["default"] = new Date());
-        }
-      }
-    });
+    let { uiSchema: { table: { focusOnAdd } = {} } } = nextProps;
 
     this.adding =
       focusOnAdd !== undefined &&
@@ -109,23 +109,6 @@ class TableField extends Component {
       nextProps.formData.length > this.props.formData.length;
   }
   // adds current date to default for table schema
-  componentWillMount() {
-    var components = this.props.schema.items.properties;
-    Object.keys(components).map(item => {
-      if (
-        components[item].format === "date" ||
-        components[item].format === "date-time"
-      ) {
-        if (components[item].default === "currentDate") {
-          components[item].format === "date"
-            ? (components[item]["default"] = new Date()
-                .toISOString()
-                .substr(0, 10))
-            : (components[item]["default"] = new Date());
-        }
-      }
-    });
-  }
 
   componentDidUpdate() {
     if (this.adding) {

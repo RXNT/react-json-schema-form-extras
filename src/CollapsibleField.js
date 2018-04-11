@@ -45,12 +45,12 @@ function CollapseMenu(props) {
         addTo,
         wrapClassName = "lead",
         actions = [],
-        classNames = "collapsableHeading",
+        classNames = "collapsibleHeading",
         collapseDivStyles: {
-          textColor = "black",
-          background = "",
-          addGlyphColor = "",
-          collapseGlyphColor = "",
+          textColor = "white",
+          background = "linear-gradient(to right, #0472B6, white)",
+          collapseGlyphColor = "white",
+          addGlyphColor = "white",
           padding = "14px",
           margin = "",
           marginLeft = "-5px",
@@ -92,12 +92,15 @@ function CollapseMenu(props) {
         {addTo && (
           <a
             onClick={handleAdd}
-            style={{ zIndex: 999, cursor: addCursor, color: addGlyphColor }}>
-            <i className={add} />
+            style={{ color: addGlyphColor, cursor: addCursor }}>
+            <i style={{ cursor: addCursor }} className={add} />
           </a>
         )}
-        <a style={{ color: collapseGlyphColor }}>
-          <i className={collapsed ? disabled : enabled} />
+        <a>
+          <i
+            style={{ color: collapseGlyphColor }}
+            className={collapsed ? disabled : enabled}
+          />
         </a>
         {actions.map((action, i) => (
           <CollapseMenuAction
