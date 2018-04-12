@@ -135,6 +135,11 @@ export default {
                 format: "date",
                 title: "Start Date",
               },
+              isSelected: {
+                default: true,
+                type: "boolean"  ,
+                title: "IsSelected",           
+              }
             },
           },
         },
