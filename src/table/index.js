@@ -13,8 +13,8 @@ function convertFields(cellValue, { type, format, default: def }) {
     return cellValue === "true";
   } else if (type === "number") {
     return cellValue !== undefined && cellValue != ""
-    ? parseFloat(cellValue)
-    : "";
+      ? parseFloat(cellValue)
+      : "";
   } else if (type === "string" && format === "date-time") {
     if (cellValue === "") {
       return def;
@@ -37,13 +37,28 @@ class TableField extends Component {
   constructor(props) {
     super(props);
 
+    // var components = this.props.schema.items.properties;
+    // Object.keys(components).map(item => {
+    //   if (
+    //     components[item].format === "date" ||
+    //     components[item].format === "date-time"
+    //   ) {
+    //     if (components[item].default === "currentDate") {
+    //       components[item].format === "date"
+    //         ? (components[item]["default"] = new Date()
+    //             .toISOString()
+    //             .substr(0, 10))
+    //         : (components[item]["default"] = new Date());
+    //     }
+    //   }
+    // });
+
     this.handleCellSave = this.handleCellSave.bind(this);
-    this.handleRowsDelete = this.handleRowsDelete.bind(this); 
+    this.handleRowsDelete = this.handleRowsDelete.bind(this);
   }
-  
+
   handleCellSave(updRow, cellName, cellValue) {
     let { keyField, data } = this.tableConf;
-
     let fieldSchema = this.props.schema.items.properties[cellName];
     updRow[cellName] = convertFields(cellValue, fieldSchema);
     // Small hack to support object returned from async autocomplete
@@ -58,10 +73,13 @@ class TableField extends Component {
     );
 
     /* Number field Validation => if Number is Undefined Or Empty, it should removed from the FormData */
-    let {type, format, default: def} = fieldSchema;
-    if(type === 'number'){
-      Object.keys(updTable[targetKey]).map(function (column) {
-        if(column == cellName && updTable[targetKey][column] === undefined || updTable[targetKey][column] == ''){
+    let { type } = fieldSchema;
+    if (type === "number") {
+      Object.keys(updTable[targetKey]).map(function(column) {
+        if (
+          (column == cellName && updTable[targetKey][column] === undefined) ||
+          updTable[targetKey][column] == ""
+        ) {
           delete updTable[targetKey][column];
         }
       });
@@ -83,16 +101,19 @@ class TableField extends Component {
 
   componentWillReceiveProps(nextProps) {
     let { uiSchema: { table: { focusOnAdd } = {} } } = nextProps;
+
     this.adding =
       focusOnAdd !== undefined &&
       nextProps.formData &&
       this.props.formData &&
       nextProps.formData.length > this.props.formData.length;
   }
+  // adds current date to default for table schema
 
   componentDidUpdate() {
     if (this.adding) {
       let { uiSchema: { table: { focusOnAdd } } } = this.props;
+
       let body = this.refs.table.refs.body
         ? this.refs.table.refs.body
         : this.refs.table.body;
@@ -120,7 +141,7 @@ class TableField extends Component {
       this.handleCellSave,
       this.handleRowsDelete
     );
-    
+
     this.tableConf.cellEdit.beforeSaveCell = this.beforeSaveCell;
     let columns = columnHeadersFrom(
       schema,
@@ -129,7 +150,7 @@ class TableField extends Component {
       formData,
       onChange
     );
-   
+
     return (
       <div id={$id}>
         <BootstrapTable {...this.tableConf} ref="table">

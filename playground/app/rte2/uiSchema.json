@@ -166,7 +166,19 @@
       },
       "collapse": {
         "field": "rte",
-        "collapsed": false
+        "collapsed": false,
+        "collapseDivStyles": {
+          "textColor": "white",
+          "padding": "14px", 
+          "margin": "",
+          "marginLeft": "-10px",
+          "marginBottom": "5px",
+          "zIndex": -1,
+          "cursor": "pointer",
+          "background": "grey",
+          "addGlyphColor": "white",
+          "collapseGlyphColor": "white"
+        }
       }
     }
   }

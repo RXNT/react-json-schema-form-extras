@@ -30,7 +30,8 @@ let uiSchema = {
         },
         {
           dataField: "str",
-          columnCustomFormat : '{"function":{"arguments":"cell,row,schema","body":"return \'<a >\'+cell+\'<\/a>\' "}}'
+          columnCustomFormat:
+            '{"function":{"arguments":"cell,row,schema","body":"return \'<a >\'+cell+\'</a>\' "}}', //eslint-disable-line
         },
       ],
     },

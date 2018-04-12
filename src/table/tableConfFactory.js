@@ -9,7 +9,7 @@ const DEFAULT_TABLE_CONF = {
   },
   options: {},
   keyBoardNav: {
-    enterToEdit: true
+    enterToEdit: true,
   },
   handleConfirmDeleteRow: next => next(),
 };

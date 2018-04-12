@@ -45,6 +45,20 @@ function CollapseMenu(props) {
         addTo,
         wrapClassName = "lead",
         actions = [],
+        classNames = "collapsibleHeading",
+        collapseDivStyles: {
+          textColor = "white",
+          background = "linear-gradient(to right, #0472B6, white)",
+          collapseGlyphColor = "white",
+          addGlyphColor = "white",
+          padding = "14px",
+          margin = "",
+          marginLeft = "-5px",
+          marginBottom = "5px",
+          zIndex = -1,
+          divCursor = "pointer",
+          addCursor = "copy",
+        } = {},
       },
     },
     formContext = {},
@@ -54,24 +68,48 @@ function CollapseMenu(props) {
     name,
     collapsed,
   } = props;
+
+  const handleAdd = event => {
+    event.stopPropagation();
+    onAdd(event);
+  };
+
   return (
-    <div className={wrapClassName}>
-      <span>{title || name}</span>&nbsp;
-      {addTo && (
-        <a onClick={onAdd}>
-          <i className={add} />
+    <div className={`${wrapClassName}`}>
+      <div
+        className={classNames}
+        onClick={onChange}
+        style={{
+          padding,
+          margin,
+          marginLeft,
+          marginBottom,
+          zIndex,
+          cursor: divCursor,
+          background,
+        }}>
+        <span style={{ color: textColor }}>{title || name}</span>&nbsp;
+        {addTo && (
+          <a
+            onClick={handleAdd}
+            style={{ color: addGlyphColor, cursor: addCursor }}>
+            <i style={{ cursor: addCursor }} className={add} />
+          </a>
+        )}
+        <a>
+          <i
+            style={{ color: collapseGlyphColor }}
+            className={collapsed ? disabled : enabled}
+          />
         </a>
-      )}
-      <a onClick={onChange}>
-        <i className={collapsed ? disabled : enabled} />
-      </a>
-      {actions.map((action, i) => (
-        <CollapseMenuAction
-          key={i}
-          action={action}
-          allActions={formContext.allActions}
-        />
-      ))}
+        {actions.map((action, i) => (
+          <CollapseMenuAction
+            key={i}
+            action={action}
+            allActions={formContext.allActions}
+          />
+        ))}
+      </div>
       {separate && <hr />}
     </div>
   );
