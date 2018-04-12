@@ -197,6 +197,7 @@ export default {
                 type: "string",
                 title: "Allergy Identified On",
                 format: "date",
+                default: "currentDate",
               },
             },
           },

@@ -3,32 +3,39 @@ import actionHeaderFrom from "./actionHeaderFactory";
 import moment from "moment";
 
 const toDataAlignment = fieldProp => {
-	if (fieldProp.type === "number") {
-		return "right";
-	}else if(fieldProp.format === "date" || fieldProp.format === "date-time" ){
-		return "right";
-	}
+
+  if (fieldProp.type === "number") {
+    return "right";
+  } else if (fieldProp.format === "date" || fieldProp.format === "date-time") {
+    return "right";
+  }
 };
 const toDataFormat = (fieldProp, fieldUIProp) => {
-
-	if (fieldProp.enum && fieldProp.enumNames) {
-		return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
-	} else if (fieldProp.type === "boolean") {
-		return cell => (
-			<div style={{ textAlign: "right" }}>
-				<label>{ (cell) ? "Yes" : "No"}</label>
-			</div>
-		);
-	} else if ((fieldUIProp !== undefined) && fieldUIProp.columnCustomFormat !== undefined) {
-
-		let columnCustomFormat = JSON.parse(fieldUIProp.columnCustomFormat);
-		let funcBody =  JSON.parse(JSON.stringify(columnCustomFormat.function.body).replace(/&nbsp;/g," "));
-		let customFunc = new Function(columnCustomFormat.function.arguments, funcBody);
-		return  (cell, row) => ( customFunc(cell,row,fieldProp) );
-	}
-	return undefined;
+  if (fieldProp.enum && fieldProp.enumNames) {
+    return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
+  } else if (fieldProp.type === "boolean") {
+    return cell => (
+      <div style={{ textAlign: "right" }}>
+        <label>{cell ? "Yes" : "No"}</label>
+      </div>
+    );
+  } else if (
+    fieldUIProp !== undefined &&
+    fieldUIProp.columnCustomFormat !== undefined
+  ) {
+    let columnCustomFormat = JSON.parse(fieldUIProp.columnCustomFormat);
+    let funcBody = JSON.parse(
+      JSON.stringify(columnCustomFormat.function.body).replace(/&nbsp;/g, " ")
+    );
+    let customFunc = new Function(
+      columnCustomFormat.function.arguments,
+      funcBody
+    );
+    return (cell, row) => customFunc(cell, row, fieldProp);
+  }
+  return undefined;
 };
- 
+
 const toEditable = fieldProp => {
 	if (fieldProp.enum) {
 		if (fieldProp.enumNames) {
@@ -71,17 +78,19 @@ const toEditable = fieldProp => {
 };
 
 const columnHeadersFromSchema = (schema, uiSchema) => {
-	let { items: { properties } } = schema;
-	let { table: { tableCols } } = uiSchema;
-	let schemaCols = Object.keys(properties).map(dataField => {
-		let { title } = properties[dataField];
-		let editable = toEditable(properties[dataField]);
-		let uiProperties = (tableCols) ? tableCols.find(cols => (cols.dataField === dataField)) : false;
-		let dataFormat = toDataFormat(properties[dataField], uiProperties);
-		let dataAlign = toDataAlignment(properties[dataField]);
-		return { dataField, displayName: title, editable, dataFormat, dataAlign };
-	});
-	return schemaCols;
+  let { items: { properties } } = schema;
+  let { table: { tableCols } } = uiSchema;
+  let schemaCols = Object.keys(properties).map(dataField => {
+    let { title } = properties[dataField];
+    let editable = toEditable(properties[dataField]);
+    let uiProperties = tableCols
+      ? tableCols.find(cols => cols.dataField === dataField)
+      : false;
+    let dataFormat = toDataFormat(properties[dataField], uiProperties);
+    let dataAlign = toDataAlignment(properties[dataField]);
+    return { dataField, displayName: title, editable, dataFormat, dataAlign };
+  });
+  return schemaCols;
 };
 
 export function overrideColDataFormat(colConf, fieldSchema) {

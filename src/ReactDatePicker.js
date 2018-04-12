@@ -39,12 +39,17 @@ export default class ReactDatePicker extends Component {
   }
 
   handleKeyDown = evt => {
-    var eventCode = (evt.which) ? evt.which : event.keyCode
+    var eventCode = evt.which ? evt.which : event.keyCode;
     if (eventCode === 13) {
       this.refs.datePicker.getInput().blur();
       this.notifyChange();
-    } else if (eventCode > 31 && ((eventCode < 48 || eventCode > 57) && (eventCode < 96 || eventCode > 105)) && eventCode != 191){
-        evt.preventDefault()
+    } else if (
+      eventCode > 31 &&
+      ((eventCode < 48 || eventCode > 57) &&
+        (eventCode < 96 || eventCode > 105)) &&
+      eventCode != 191
+    ) {
+      evt.preventDefault();
     } /* date filed Validation , will accept only number and forward slash */
   };
 
