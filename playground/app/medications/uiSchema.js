@@ -232,14 +232,33 @@ export default {
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
           },
+          {
+            dataField: "startDate",
+            "dataFormat": "MM/DD/YYYY",
+                  "field": "rdp",
+                  "uiSchema": {
+                    "rdp": {
+                      "placeholder": "MM/DD/YYYY",
+                      "inputProps": {
+                        "className": "form-control",
+                        "type": "text"
+                      }}
+                    },
+          },
+          {
+            "dataField": "isSelected",
+            hidden : true,
+            filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
+          }
         ],
         rightActions: [
           {
-            action: "delete",
-            className: "col-md-1",
-            columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1",
-            icon: "glyphicon glyphicon-minus",
+            "action": "update",
+            "className": "table-action",
+            "columnClassName": "table-action",
+            "editColumnClassName": "table-action",
+            "icon": "glyphicon glyphicon-minus",
+            "actionConfiguration" : {"action" : "update", "fieldToUpdate" : [ 'isSelected'],'filterField' : 'isSelected' }
           },
           {
             action: "moveup",
