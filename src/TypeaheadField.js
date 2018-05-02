@@ -260,6 +260,10 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       options: this.state.options,
     });
 
+    if (this.props.overrideOptions) {
+      typeConf.onInputChange = this.props.onChange;
+    }
+
     return (
       <div id={$id}>
         <DefaultLabel {...this.props} />
@@ -282,6 +286,7 @@ AsyncTypeaheadField.propTypes = {
         PropTypes.object,
       ]),
       cleanAfterSelection: PropTypes.bool,
+      overrideOptions: PropTypes.bool,
       search: PropTypes.func,
     }).isRequired,
   }),
