@@ -10,22 +10,24 @@ const toDataAlignment = fieldProp => {
   }
 };
 const toDataHelpText = (fieldProp, fieldUIProp) => {
-
-	let { enableHelpText = false } = fieldUIProp;
-	if(fieldProp && fieldUIProp){
-		if(fieldUIProp['enableHelpText'] !== undefined && (fieldUIProp['enableHelpText'])){
-			 if (fieldProp.type === "boolean"){
-				return cell => {
-					return  (cell) ? "Yes" : "No";
-				}	
-			}else {
-				return cell => {
-					return  (cell) ? cell.toString() : "";	
-				}
-			}
-		}
-	}
-	return undefined
+  let { enableHelpText = false } = fieldUIProp; //eslint-disable-line
+  if (fieldProp && fieldUIProp) {
+    if (
+      fieldUIProp["enableHelpText"] !== undefined &&
+      fieldUIProp["enableHelpText"]
+    ) {
+      if (fieldProp.type === "boolean") {
+        return cell => {
+          return cell ? "Yes" : "No";
+        };
+      } else {
+        return cell => {
+          return cell ? cell.toString() : "";
+        };
+      }
+    }
+  }
+  return undefined;
 };
 const toDataFormat = (fieldProp, fieldUIProp) => {
   if (fieldProp.enum && fieldProp.enumNames) {
@@ -104,95 +106,104 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
       ? tableCols.find(cols => cols.dataField === dataField)
       : false;
     let dataFormat = toDataFormat(properties[dataField], uiProperties);
-		let dataAlign = toDataAlignment(properties[dataField]);
+    let dataAlign = toDataAlignment(properties[dataField]);
 
-		let columnTitle = false;
-		if(uiProperties){
-			columnTitle = toDataHelpText(properties[dataField], uiProperties);
-		}
+    let columnTitle = false;
+    if (uiProperties) {
+      columnTitle = toDataHelpText(properties[dataField], uiProperties);
+    }
 
-    return { dataField, displayName: title, editable, dataFormat, dataAlign, columnTitle };
+    return {
+      dataField,
+      displayName: title,
+      editable,
+      dataFormat,
+      dataAlign,
+      columnTitle,
+    };
   });
   return schemaCols;
 };
 
 export function overrideColDataFormat(colConf, fieldSchema, formData) {
-	if (typeof colConf.dataFormat === "string" && fieldSchema.type === "object") {
-		const { dataField, dataFormat: field } = colConf;
-		colConf.dataFormat = function(cell, row) {
-			return row[dataField] ? row[dataField][field] : undefined;
-		};
-		colConf.dataFormat.bind(this);
-	} else if (
-		typeof colConf.dataFormat === "string" &&
+  if (typeof colConf.dataFormat === "string" && fieldSchema.type === "object") {
+    const { dataField, dataFormat: field } = colConf;
+    colConf.dataFormat = function(cell, row) {
+      return row[dataField] ? row[dataField][field] : undefined;
+    };
+    colConf.dataFormat.bind(this);
+  } else if (
+    typeof colConf.dataFormat === "string" &&
     fieldSchema.type === "string" &&
     (fieldSchema.format === "date-time" || fieldSchema.format === "date")
-	) {
-		const { dataField, dataFormat, defaultCurrentDate = false  } = colConf;
-		colConf.dataFormat = function(cell, row) {
-			if (!row[dataField] && !defaultCurrentDate) {
-				return undefined;
-			}
-			let fieldVal = (defaultCurrentDate && !row[dataField])  ? new Date() : row[dataField] ;
-			if (typeof fieldVal === "string") {
-				return moment(fieldVal).format(dataFormat);
-			}
-			formData[row['_position']][dataField] = moment(fieldVal.toISOString()).format('YYYY-MM-DD'); //Updating the formdata for the default date picker
-			return moment(fieldVal.toISOString()).format(dataFormat);
-		};
-		colConf.dataFormat.bind(this);
-	}
+  ) {
+    const { dataField, dataFormat, defaultCurrentDate = false } = colConf;
+    colConf.dataFormat = function(cell, row) {
+      if (!row[dataField] && !defaultCurrentDate) {
+        return undefined;
+      }
+      let fieldVal =
+        defaultCurrentDate && !row[dataField] ? new Date() : row[dataField];
+      if (typeof fieldVal === "string") {
+        return moment(fieldVal).format(dataFormat);
+      }
+      formData[row["_position"]][dataField] = moment(
+        fieldVal.toISOString()
+      ).format("YYYY-MM-DD"); //Updating the formdata for the default date picker
+      return moment(fieldVal.toISOString()).format(dataFormat);
+    };
+    colConf.dataFormat.bind(this);
+  }
 }
 
 const overrideColEditable = (colConf, fieldSchema, fields) => {
-	if (colConf.field && fields[colConf.field]) {
-		let FieldEditor = fields[colConf.field];
-		let { defaultCurrentDate = false} =  colConf ;
-		let fieldUISchema = Object.assign(
-			{ "ui:autofocus": true, "defaultCurrentDate": defaultCurrentDate  },
-			colConf.uiSchema	
-		);
-		let fieldSchemaWithoutTitle = Object.assign(
-			{ ...fieldSchema },
-			{ title: "" }
-		);
-		colConf.customEditor = {
-			getElement: (onUpdate, props) => (
-				<FieldEditor
-					formData={props.defaultValue}
-					schema={fieldSchemaWithoutTitle}
-					uiSchema={fieldUISchema}
-					onChange={onUpdate}
-				/>
-			),
-		};
-	}
+  if (colConf.field && fields[colConf.field]) {
+    let FieldEditor = fields[colConf.field];
+    let { defaultCurrentDate = false } = colConf;
+    let fieldUISchema = Object.assign(
+      { "ui:autofocus": true, defaultCurrentDate: defaultCurrentDate },
+      colConf.uiSchema
+    );
+    let fieldSchemaWithoutTitle = Object.assign(
+      { ...fieldSchema },
+      { title: "" }
+    );
+    colConf.customEditor = {
+      getElement: (onUpdate, props) => (
+        <FieldEditor
+          formData={props.defaultValue}
+          schema={fieldSchemaWithoutTitle}
+          uiSchema={fieldUISchema}
+          onChange={onUpdate}
+        />
+      ),
+    };
+  }
 };
 
 const overrideColumns = (
-	columns,
-	{ items: { properties } },
-	uiSchema,
-	fields,
-	formData
+  columns,
+  { items: { properties } },
+  uiSchema,
+  fields,
+  formData
 ) => {
-	let { table: { tableCols = [] } = {} } = uiSchema;
+  let { table: { tableCols = [] } = {} } = uiSchema;
 
-	let columnsWithOverrides = columns.map(col => {
-		let colConf = tableCols.find(
-			overrideCol => overrideCol.dataField === col.dataField
-		);
-		if (!colConf) {
-			return col;
-		}
-		let updCol = Object.assign({}, col, colConf);
-		overrideColDataFormat(updCol, properties[col.dataField], formData);
-		overrideColEditable(updCol, properties[col.dataField], fields);
-		return updCol;
-	});
+  let columnsWithOverrides = columns.map(col => {
+    let colConf = tableCols.find(
+      overrideCol => overrideCol.dataField === col.dataField
+    );
+    if (!colConf) {
+      return col;
+    }
+    let updCol = Object.assign({}, col, colConf);
+    overrideColDataFormat(updCol, properties[col.dataField], formData);
+    overrideColEditable(updCol, properties[col.dataField], fields);
+    return updCol;
+  });
 
-	return columnsWithOverrides;
-
+  return columnsWithOverrides;
 };
 
 const orderColumns = (columns, uiSchema) => {
@@ -250,23 +261,27 @@ const columnHeadersFactory = (
   formData,
   onChange
 ) => {
+  let allColumns = columnHeadersFromSchema(schema, uiSchema);
+  let orderedColumns = orderColumns(allColumns, uiSchema);
+  let withOverrides = overrideColumns(
+    orderedColumns,
+    schema,
+    uiSchema,
+    fields,
+    formData
+  );
+  let columnsWithCSS = withColumnCss(withOverrides);
+  let { rightColumns, leftColumns } = actionHeaderFrom(
+    schema,
+    uiSchema,
+    formData,
+    onChange
+  );
 
-	let allColumns = columnHeadersFromSchema(schema, uiSchema);
-	let orderedColumns = orderColumns(allColumns, uiSchema);
-	let withOverrides = overrideColumns(orderedColumns, schema, uiSchema, fields, formData);
-	let columnsWithCSS = withColumnCss(withOverrides);
-	let { rightColumns, leftColumns } = actionHeaderFrom(
-		schema,
-		uiSchema,
-		formData,
-		onChange
-	);
+  leftColumns.forEach(col => columnsWithCSS.unshift(col));
+  rightColumns.forEach(col => columnsWithCSS.push(col));
 
-	leftColumns.forEach(col => columnsWithCSS.unshift(col));
-	rightColumns.forEach(col => columnsWithCSS.push(col));
-
-	return columnsWithCSS;
-
+  return columnsWithCSS;
 };
 
 export default columnHeadersFactory;
