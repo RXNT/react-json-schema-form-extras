@@ -260,7 +260,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       options: this.state.options,
     });
 
-    if (this.props.overrideOptions) {
+    if (asyncTypeahead.overrideOptions) {
       typeConf.onInputChange = this.props.onChange;
     }
 
