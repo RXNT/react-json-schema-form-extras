@@ -137,9 +137,9 @@ export default {
               },
               isSelected: {
                 default: true,
-                type: "boolean"  ,
-                title: "IsSelected",           
-              }
+                type: "boolean",
+                title: "IsSelected",
+              },
             },
           },
         },
@@ -197,7 +197,6 @@ export default {
                 type: "string",
                 title: "Allergy Identified On",
                 format: "date",
-                default: "currentDate",
               },
             },
           },
