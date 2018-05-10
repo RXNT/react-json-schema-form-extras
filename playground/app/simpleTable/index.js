@@ -2,6 +2,7 @@ let schema = {
   type: "object",
   properties: {
     str: { type: "string" },
+    lab: { title: "This is a test label" },
     simpleTable: {
       type: "array",
       items: {
@@ -16,6 +17,9 @@ let schema = {
 };
 
 let uiSchema = {
+  lab: {
+    "ui:field": "simpleLabel",
+  },
   simpleTable: {
     "ui:field": "table",
     table: {
