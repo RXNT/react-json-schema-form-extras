@@ -3,6 +3,7 @@ import actionHeaderFrom from "./actionHeaderFactory";
 import moment from "moment";
 
 const toDataAlignment = fieldProp => {
+  
   if (fieldProp.type === "number") {
     return "right";
   } else if (fieldProp.format === "date" || fieldProp.format === "date-time") {
@@ -10,34 +11,34 @@ const toDataAlignment = fieldProp => {
   }
 };
 const toDataHelpText = (fieldProp, fieldUIProp) => {
-  let { enableHelpText = false } = fieldUIProp; //eslint-disable-line
-  if (fieldProp && fieldUIProp) {
-    if (
-      fieldUIProp["enableHelpText"] !== undefined &&
-      fieldUIProp["enableHelpText"]
-    ) {
-      if (fieldProp.type === "boolean") {
-        return cell => {
-          return cell ? "Yes" : "No";
-        };
-      } else {
-        return cell => {
-          return cell ? cell.toString() : "";
-        };
-      }
-    }
-  }
-  return undefined;
+
+	let { enableHelpText = false } = fieldUIProp;
+	if(fieldProp && fieldUIProp){
+		if(fieldUIProp['enableHelpText'] !== undefined && (fieldUIProp['enableHelpText'])){
+			 if (fieldProp.type === "boolean"){
+				return cell => {
+					return  (cell) ? "Yes" : "No";
+				}	
+			}else if (fieldProp.enum && fieldProp.enumNames) {
+				return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
+			}else {
+				return cell => {
+					return  (cell) ? cell.toString() : "";	
+				}
+			}
+		}
+	}
+	return undefined
 };
-const toDataFormat = (fieldProp, fieldUIProp) => {
+const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey) => {
   if (fieldProp.enum && fieldProp.enumNames) {
     return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
   } else if (fieldProp.type === "boolean") {
-    return cell => (
-      <div style={{ textAlign: "right" }}>
-        <label>{cell ? "Yes" : "No"}</label>
-      </div>
-    );
+		return (cell, row) =>(
+			<div className = { defaultFilterKey ? ( !row[defaultFilterKey] ? 'deleted-row-boolean-column' : '') : '' }  style={{ textAlign: "right" }}>
+			<label>{cell ? "Yes" : "No"}</label>
+		</div>
+		);
   } else if (
     fieldUIProp !== undefined &&
     fieldUIProp.columnCustomFormat !== undefined
@@ -97,7 +98,8 @@ const toEditable = fieldProp => {
 };
 
 const columnHeadersFromSchema = (schema, uiSchema) => {
-  let { items: { properties } } = schema;
+	let { items: { properties, defaultFilterKey = false } } = schema;
+	
   let { table: { tableCols } } = uiSchema;
   let schemaCols = Object.keys(properties).map(dataField => {
     let { title } = properties[dataField];
@@ -105,8 +107,9 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
     let uiProperties = tableCols
       ? tableCols.find(cols => cols.dataField === dataField)
       : false;
-    let dataFormat = toDataFormat(properties[dataField], uiProperties);
-    let dataAlign = toDataAlignment(properties[dataField]);
+
+    let dataFormat = toDataFormat(properties[dataField], uiProperties, defaultFilterKey);
+		let dataAlign = toDataAlignment(properties[dataField]);
 
     let columnTitle = false;
     if (uiProperties) {
@@ -261,6 +264,7 @@ const columnHeadersFactory = (
   formData,
   onChange
 ) => {
+
   let allColumns = columnHeadersFromSchema(schema, uiSchema);
   let orderedColumns = orderColumns(allColumns, uiSchema);
   let withOverrides = overrideColumns(
