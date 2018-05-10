@@ -1,85 +1,90 @@
 import React from "react";
 
-function actionFactory(action, actionConfiguration, schema) {if (action === "update") {
-  return (cell, row, enumObject, rowIndex, formData, onChange) => {
-    let newFormData = formData.slice(0);
-    if (rowIndex != undefined) {
-      newFormData.map(function(value, index){
-        if (rowIndex === index){
-          if(actionConfiguration.fieldToUpdate !== undefined){
-            let update = [];
-            actionConfiguration.fieldToUpdate.map(
-              (fieldToUpdate) => {
-                if(schema[fieldToUpdate] !== undefined){
-                  if(schema[fieldToUpdate]["type"] === "boolean"){
+function actionFactory(action, actionConfiguration, schema) {
+  if (action === "update") {
+    return (cell, row, enumObject, rowIndex, formData, onChange) => {
+      let newFormData = formData.slice(0);
+      if (rowIndex != undefined) {
+        newFormData.map(function(value, index) {
+          if (rowIndex === index) {
+            if (actionConfiguration.fieldToUpdate !== undefined) {
+              let update = [];
+              actionConfiguration.fieldToUpdate.map(fieldToUpdate => {
+                if (schema[fieldToUpdate] !== undefined) {
+                  if (schema[fieldToUpdate]["type"] === "boolean") {
                     update[fieldToUpdate] = !value[fieldToUpdate];
                   } // can add separate block for each type of input
-                  newFormData[index] =  Object.assign({},  value, update );
+                  newFormData[index] = Object.assign({}, value, update);
                 }
               });
+            }
           }
-        }
-      });
-    }
-    onChange(newFormData); 
-  };
-}else if (action === "delete") {
-  return (cell, row, enumObject, rowIndex, formData, onChange) => {
-    let newFormData = formData.slice(0);
-    newFormData.splice(rowIndex, 1);
-    onChange(newFormData);     
-  };  
-} else if (action === "moveup") {
-  return (cell, row, enumObject, rowIndex, formData, onChange) => {
-    let newFormData = formData.slice(0);
-    let temp = newFormData[rowIndex];
-    if (rowIndex >= 1) {
-      newFormData[rowIndex] = newFormData[rowIndex - 1];
-      newFormData[rowIndex - 1] = temp;
+        });
+      }
       onChange(newFormData);
-    }
-  };
-} else if (action === "movedown") {
-  return (cell, row, enumObject, rowIndex, formData, onChange) => {
-    let newFormData = formData.slice(0);
-    let temp = newFormData[rowIndex];
-    if (rowIndex <= formData.length - 2) {
-      newFormData[rowIndex] = newFormData[rowIndex + 1];
-      newFormData[rowIndex + 1] = temp;
+    };
+  } else if (action === "delete") {
+    return (cell, row, enumObject, rowIndex, formData, onChange) => {
+      let newFormData = formData.slice(0);
+      newFormData.splice(rowIndex, 1);
       onChange(newFormData);
-    }
-  };
-} else if (typeof action === "function") {
-  return action;
-} else {
-  return undefined;
+    };
+  } else if (action === "moveup") {
+    return (cell, row, enumObject, rowIndex, formData, onChange) => {
+      let newFormData = formData.slice(0);
+      let temp = newFormData[rowIndex];
+      if (rowIndex >= 1) {
+        newFormData[rowIndex] = newFormData[rowIndex - 1];
+        newFormData[rowIndex - 1] = temp;
+        onChange(newFormData);
+      }
+    };
+  } else if (action === "movedown") {
+    return (cell, row, enumObject, rowIndex, formData, onChange) => {
+      let newFormData = formData.slice(0);
+      let temp = newFormData[rowIndex];
+      if (rowIndex <= formData.length - 2) {
+        newFormData[rowIndex] = newFormData[rowIndex + 1];
+        newFormData[rowIndex + 1] = temp;
+        onChange(newFormData);
+      }
+    };
+  } else if (typeof action === "function") {
+    return action;
+  } else {
+    return undefined;
+  }
 }
-}
-
 
 function actionColumnFrom(
   { action, icon, text, actionConfiguration = false },
   schema
 ) {
-  let { filterField = false, actionCompletedIcon='' }  = actionConfiguration;
-	let handleClick = actionFactory(action, actionConfiguration, schema);
-	if (!handleClick) {
-		return {};
-	}
+  let { filterField = false, actionCompletedIcon = "" } = actionConfiguration;
+  let handleClick = actionFactory(action, actionConfiguration, schema);
+  if (!handleClick) {
+    return {};
+  }
 
-	return {
-		dataField: icon,
-		dataFormat: (cell, row, enumObject, rowIndex, formData, onChange) => (
-			<span
-				onClick={() =>
-					handleClick(cell, row, enumObject, rowIndex, formData, onChange)
-				}>
-				<i className= { row[filterField] || row[filterField]===undefined ? icon : actionCompletedIcon} />
-				{text}
-			</span>
-		),
-		editable: false,
-	};
+  return {
+    dataField: icon,
+    dataFormat: (cell, row, enumObject, rowIndex, formData, onChange) => (
+      <span
+        onClick={() =>
+          handleClick(cell, row, enumObject, rowIndex, formData, onChange)
+        }>
+        <i
+          className={
+            row[filterField] || row[filterField] === undefined
+              ? icon
+              : actionCompletedIcon
+          }
+        />
+        {text}
+      </span>
+    ),
+    editable: false,
+  };
 }
 
 const actionToCol = (formData, onChange, schema) => actionConf => {
