@@ -18,8 +18,6 @@ function normalizeDay(day, format) {
 }
 
 function loadFormatedDate(date, setCurrentDate){
-  console.log('date>>', date);
-  console.log('setCurrentDate>>', setCurrentDate);
   let formDate = date;
   if(!date || date === ''){
     formDate = (setCurrentDate) 
@@ -91,11 +89,9 @@ export default class ReactDatePicker extends Component {
       idSchema: { $id } = {},
       schema: { format = "date-time" },
     } = this.props;
-    console.log('uiSchema--->>',this.props);
-    let { rdp = {}, defaultCurrentDate=false } = uiSchema;
+        let { rdp = {}, defaultCurrentDate=false } = uiSchema;
 
     formData = loadFormatedDate(formData, defaultCurrentDate); // to load the formated date
-    console.log('formDataformData', formData);
     let dayPickerInputProps = Object.assign(
       {
         onDayChange: this.handleDayChange,

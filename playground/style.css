@@ -221,3 +221,11 @@
   -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
+.deleted-row {
+  font-weight: bold;
+  color:red;
+  text-decoration : line-through;
+}
+.deleted-row-boolean-column > label {
+  text-decoration : line-through;
+}
