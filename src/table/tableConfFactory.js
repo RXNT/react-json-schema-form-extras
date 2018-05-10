@@ -32,7 +32,8 @@ export default function tableConfFrom(
   { table = {} },
   formData = [],
   afterSaveCell,
-  afterDeleteRow
+  afterDeleteRow,
+  highlightAfterDelete
 ) {
   let { keyField = POSITION_KEY } = table;
   if (keyField === POSITION_KEY) {
@@ -48,6 +49,7 @@ export default function tableConfFrom(
 
   tableConf.cellEdit.afterSaveCell = afterSaveCell;
   tableConf.options.afterDeleteRow = afterDeleteRow;
+  tableConf.trClassName = highlightAfterDelete;
 
   return tableConf;
 }

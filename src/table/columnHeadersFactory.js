@@ -19,6 +19,8 @@ const toDataHelpText = (fieldProp, fieldUIProp) => {
 				return cell => {
 					return  (cell) ? "Yes" : "No";
 				}	
+			}else if (fieldProp.enum && fieldProp.enumNames) {
+				return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
 			}else {
 				return cell => {
 					return  (cell) ? cell.toString() : "";	
@@ -28,15 +30,15 @@ const toDataHelpText = (fieldProp, fieldUIProp) => {
 	}
 	return undefined
 };
-const toDataFormat = (fieldProp, fieldUIProp) => {
+const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey) => {
   if (fieldProp.enum && fieldProp.enumNames) {
     return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
   } else if (fieldProp.type === "boolean") {
-    return cell => (
-      <div style={{ textAlign: "right" }}>
-        <label>{cell ? "Yes" : "No"}</label>
-      </div>
-    );
+		return (cell, row) =>(
+			<div className = { defaultFilterKey ? ( !row[defaultFilterKey] ? 'deleted-row-boolean-column' : '') : '' }  style={{ textAlign: "right" }}>
+			<label>{cell ? "Yes" : "No"}</label>
+		</div>
+		);
   } else if (
     fieldUIProp !== undefined &&
     fieldUIProp.columnCustomFormat !== undefined
@@ -96,7 +98,8 @@ const toEditable = fieldProp => {
 };
 
 const columnHeadersFromSchema = (schema, uiSchema) => {
-  let { items: { properties } } = schema;
+	let { items: { properties, defaultFilterKey = false } } = schema;
+	
   let { table: { tableCols } } = uiSchema;
   let schemaCols = Object.keys(properties).map(dataField => {
     let { title } = properties[dataField];
@@ -104,7 +107,7 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
     let uiProperties = tableCols
       ? tableCols.find(cols => cols.dataField === dataField)
       : false;
-    let dataFormat = toDataFormat(properties[dataField], uiProperties);
+    let dataFormat = toDataFormat(properties[dataField], uiProperties, defaultFilterKey);
 		let dataAlign = toDataAlignment(properties[dataField]);
 
 		let columnTitle = false;
@@ -260,6 +263,7 @@ const columnHeadersFactory = (
 		formData,
 		onChange
 	);
+
 
 	leftColumns.forEach(col => columnsWithCSS.unshift(col));
 	rightColumns.forEach(col => columnsWithCSS.push(col));

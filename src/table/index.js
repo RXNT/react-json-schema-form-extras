@@ -55,8 +55,28 @@ class TableField extends Component {
 
     this.handleCellSave = this.handleCellSave.bind(this);
     this.handleRowsDelete = this.handleRowsDelete.bind(this);
+    this.handleDeletedRow = this.handleDeletedRow.bind(this);
   }
-
+  handleDeletedRow(row, rowIdx, c) {
+    let { items: { defaultFilterKey = undefined  } } = this.props.schema;
+    let { table: { rightActions } } = this.props.uiSchema;
+    
+    let highlightRow = '';
+    if(rightActions){
+      let classAfterAction = rightActions.map(rightAction =>
+      {
+          if(rightAction.action === 'update'){
+            let { actionConfiguration  : { actionCompletedClassName = false } } = rightAction;
+            return actionCompletedClassName;
+          }
+          return undefined;
+      });
+      if(!row[defaultFilterKey] && row[defaultFilterKey] !== undefined){
+        highlightRow = classAfterAction;
+      }
+    }
+    return highlightRow;
+  }
   handleCellSave(updRow, cellName, cellValue) {
     let { keyField, data } = this.tableConf;
     let fieldSchema = this.props.schema.items.properties[cellName];
@@ -77,8 +97,8 @@ class TableField extends Component {
     if (type === "number") {
       Object.keys(updTable[targetKey]).map(function(column) {
         if (
-          (column == cellName && updTable[targetKey][column] === undefined) ||
-          updTable[targetKey][column] == ""
+          (column === cellName && ( updTable[targetKey][column] === undefined) ||
+          updTable[targetKey][column] === "")
         ) {
           delete updTable[targetKey][column];
         }
@@ -139,7 +159,8 @@ class TableField extends Component {
       uiSchema,
       formData,
       this.handleCellSave,
-      this.handleRowsDelete
+      this.handleRowsDelete,
+      this.handleDeletedRow
     );
 
     this.tableConf.cellEdit.beforeSaveCell = this.beforeSaveCell;
@@ -150,6 +171,7 @@ class TableField extends Component {
       formData,
       onChange
     );
+
 
     return (
       <div id={$id}>

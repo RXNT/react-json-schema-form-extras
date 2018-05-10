@@ -1,29 +1,11 @@
 import React from "react";
 
 function actionFactory(action, actionConfiguration, schema) {
-
 	if (action === "update") {
 		return (cell, row, enumObject, rowIndex, formData, onChange) => {
-			let activeRecords = [];
 			let newFormData = formData.slice(0);
 			if (rowIndex != undefined) {
-				let filterStatus = actionConfiguration.filterField ? actionConfiguration.filterField : false;
-				if(filterStatus){ //If filter enabled on the table 
-					newFormData.map(function(value, index){
-						if(value[actionConfiguration.filterField] === schema[actionConfiguration.filterField]["default"]){
-							value["form_index"] = index;
-							activeRecords.push(value);
-						}
-					});
-				}else{
-					activeRecords = newFormData;
-				}
-				activeRecords.map(function(value, index){
-					let form_index = index;
-					if(value["form_index"] !== undefined){
-						form_index =  value["form_index"];
-						delete value["form_index"];
-					}
+				newFormData.map(function(value, index){
 					if (rowIndex === index){
 						if(actionConfiguration.fieldToUpdate !== undefined){
 							let update = [];
@@ -33,7 +15,7 @@ function actionFactory(action, actionConfiguration, schema) {
 										if(schema[fieldToUpdate]["type"] === "boolean"){
 											update[fieldToUpdate] = !value[fieldToUpdate];
 										} // can add separate block for each type of input
-										newFormData[form_index] =  Object.assign({},  value, update );
+										newFormData[index] =  Object.assign({},  value, update );
 									}
 								});
 						}
@@ -73,12 +55,11 @@ function actionFactory(action, actionConfiguration, schema) {
 	} else {
 		return undefined;
 	}
-
 }
 
 function actionColumnFrom({ action, icon, text, actionConfiguration = false }, schema) {
 
-
+	let { filterField = false, actionCompletedIcon='' }  = actionConfiguration;
 	let handleClick = actionFactory(action, actionConfiguration, schema);
 	if (!handleClick) {
 		return {};
@@ -91,7 +72,7 @@ function actionColumnFrom({ action, icon, text, actionConfiguration = false }, s
 				onClick={() =>
 					handleClick(cell, row, enumObject, rowIndex, formData, onChange)
 				}>
-				<i className={icon} />
+				<i className= { row[filterField] || row[filterField]===undefined ? icon : actionCompletedIcon} />
 				{text}
 			</span>
 		),

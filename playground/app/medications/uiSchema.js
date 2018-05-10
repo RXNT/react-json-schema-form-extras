@@ -226,7 +226,7 @@ export default {
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
-            enableHelpText:false,
+            enableHelpText:true,
           },
           {
             dataField: "refills",
@@ -258,7 +258,7 @@ export default {
           {
             "dataField": "isSelected",
           
-            filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
+          //  filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
           }
         ],
         rightActions: [
@@ -273,7 +273,9 @@ export default {
               "fieldToUpdate": [
                 "isSelected"
               ],
-              "filterField": "isSelected"
+              "filterField": "isSelected",
+              'actionCompletedIcon' : "glyphicon glyphicon-trash",
+              "actionCompletedClassName": "deleted-row",
             }
           },
           {
