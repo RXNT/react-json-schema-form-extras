@@ -36,42 +36,26 @@ function convertFields(cellValue, { type, format, default: def }) {
 class TableField extends Component {
   constructor(props) {
     super(props);
-
-    // var components = this.props.schema.items.properties;
-    // Object.keys(components).map(item => {
-    //   if (
-    //     components[item].format === "date" ||
-    //     components[item].format === "date-time"
-    //   ) {
-    //     if (components[item].default === "currentDate") {
-    //       components[item].format === "date"
-    //         ? (components[item]["default"] = new Date()
-    //             .toISOString()
-    //             .substr(0, 10))
-    //         : (components[item]["default"] = new Date());
-    //     }
-    //   }
-    // });
-
     this.handleCellSave = this.handleCellSave.bind(this);
     this.handleRowsDelete = this.handleRowsDelete.bind(this);
     this.handleDeletedRow = this.handleDeletedRow.bind(this);
   }
   handleDeletedRow(row, rowIdx, c) {
-    let { items: { defaultFilterKey = undefined  } } = this.props.schema;
+    let { items: { defaultFilterKey = undefined } } = this.props.schema;
     let { table: { rightActions } } = this.props.uiSchema;
-    
-    let highlightRow = '';
-    if(rightActions){
-      let classAfterAction = rightActions.map(rightAction =>
-      {
-          if(rightAction.action === 'update'){
-            let { actionConfiguration  : { actionCompletedClassName = false } } = rightAction;
-            return actionCompletedClassName;
-          }
-          return undefined;
+
+    let highlightRow = "";
+    if (rightActions) {
+      let classAfterAction = rightActions.map(rightAction => {
+        if (rightAction.action === "update") {
+          let {
+            actionConfiguration: { actionCompletedClassName = false },
+          } = rightAction;
+          return actionCompletedClassName;
+        }
+        return undefined;
       });
-      if(!row[defaultFilterKey] && row[defaultFilterKey] !== undefined){
+      if (!row[defaultFilterKey] && row[defaultFilterKey] !== undefined) {
         highlightRow = classAfterAction;
       }
     }
@@ -97,8 +81,8 @@ class TableField extends Component {
     if (type === "number") {
       Object.keys(updTable[targetKey]).map(function(column) {
         if (
-          (column === cellName && ( updTable[targetKey][column] === undefined) ||
-          updTable[targetKey][column] === "")
+          (column === cellName && updTable[targetKey][column] === undefined) ||
+          updTable[targetKey][column] === ""
         ) {
           delete updTable[targetKey][column];
         }
@@ -171,7 +155,6 @@ class TableField extends Component {
       formData,
       onChange
     );
-
 
     return (
       <div id={$id}>
