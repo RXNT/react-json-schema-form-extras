@@ -5,6 +5,7 @@ import AltInputField from "./AltInputField";
 import CollapsibleField from "./CollapsibleField";
 import RTEField from "./RTEField";
 import rdp from "./ReactDatePicker";
+import SimpleLabel from "./SimpleLabel";
 
 export default {
   table,
@@ -15,4 +16,5 @@ export default {
   altInput: AltInputField,
   rte: RTEField,
   rdp,
+  simpleLabel: SimpleLabel,
 };

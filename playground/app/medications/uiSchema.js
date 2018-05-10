@@ -219,7 +219,7 @@ export default {
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
-            enableHelpText:true,
+            enableHelpText: true,
           },
           {
             dataField: "unit",
@@ -239,21 +239,21 @@ export default {
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
-         
           },
           {
-            "dataField": "startDate",
-            "dataFormat": "MM/DD/YYYY",
-            "field": "rdp",
-              "uiSchema": {
-                "rdp": {
-                  "placeholder": "MM/DD/YYYY",
-                  "inputProps": {
-                    "className": "form-control",
-                    "type": "text"
-                  }}
+            dataField: "startDate",
+            dataFormat: "MM/DD/YYYY",
+            field: "rdp",
+            uiSchema: {
+              rdp: {
+                placeholder: "MM/DD/YYYY",
+                inputProps: {
+                  className: "form-control",
+                  type: "text",
                 },
-            "defaultCurrentDate": true,
+              },
+            },
+            defaultCurrentDate: true,
           },
           {
             "dataField": "isSelected",
@@ -321,11 +321,11 @@ export default {
             hidden: true,
           },
           {
-            "dataField": "allergyName",
-            enableHelpText:true,
-            
-           // hidden : true,
-           // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
+            dataField: "allergyName",
+            enableHelpText: true,
+
+            // hidden : true,
+            // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
           },
           {
             dataField: "allergyReaction",
@@ -334,19 +334,20 @@ export default {
             editColumnClassName: "col-md-1",
           },
           {
-            "dataField": "isSelected",
-            
-           // hidden : true,
-           // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
-          },{
-            "dataField": "allergyActive",
-           // hidden : true,
-           // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
+            dataField: "isSelected",
+
+            // hidden : true,
+            // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
+          },
+          {
+            dataField: "allergyActive",
+            // hidden : true,
+            // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
           },
           {
             dataField: "allergyName",
             field: "asyncTypeahead",
-            enableHelpText:true,
+            enableHelpText: true,
             uiSchema: {
               focusOnMount: true,
               asyncTypeahead: {
