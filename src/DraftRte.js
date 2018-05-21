@@ -26,7 +26,6 @@ export default class DraftRTE extends Component {
       entityMap
     );
     let editorState = EditorState.createWithContent(contentState);
-    editorState = EditorState.moveFocusToEnd(editorState);
 
     this.state = {
       editorState,
@@ -83,19 +82,19 @@ export default class DraftRTE extends Component {
     }
   };
 
+  setEditorReference = ref => {
+    let autoFocus = this.props.uiSchema["ui:autofocus"]
+      ? this.props.uiSchema["ui:autofocus"]
+      : false;
+    ref && autoFocus && ref.focus();
+  };
+
   /**
    * react render function
    */
   render() {
     const { editorState } = this.state;
     let { uiSchema: { draftRte }, idSchema: { $id } = {} } = this.props;
-    let autoFocus = this.props.uiSchema["ui:autofocus"]
-      ? this.props.uiSchema["ui:autofocus"]
-      : false;
-
-    const setEditorReference = ref => {
-      ref && autoFocus && ref.focus();
-    };
 
     return (
       <div id={$id}>
@@ -106,7 +105,7 @@ export default class DraftRTE extends Component {
           editorState={editorState}
           onEditorStateChange={this.onEditorStateChange}
           onBlur={this.handleBlur}
-          editorRef={setEditorReference}
+          editorRef={this.setEditorReference}
           handlePastedText={() => false}
           {...draftRte}
         />
