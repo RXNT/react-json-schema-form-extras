@@ -274,8 +274,9 @@ export default {
                 "isSelected"
               ],
               "filterField": "isSelected",
-              'actionCompletedIcon' : "glyphicon glyphicon-trash",
+              'actionCompletedIcon' : "glyphicon glyphicon-refresh",
               "actionCompletedClassName": "deleted-row",
+              "mandatoryField" : [ 'drugName' ]
             }
           },
           {
