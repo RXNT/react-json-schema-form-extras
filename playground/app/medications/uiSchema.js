@@ -226,7 +226,7 @@ export default {
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
-            enableHelpText:true,
+            enableHelpText: true,
           },
           {
             dataField: "refills",
@@ -256,10 +256,10 @@ export default {
             defaultCurrentDate: true,
           },
           {
-            "dataField": "isSelected",
-          
-          //  filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
-          }
+            dataField: "isSelected",
+
+            //  filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
+          },
         ],
         rightActions: [
           {

@@ -17,7 +17,6 @@ function normalizeDay(day, format) {
   }
 }
 
-
 function loadFormatedDate(date, setCurrentDate) {
   let formDate = date;
   if (!date || date === "") {
