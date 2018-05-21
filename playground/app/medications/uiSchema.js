@@ -263,18 +263,21 @@ export default {
         ],
         rightActions: [
           {
-            action: "update",
-            className: "table-action",
-            columnClassName: "table-action",
-            editColumnClassName: "table-action",
-            icon: "glyphicon glyphicon-plus",
-            actionConfiguration: {
-              action: "update",
-              fieldToUpdate: ["isSelected"],
-              filterField: "isSelected",
-              actionCompletedIcon: "glyphicon glyphicon-trash",
-              actionCompletedClassName: "deleted-row",
-            },
+            "action": "update",
+            "className": "table-action",
+            "columnClassName": "table-action",
+            "editColumnClassName": "table-action",
+             "icon": "glyphicon glyphicon-plus",
+            "actionConfiguration": {
+              "action": "update",
+              "fieldToUpdate": [
+                "isSelected"
+              ],
+              "filterField": "isSelected",
+              'actionCompletedIcon' : "glyphicon glyphicon-refresh",
+              "actionCompletedClassName": "deleted-row",
+              "mandatoryField" : [ 'drugName' ]
+            }
           },
           {
             action: "moveup",
