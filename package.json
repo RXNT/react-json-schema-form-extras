@@ -51,6 +51,9 @@
     "react-rte": "^0.15.0"
   },
   "dependencies": {
+    "draftjs-to-html": "^0.8.4",
+    "html-to-draftjs": "^1.4.0",
+    "react-draft-wysiwyg": "^1.12.13",
     "selectn": "^1.1.2"
   },
   "devDependencies": {
