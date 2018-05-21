@@ -1,23 +1,37 @@
 import React from "react";
 
-function actionFactory(action, actionConfiguration, schema) {
-  if (action === "update") {
-    return (cell, row, enumObject, rowIndex, formData, onChange) => {
-      let newFormData = formData.slice(0);
-      if (rowIndex != undefined) {
-        newFormData.map(function(value, index) {
-          if (rowIndex === index) {
-            if (actionConfiguration.fieldToUpdate !== undefined) {
-              let update = [];
-              actionConfiguration.fieldToUpdate.map(fieldToUpdate => {
-                if (schema[fieldToUpdate] !== undefined) {
-                  if (schema[fieldToUpdate]["type"] === "boolean") {
-                    update[fieldToUpdate] = !value[fieldToUpdate];
-                  } // can add separate block for each type of input
-                  newFormData[index] = Object.assign({}, value, update);
+function actionFactory(action, actionConfiguration, schema) {if (action === "update") {
+  return (cell, row, enumObject, rowIndex, formData, onChange) => {
+    let newFormData = formData.slice(0);   
+    if (rowIndex != undefined) {
+      newFormData.map(function(value, index){
+        if (rowIndex === index){
+          let actionToApply = 0; // 0 - update(soft delete), 1 - delete(hard delete)
+          let { mandatoryField = undefined, fieldToUpdate = undefined } = actionConfiguration;
+
+          if(mandatoryField !== undefined){
+            mandatoryField.map((mandatory) =>{
+                if(value[mandatory] === undefined || value[mandatory] === ""){
+                  actionToApply = 1;
                 }
-              });
+            });
+          }
+          if(actionToApply === 0){ // just updating the Column
+            if(fieldToUpdate !== undefined){
+              let update = [];
+              fieldToUpdate.map(
+                (fieldToUpdate) => {
+                  if(schema[fieldToUpdate] !== undefined){
+                    if(schema[fieldToUpdate]["type"] === "boolean"){
+                      update[fieldToUpdate] = !value[fieldToUpdate];
+                    } // can add separate block for each type of input
+                    newFormData[index] =  Object.assign({},  value, update );
+                  }
+                });
             }
+          }else if(actionToApply === 1){ //Hard delete the row
+            newFormData.splice(rowIndex, 1);
+            onChange(newFormData);  
           }
         });
       }
