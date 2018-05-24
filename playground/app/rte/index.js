@@ -60,6 +60,11 @@ export default function goalsField() {
             ],
           },
         },
+        mention: {
+          separator: " ",
+          trigger: "#",
+          suggestions: [{ text: "Diagnosis", value: "Diagnosis" }],
+        },
       },
       "ui:autofocus": true,
       classNames: "col-md-12",
