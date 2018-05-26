@@ -409,6 +409,8 @@ Async typeahead extends default configuration list for `typeahead`, by adding fe
         - `labelKey` `array` in this case array is a list of fields in original object, which are combined in a single string with a space separator
         - `labelKey` `object` with `fields` `array` of fields to use, `separator` string separator to use between fields 
     - `cleanAfterSelection` `boolean` clean selection after component was selected (default false)
+    - `overrideOptions` if true, the user can type any text in the input field (or select an option, then modify it), 
+    and it will be saved in the RJSF model (default false)
     - `mapping` `object` that maps selected object to schema object
 
 
