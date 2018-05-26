@@ -278,7 +278,7 @@ AsyncTypeaheadField.propTypes = {
   uiSchema: PropTypes.shape({
     focusOnMount: PropTypes.bool,
     asyncTypeahead: PropTypes.shape({
-      url: PropTypes.string.isRequired,
+      url: PropTypes.string,
       optionsPath: PropTypes.string,
       mapping: PropTypes.oneOfType([
         PropTypes.func,
