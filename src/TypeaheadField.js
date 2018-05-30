@@ -260,6 +260,10 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       options: this.state.options,
     });
 
+    if (asyncTypeahead.overrideOptions) {
+      typeConf.onInputChange = this.props.onChange;
+    }
+
     return (
       <div id={$id}>
         <DefaultLabel {...this.props} />
@@ -274,7 +278,7 @@ AsyncTypeaheadField.propTypes = {
   uiSchema: PropTypes.shape({
     focusOnMount: PropTypes.bool,
     asyncTypeahead: PropTypes.shape({
-      url: PropTypes.string.isRequired,
+      url: PropTypes.string,
       optionsPath: PropTypes.string,
       mapping: PropTypes.oneOfType([
         PropTypes.func,
@@ -282,6 +286,7 @@ AsyncTypeaheadField.propTypes = {
         PropTypes.object,
       ]),
       cleanAfterSelection: PropTypes.bool,
+      overrideOptions: PropTypes.bool,
       search: PropTypes.func,
     }).isRequired,
   }),
