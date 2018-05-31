@@ -174,12 +174,15 @@ class CollapsibleField extends Component {
       let { schema, uiSchema, formData, registry: { fields } } = this.props;
       let { collapse: { addTo, addElement } } = uiSchema;
 
-      if (schema.properties[addTo] === undefined) {
+      let fieldSchema =
+        addTo === "self"
+          ? schema.items
+          : schema.properties
+            ? schema.properties[addTo] ? schema.properties[addTo].items : null
+            : null;
+      if (!fieldSchema) {
         return false;
       }
-
-      let fieldSchema =
-        addTo === "self" ? schema.items : schema.properties[addTo].items;
       let fieldUiSchema = addTo === "self" ? uiSchema : uiSchema[addTo];
 
       if (addElement) {
