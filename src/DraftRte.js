@@ -23,13 +23,15 @@ export default class DraftRTE extends Component {
     const { contentBlocks, entityMap } = blocksFromHtml;
     const contentState = ContentState.createFromBlockArray(
       contentBlocks,
-      entityMap,
+      entityMap
     );
 
     let editorState = null;
 
     if (autoFocus) {
-      editorState = EditorState.moveFocusToEnd(EditorState.createWithContent(contentState));
+      editorState = EditorState.moveFocusToEnd(
+        EditorState.createWithContent(contentState)
+      );
     } else {
       editorState = EditorState.createWithContent(contentState);
     }
