@@ -15,17 +15,24 @@ export default class DraftRTE extends Component {
    */
   constructor(props) {
     super(props);
-
-    let { formData = "" } = props;
+    let { formData = "", uiSchema } = props;
+    let autoFocus = uiSchema["ui:autofocus"] ? uiSchema["ui:autofocus"] : false;
 
     // Initializing the editor state (ref: https://jpuri.github.io/react-draft-wysiwyg/#/docs)
     const blocksFromHtml = htmlToDraft(formData);
     const { contentBlocks, entityMap } = blocksFromHtml;
     const contentState = ContentState.createFromBlockArray(
       contentBlocks,
-      entityMap
+      entityMap,
     );
-    let editorState = EditorState.createWithContent(contentState);
+
+    let editorState = null;
+
+    if (autoFocus) {
+      editorState = EditorState.moveFocusToEnd(EditorState.createWithContent(contentState));
+    } else {
+      editorState = EditorState.createWithContent(contentState);
+    }
 
     this.state = {
       editorState,
