@@ -6,7 +6,7 @@ import htmlToDraft from "html-to-draftjs";
 import PropTypes from "prop-types";
 import { DefaultLabel } from "./Label";
 
-const debounce = require('lodash.debounce');
+const debounce = require("lodash.debounce");
 
 export default class DraftRTE extends Component {
   /**
