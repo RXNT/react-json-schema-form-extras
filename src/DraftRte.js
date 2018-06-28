@@ -45,7 +45,6 @@ export default class DraftRTE extends Component {
    * updates formData by calling parent's onChange function with current html content
    */
   updateFormData = () => {
-    console.log('updateFormData');
     let { onChange } = this.props;
     let { editorState } = this.state; //eslint-disable-line
     if (onChange) {
