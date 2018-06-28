@@ -53,6 +53,7 @@
   "dependencies": {
     "draftjs-to-html": "^0.8.4",
     "html-to-draftjs": "^1.4.0",
+    "lodash.debounce": "^4.0.8",
     "react-draft-wysiwyg": "^1.12.13",
     "selectn": "^1.1.2"
   },
