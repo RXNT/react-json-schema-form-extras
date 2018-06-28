@@ -4,8 +4,9 @@ import { Editor } from "react-draft-wysiwyg";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import PropTypes from "prop-types";
-import _ from "lodash";
 import { DefaultLabel } from "./Label";
+
+const debounce = require('lodash.debounce');
 
 export default class DraftRTE extends Component {
   /**
@@ -44,6 +45,7 @@ export default class DraftRTE extends Component {
    * updates formData by calling parent's onChange function with current html content
    */
   updateFormData = () => {
+    console.log('updateFormData');
     let { onChange } = this.props;
     let { editorState } = this.state; //eslint-disable-line
     if (onChange) {
@@ -74,7 +76,7 @@ export default class DraftRTE extends Component {
 
   handleDebounce = this.props.uiSchema.draftRte
     ? this.props.uiSchema.draftRte.debounce
-      ? _.debounce(
+      ? debounce(
           this.updateFormData,
           this.props.uiSchema.draftRte.debounce.interval
         )
