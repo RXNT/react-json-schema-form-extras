@@ -14,6 +14,7 @@ import label from "./labels";
 import simpleTable from "./simpleTable";
 import ros from "./ros";
 import simpleLabel from "./simpleLabel";
+import aTypeahead from "./asyncTypeahead";
 
 const ALL_CONFS = [
   label,
@@ -27,6 +28,7 @@ const ALL_CONFS = [
   dx,
   ros,
   simpleLabel,
+  aTypeahead,
 ];
 
 export default function App() {
