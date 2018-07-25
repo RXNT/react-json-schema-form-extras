@@ -174,9 +174,11 @@ export class TypeaheadField extends BaseTypeaheadField {
 
     let labelKey = mapLabelKey(typeahead.labelKey);
     let selected = toSelected(formData, schema, typeahead.mapping, labelKey);
+    let onFocus = () => { this.props.onFocus($id); }
 
     let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead, {
       onChange: this.handleSelectionChange(typeahead),
+      onFocus,
       labelKey,
       selected,
     });
@@ -251,11 +253,13 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       asyncTypeahead.mapping,
       labelKey
     );
+    let onFocus = () => { this.props.onFocus($id); }
 
     let typeConf = Object.assign({}, DEFAULT_OPTIONS, asyncTypeahead, {
       selected,
       labelKey,
       onChange: this.handleSelectionChange(asyncTypeahead),
+      onFocus,
       onSearch: this.handleSearch,
       options: this.state.options,
     });
