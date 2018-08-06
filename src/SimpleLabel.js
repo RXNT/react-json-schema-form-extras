@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import renderHTML from "react-render-html";
 
 export default class SimpleLabel extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ export default class SimpleLabel extends Component {
     } = this.props;
     return (
       <span className={classNames} style={styles}>
-        {this.state.label}
+        {renderHTML(this.state.label)}
       </span>
     );
   }
