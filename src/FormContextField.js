@@ -11,7 +11,7 @@ export default class FormContextField extends Component {
 
     return (
       <div>
-          <Component {...this.props} />
+        <Component {...this.props} />
       </div>
     );
   }
