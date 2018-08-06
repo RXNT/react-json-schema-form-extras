@@ -6,7 +6,10 @@ export default class SignatureCheckbox extends Component {
     this.updateFormData = this.updateFormData.bind(this);
     this.selectionChange = this.selectionChange.bind(this);
     this.state = {
-      value: (typeof this.props.formData === "undefined"? false : this.props.formData.imgSelected)
+      value:
+        typeof this.props.formData === "undefined"
+          ? false
+          : this.props.formData.imgSelected,
     };
   }
 
@@ -22,7 +25,7 @@ export default class SignatureCheckbox extends Component {
   };
 
   selectionChange(value) {
-      this.setState({ value }, () => this.updateFormData());
+    this.setState({ value }, () => this.updateFormData());
   }
 
   render() {
@@ -30,20 +33,22 @@ export default class SignatureCheckbox extends Component {
     const disabled = Boolean(uiSchema["ui:disabled"]);
     let imgSrc = null;
     if (formData !== null && formData !== undefined) {
-        if (formData.format && formData.base64Image) {
-          imgSrc = `data:image/${formData.format};base64,${formData.base64Image}`;
-        }
+      if (formData.format && formData.base64Image) {
+        imgSrc = `data:image/${formData.format};base64,${formData.base64Image}`;
+      }
     }
-    
+
     return (
-        <div>
-            <input type="checkbox"
-                disabled={disabled}
-                checked={this.state.value}
-                onChange={event => this.selectionChange(event.target.checked)} ></input>
-            <span>{properties.imgSelected.title}</span>
-            {this.state.value && <img src={imgSrc} />}
-        </div>
+      <div>
+        <input
+          type="checkbox"
+          disabled={disabled}
+          checked={this.state.value}
+          onChange={event => this.selectionChange(event.target.checked)}
+        />
+        <span>{properties.imgSelected.title}</span>
+        {this.state.value && <img src={imgSrc} />}
+      </div>
     );
   }
 }
