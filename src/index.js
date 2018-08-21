@@ -6,6 +6,8 @@ import CollapsibleField from "./CollapsibleField";
 import RTEField from "./RTEField";
 import rdp from "./ReactDatePicker";
 import SimpleLabel from "./SimpleLabel";
+import draftRte from "./DraftRte";
+import formContextField from "./FormContextField";
 
 export default {
   table,
@@ -17,4 +19,6 @@ export default {
   rte: RTEField,
   rdp,
   simpleLabel: SimpleLabel,
+  draftRte,
+  formContextField,
 };
