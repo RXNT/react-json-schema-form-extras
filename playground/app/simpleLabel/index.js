@@ -2,7 +2,7 @@ const schema = {
   type: "object",
   properties: {
     myLabel: {
-      title: "Demo Label: ",
+      title: "<ul> <li>Demo <strong>Label</strong>: </li></ul> ",
     },
   },
 };
@@ -14,9 +14,7 @@ const uiSchema = {
       classNames: "col-md-2",
       styles: {
         marginLeft: "5px",
-        backgroundColor: "#222333",
-        color: "#aaccff",
-        font: "italic small-caps bold 40px/2 cursive",
+        color: "red",
       },
     },
   },

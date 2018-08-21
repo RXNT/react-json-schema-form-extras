@@ -6,6 +6,8 @@ dist
 lib
 yarn.lock
 
+package-lock.json
+
 # Numerous always-ignore extensions
 *.diff
 *.err

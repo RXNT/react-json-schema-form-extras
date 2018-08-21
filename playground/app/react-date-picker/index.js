@@ -28,6 +28,7 @@ let uiSchema = {
   datePicker: {
     classNames: "col-md-12",
     "ui:field": "rdp",
+    yearStartFrom: 2000,
   },
 };
 
