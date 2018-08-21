@@ -66,12 +66,9 @@ export default class ReactDatePicker extends Component {
     super(props);
     this.handleYearMonthChange = this.handleYearMonthChange.bind(this);
     this.state = {
-      month: fromMonth
+      month: fromMonth,
     };
-    let {
-      schema: { format = "date-time" },
-      formData
-    } = props;
+    let { schema: { format = "date-time" }, formData } = props;
     this.day = formData
       ? format === "date"
         ? new Date(formData).toISOString().substr(0, 10)
@@ -109,17 +106,13 @@ export default class ReactDatePicker extends Component {
 
   handleBlur = () => {
     let {
-      uiSchema: { rdp: { updateDelay = DEFAULT_UPDATE_DELAY } = {} } = {} //eslint-disable-line
+      uiSchema: { rdp: { updateDelay = DEFAULT_UPDATE_DELAY } = {} } = {}, //eslint-disable-line
     } = this.props;
   };
 
   notifyChange = () => {
     let day = this.day;
-    let {
-      schema: { format = "date-time" },
-      onChange,
-      formData
-    } = this.props;
+    let { schema: { format = "date-time" }, onChange, formData } = this.props;
     let event = normalizeDay(day, format);
     if (event !== formData && event != undefined) {
       onChange(event);
@@ -138,7 +131,7 @@ export default class ReactDatePicker extends Component {
     let {
       uiSchema = {},
       formData,
-      schema: { format = "date-time" }
+      schema: { format = "date-time" },
     } = this.props;
     const dayPickerProps = {
       month: this.state.month,
@@ -151,8 +144,8 @@ export default class ReactDatePicker extends Component {
       ),
       inputProps: {
         className: "form-control",
-        type: "text"
-      }
+        type: "text",
+      },
     };
     formData = loadFormatedDate(formData, defaultCurrentDate); // to load the formated date
     let { rdp = {}, defaultCurrentDate = false } = uiSchema;
@@ -173,8 +166,8 @@ export default class ReactDatePicker extends Component {
         inputProps: {
           className: "form-control",
           type: "text",
-          autoFocus: uiSchema["ui:autofocus"]
-        }
+          autoFocus: uiSchema["ui:autofocus"],
+        },
       },
       rdp
     );
@@ -195,6 +188,6 @@ export default class ReactDatePicker extends Component {
 
 ReactDatePicker.propTypes = {
   schema: PropTypes.shape({
-    format: PropTypes.oneOf(["date-time", "date"])
-  })
+    format: PropTypes.oneOf(["date-time", "date"]),
+  }),
 };
