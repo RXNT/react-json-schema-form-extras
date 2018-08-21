@@ -7,7 +7,6 @@ const toColumnClassNames = (fieldProp, fieldUIProp, customRowConfiguration) => {
     fieldProp.type === "string" &&
     Object.keys(customRowConfiguration).length > 0
   ) {
-    console.log("CHECK");
     let classNameAdd = false;
     let fieldToValidate = false;
     Object.keys(customRowConfiguration.action).map(function(action) {
@@ -67,13 +66,10 @@ const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey) => {
       <div
         className={
           defaultFilterKey
-            ? !row[defaultFilterKey]
-              ? "deleted-row-boolean-column"
-              : ""
+            ? !row[defaultFilterKey] ? "deleted-row-boolean-column" : ""
             : ""
         }
-        style={{ textAlign: "right" }}
-      >
+        style={{ textAlign: "right" }}>
         <label>{cell ? "Yes" : "No"}</label>
       </div>
     );
@@ -103,46 +99,42 @@ const toEditable = fieldProp => {
       });
       return {
         type: "select",
-        options: { values }
+        options: { values },
       };
     } else {
       return {
         type: "select",
-        options: { values: fieldProp.enum }
+        options: { values: fieldProp.enum },
       };
     }
   } else if (fieldProp.type === "boolean") {
     return {
-      type: "checkbox"
+      type: "checkbox",
     };
   } else if (fieldProp.format === "date-time") {
     return {
-      type: "datetime-local"
+      type: "datetime-local",
     };
   } else if (fieldProp.format === "date") {
     return {
-      type: "date"
+      type: "date",
     };
   } else if (fieldProp.format === "time") {
     return {
-      type: "time"
+      type: "time",
     };
   } else if (fieldProp.type === "number") {
     return {
-      type: "number"
+      type: "number",
     };
   }
   return true;
 };
 
 const columnHeadersFromSchema = (schema, uiSchema) => {
-  let {
-    items: { properties, defaultFilterKey = false }
-  } = schema;
+  let { items: { properties, defaultFilterKey = false } } = schema;
 
-  let {
-    table: { tableCols, tableConfig = {} }
-  } = uiSchema;
+  let { table: { tableCols, tableConfig = {} } } = uiSchema;
   let schemaCols = Object.keys(properties).map(dataField => {
     let { title } = properties[dataField];
     let editable = toEditable(properties[dataField]);
@@ -174,7 +166,7 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
       dataFormat,
       dataAlign,
       columnTitle,
-      columnClassName
+      columnClassName,
     };
   });
   return schemaCols;
@@ -231,7 +223,7 @@ const overrideColEditable = (colConf, fieldSchema, fields) => {
           uiSchema={fieldUISchema}
           onChange={onUpdate}
         />
-      )
+      ),
     };
   }
 };
@@ -287,7 +279,7 @@ const setColumnCSSIfMissing = (col, css) => {
   let {
     className = css,
     columnClassName = css,
-    editColumnClassName = css
+    editColumnClassName = css,
   } = col;
   Object.assign(col, { className, columnClassName, editColumnClassName });
 };
