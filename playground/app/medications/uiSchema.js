@@ -2,26 +2,26 @@ export default {
   medicationData: {
     "ui:field": "collapsible",
     "ui:options": {
-      label: false
+      label: false,
     },
     label: false,
     collapse: {
       field: "ObjectField",
       collapsed: false,
       legend: {
-        component: "LanguageLegend"
+        component: "LanguageLegend",
       },
       actions: [
         {
-          component: "Button"
-        }
+          component: "Button",
+        },
       ],
-      addTo: "medications"
+      addTo: "medications",
     },
     medications: {
       "ui:field": "table",
       "ui:options": {
-        label: false
+        label: false,
       },
       classNames: "col-md-12",
       table: {
@@ -29,7 +29,7 @@ export default {
         tableCols: [
           {
             dataField: "drugId",
-            hidden: true
+            hidden: true,
           },
           {
             dataField: "drugName",
@@ -41,202 +41,204 @@ export default {
                   {
                     DrugId: 471154,
                     DrugName:
-                      "AmLactin Distribution Pack (pramoxine) 1 %-12 % topical kit"
+                      "AmLactin Distribution Pack (pramoxine) 1 %-12 % topical kit",
                   },
                   {
                     DrugId: 471211,
-                    DrugName: "AmLactin Distribution Pack 12 %-12 % topical kit"
+                    DrugName:
+                      "AmLactin Distribution Pack 12 %-12 % topical kit",
                   },
                   {
                     DrugId: 237930,
-                    DrugName: "ceftibuten 180 mg/5 mL oral suspension"
+                    DrugName: "ceftibuten 180 mg/5 mL oral suspension",
                   },
                   {
                     DrugId: 195800,
-                    DrugName: "ceftibuten 400 mg capsule"
+                    DrugName: "ceftibuten 400 mg capsule",
                   },
                   {
                     DrugId: 445980,
-                    DrugName: "Child Ibuprofen 100 mg/5 mL oral suspension"
+                    DrugName: "Child Ibuprofen 100 mg/5 mL oral suspension",
                   },
                   {
                     DrugId: 273242,
                     DrugName:
-                      "Children's Ibu-Drops 50 mg/1.25 mL oral drops,suspension"
+                      "Children's Ibu-Drops 50 mg/1.25 mL oral drops,suspension",
                   },
                   {
                     DrugId: 436727,
-                    DrugName: "Children's Ibuprofen 100 mg/5 mL oral suspension"
+                    DrugName:
+                      "Children's Ibuprofen 100 mg/5 mL oral suspension",
                   },
                   {
                     DrugId: 557123,
-                    DrugName: "Comfort Pac-Ibuprofen 800 mg kit"
+                    DrugName: "Comfort Pac-Ibuprofen 800 mg kit",
                   },
                   {
                     DrugId: 219132,
-                    DrugName: "dibucaine 1 % topical ointment"
+                    DrugName: "dibucaine 1 % topical ointment",
                   },
                   {
                     DrugId: 292795,
-                    DrugName: "dibucaine HCl (bulk) 100 % powder"
+                    DrugName: "dibucaine HCl (bulk) 100 % powder",
                   },
                   {
                     DrugId: 554201,
-                    DrugName: "hydrocodone 10 mg-ibuprofen 200 mg tablet"
+                    DrugName: "hydrocodone 10 mg-ibuprofen 200 mg tablet",
                   },
                   {
                     DrugId: 469644,
-                    DrugName: "hydrocodone 5 mg-ibuprofen 200 mg tablet"
+                    DrugName: "hydrocodone 5 mg-ibuprofen 200 mg tablet",
                   },
                   {
                     DrugId: 156812,
-                    DrugName: "hydrocodone 7.5 mg-ibuprofen 200 mg tablet"
+                    DrugName: "hydrocodone 7.5 mg-ibuprofen 200 mg tablet",
                   },
                   {
                     DrugId: 290029,
-                    DrugName: "Ibu-Drops 50 mg/1.25 mL oral drops,suspension"
+                    DrugName: "Ibu-Drops 50 mg/1.25 mL oral drops,suspension",
                   },
                   { DrugId: 554209, DrugName: "Ibudone 10 mg-200 mg tablet" },
                   {
                     DrugId: 554208,
-                    DrugName: "Ibudone 5 mg-200 mg tablet"
+                    DrugName: "Ibudone 5 mg-200 mg tablet",
                   },
                   { DrugId: 227645, DrugName: "ibuprofen (bulk) 100 % powder" },
                   {
                     DrugId: 298404,
-                    DrugName: "ibuprofen 100 mg chewable tablet"
+                    DrugName: "ibuprofen 100 mg chewable tablet",
                   },
                   { DrugId: 234997, DrugName: "ibuprofen 100 mg tablet" },
                   {
                     DrugId: 278995,
-                    DrugName: "ibuprofen 100 mg/5 mL oral suspension"
+                    DrugName: "ibuprofen 100 mg/5 mL oral suspension",
                   },
                   { DrugId: 182478, DrugName: "ibuprofen 200 mg capsule" },
                   {
                     DrugId: 256217,
-                    DrugName: "ibuprofen 200 mg tablet"
+                    DrugName: "ibuprofen 200 mg tablet",
                   },
                   { DrugId: 250621, DrugName: "ibuprofen 400 mg tablet" },
                   {
                     DrugId: 237650,
-                    DrugName: "ibuprofen 50 mg/1.25 mL oral drops,suspension"
+                    DrugName: "ibuprofen 50 mg/1.25 mL oral drops,suspension",
                   },
                   { DrugId: 275877, DrugName: "ibuprofen 600 mg tablet" },
                   {
                     DrugId: 173420,
-                    DrugName: "ibuprofen 800 mg tablet"
+                    DrugName: "ibuprofen 800 mg tablet",
                   },
                   {
                     DrugId: 449425,
                     DrugName:
-                      "Ibuprofen Cold-Sinus (with pseudoephedrine) 30 mg-200 mg tablet"
+                      "Ibuprofen Cold-Sinus (with pseudoephedrine) 30 mg-200 mg tablet",
                   },
                   {
                     DrugId: 472085,
-                    DrugName: "Ibuprofen IB 100 mg chewable tablet"
+                    DrugName: "Ibuprofen IB 100 mg chewable tablet",
                   },
                   {
                     DrugId: 281309,
-                    DrugName: "Ibuprofen IB 200 mg tablet"
+                    DrugName: "Ibuprofen IB 200 mg tablet",
                   },
                   {
                     DrugId: 471498,
-                    DrugName: "Ibuprofen Jr Strength 100 mg chewable tablet"
+                    DrugName: "Ibuprofen Jr Strength 100 mg chewable tablet",
                   },
                   {
                     DrugId: 545552,
                     DrugName:
-                      "ibuprofen lysine (PF) 20 mg/2 mL intravenous solution"
+                      "ibuprofen lysine (PF) 20 mg/2 mL intravenous solution",
                   },
                   {
                     DrugId: 581894,
-                    DrugName: "Ibuprofen PM 200 mg-25 mg capsule"
+                    DrugName: "Ibuprofen PM 200 mg-25 mg capsule",
                   },
                   {
                     DrugId: 557264,
-                    DrugName: "Ibuprofen PM 200 mg-38 mg tablet"
+                    DrugName: "Ibuprofen PM 200 mg-38 mg tablet",
                   },
                   {
                     DrugId: 550378,
                     DrugName:
-                      "ibuprofen-diphenhydramine citrate 200 mg-38 mg tablet"
+                      "ibuprofen-diphenhydramine citrate 200 mg-38 mg tablet",
                   },
                   {
                     DrugId: 472620,
-                    DrugName: "ibuprofen-oxycodone 400 mg-5 mg tablet"
+                    DrugName: "ibuprofen-oxycodone 400 mg-5 mg tablet",
                   },
                   {
                     DrugId: 281153,
                     DrugName:
-                      "ibutilide fumarate 0.1 mg/mL intravenous solution"
+                      "ibutilide fumarate 0.1 mg/mL intravenous solution",
                   },
                   {
                     DrugId: 449511,
                     DrugName:
-                      "Infant's Ibuprofen 50 mg/1.25 mL oral drops,suspension"
+                      "Infant's Ibuprofen 50 mg/1.25 mL oral drops,suspension",
                   },
                   {
                     DrugId: 472123,
                     DrugName:
-                      "Infants Ibu-Drops 50 mg/1.25 mL oral drops,suspension"
+                      "Infants Ibu-Drops 50 mg/1.25 mL oral drops,suspension",
                   },
                   {
                     DrugId: 454370,
-                    DrugName: "squaric acid dibutylest.(bulk) 100 % liquid"
+                    DrugName: "squaric acid dibutylest.(bulk) 100 % liquid",
                   },
                   {
                     DrugId: 185726,
-                    DrugName: "squaric acid dibutylester powder"
-                  }
+                    DrugName: "squaric acid dibutylester powder",
+                  },
                 ],
                 mapping: {
                   drugName: "DrugName",
-                  drugId: "DrugId"
+                  drugId: "DrugId",
                 },
                 minLength: 2,
                 labelKey: "DrugName",
                 bodyContainer: true,
-                cleanAfterSelection: true
-              }
-            }
+                cleanAfterSelection: true,
+              },
+            },
           },
           {
             dataField: "allergyReaction",
             className: "col-md-1",
             columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1"
+            editColumnClassName: "col-md-1",
           },
           {
             dataField: "dosage",
             className: "col-md-1",
             columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1"
+            editColumnClassName: "col-md-1",
           },
           {
             dataField: "quantity",
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
-            enableHelpText: true
+            enableHelpText: true,
           },
           {
             dataField: "unit",
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
-            enableHelpText: true
+            enableHelpText: true,
           },
           {
             dataField: "refills",
             className: "col-md-1",
             columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1"
+            editColumnClassName: "col-md-1",
           },
           {
             dataField: "useGeneric",
             className: "col-md-1",
             columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1"
+            editColumnClassName: "col-md-1",
           },
           {
             dataField: "startDate",
@@ -247,17 +249,17 @@ export default {
                 placeholder: "MM/DD/YYYY",
                 inputProps: {
                   className: "form-control",
-                  type: "text"
-                }
-              }
+                  type: "text",
+                },
+              },
             },
-            defaultCurrentDate: true
+            defaultCurrentDate: true,
           },
           {
-            dataField: "isSelected"
+            dataField: "isSelected",
 
             //  filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
-          }
+          },
         ],
         tableConfig: {
           // row, added by manually by external action
@@ -265,21 +267,21 @@ export default {
             mandatoryField: ["description"],
             action: {
               updateClassNames: {
-                // Upadting Class Names for the custom rows
+                // Upadating Class Names for the custom rows
                 classToAdd: {
                   classNameToAdd: "disableEdit",
-                  columnsToAdd: ["drugName"]
+                  columnsToAdd: ["drugName"],
                 },
                 classToDelete: {
                   classNameToDelete: "DeleteClass",
-                  columnsToDelete: []
+                  columnsToDelete: [],
                 },
                 validate: {
-                  field: "isCustomRow"
-                }
-              }
-            }
-          }
+                  field: "isCustomRow",
+                },
+              },
+            },
+          },
         },
         rightActions: [
           {
@@ -295,28 +297,29 @@ export default {
               actionCompletedIcon: "glyphicon glyphicon-refresh",
               actionCompletedClassName: "deleted-row",
               mandatoryField: ["drugName"],
+            },
           },
           {
             action: "moveup",
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
-            icon: "glyphicon glyphicon-arrow-up"
+            icon: "glyphicon glyphicon-arrow-up",
           },
           {
             action: "movedown",
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
-            icon: "glyphicon glyphicon-arrow-down"
-          }
-        ]
-      }
+            icon: "glyphicon glyphicon-arrow-down",
+          },
+        ],
+      },
     },
     medications_no_active: {
       classNames: "col-md-6",
-      nav: ["medications"]
-    }
+      nav: ["medications"],
+    },
   },
   allergyData: {
     classNames: "col-md-12",
@@ -324,10 +327,10 @@ export default {
     "ui:order": ["noKnownAllergies", "noKnownDrugAllergies", "allergies"],
     "ui:field": "collapsible",
     noKnownAllergies: {
-      classNames: "col-md-6"
+      classNames: "col-md-6",
     },
     noKnownDrugAllergies: {
-      classNames: "col-md-6"
+      classNames: "col-md-6",
     },
     allergies: {
       classNames: "col-md-12",
@@ -336,11 +339,11 @@ export default {
         tableCols: [
           {
             dataField: "allergyId",
-            hidden: true
+            hidden: true,
           },
           {
             dataField: "allergyName",
-            enableHelpText: true
+            enableHelpText: true,
 
             // hidden : true,
             // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
@@ -349,16 +352,16 @@ export default {
             dataField: "allergyReaction",
             className: "col-md-1",
             columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1"
+            editColumnClassName: "col-md-1",
           },
           {
-            dataField: "isSelected"
+            dataField: "isSelected",
 
             // hidden : true,
             // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
           },
           {
-            dataField: "allergyActive"
+            dataField: "allergyActive",
             // hidden : true,
             // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
           },
@@ -375,12 +378,12 @@ export default {
                 optionsPath: "Allergies",
                 mapping: {
                   allergyId: "AllergyId",
-                  allergyName: "AllergyName"
+                  allergyName: "AllergyName",
                 },
-                labelKey: "AllergyName"
-              }
-            }
-          }
+                labelKey: "AllergyName",
+              },
+            },
+          },
         ],
         focusOnAdd: 1,
         rightActions: [
@@ -389,22 +392,22 @@ export default {
             className: "table-action",
             columnClassName: "table-action",
             editColumnClassName: "table-action",
-            icon: "glyphicons glyphicons-remove-circle glyPhiconRedColor"
-          }
-        ]
-      }
+            icon: "glyphicons glyphicons-remove-circle glyPhiconRedColor",
+          },
+        ],
+      },
     },
     "ui:options": {
-      label: false
+      label: false,
     },
     collapse: {
       field: "ObjectField",
       collapsed: false,
       icon: {
-        add: "glyphicon glyphicon-plus-sign glyPhiconGreen"
+        add: "glyphicon glyphicon-plus-sign glyPhiconGreen",
       },
       actions: [],
-      addTo: "allergies"
-    }
-  }
+      addTo: "allergies",
+    },
+  },
 };
