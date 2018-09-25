@@ -116,6 +116,7 @@ export default class DraftRTE extends Component {
           onEditorStateChange={this.onEditorStateChange}
           onBlur={this.handleBlur}
           editorRef={this.setEditorReference}
+          spellCheck={true}
           handlePastedText={() => false}
           {...draftRte}
         />
