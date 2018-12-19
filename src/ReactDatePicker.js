@@ -68,10 +68,7 @@ export default class ReactDatePicker extends Component {
     this.state = {
       month: fromMonth
     };
-    let {
-      schema: { format = "date-time" },
-      formData
-    } = props;
+    let { schema: { format = "date-time" }, formData } = props;
     this.day = formData
       ? format === "date"
         ? new Date(formData).toISOString().substr(0, 10)
@@ -115,11 +112,7 @@ export default class ReactDatePicker extends Component {
 
   notifyChange = () => {
     let day = this.day;
-    let {
-      schema: { format = "date-time" },
-      onChange,
-      formData
-    } = this.props;
+    let { schema: { format = "date-time" }, onChange, formData } = this.props;
     let event = normalizeDay(day, format);
     if (event !== formData && event != undefined) {
       onChange(event);
@@ -154,8 +147,9 @@ export default class ReactDatePicker extends Component {
         type: "text"
       }
     };
-    formData = loadFormatedDate(formData, defaultCurrentDate); // to load the formated date
     let { rdp = {}, defaultCurrentDate = false } = uiSchema;
+
+    formData = loadFormatedDate(formData, defaultCurrentDate); // to load the formated date
     let dayPickerInputProps = Object.assign(
       {
         onDayChange: this.handleDayChange,
@@ -179,7 +173,6 @@ export default class ReactDatePicker extends Component {
       rdp
     );
     dayPickerInputProps.inputProps.onBlur = this.handleBlur;
-    formData = loadFormatedDate(formData, defaultCurrentDate); // to load the formated date
 
     return (
       <div onKeyDown={this.handleKeyDown}>
