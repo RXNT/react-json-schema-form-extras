@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { AsyncTypeahead, Typeahead } from "react-bootstrap-typeahead";
-import { isArraySchema, isObjectSchema, toArray } from "./utils";
+import { isArraySchema, isObjectSchema, isStringSchema, toArray } from "./utils";
 import selectn from "selectn";
 import { DefaultLabel } from "./Label";
 
@@ -42,6 +42,7 @@ function mapLabelKey(labelKey) {
   return labelKey;
 }
 
+//eslint-disable-next-line
 function applyLabelKey(obj, labelKey) {
   if (typeof labelKey === "function") {
     return labelKey(obj);
@@ -110,13 +111,23 @@ function mapFromObject(data, mapping, defVal) {
     if (typeof eventField === "object") {
       Object.assign(agg, mapFromObject(data[field], mapping, {}));
     } else {
-      agg[eventField] = data[field];
+      if(data[field]){
+        agg[eventField] = data[field];
+      }
     }
     return agg;
   }, defVal);
 }
-
+/**
+ * 
+ * @param {*} data 
+ * @param {*} mapping 
+ * Mapped object is converted to the object mapping takes
+ */
 export function mapFromSchema(data, mapping) {
+  if(isEmpty(data)) { 
+    return
+  }
   if (!mapping || mapping === null) {
     return data;
   } else if (typeof mapping === mapping) {
@@ -128,14 +139,27 @@ export function mapFromSchema(data, mapping) {
   }
 }
 
-function toSelected(formData, schema, mapping, labelKey) {
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object
+}
+
+function toSelected(formData, schema, mapping, labelKey, options) {
   let normFormData = formData ? toArray(formData) : [];
   if (isObjectSchema(schema)) {
     return normFormData.map(selected =>
-      applyLabelKey(mapFromSchema(selected, mapping), labelKey)
+      mapFromSchema(selected, mapping)
     );
+  } else if (options && isStringSchema(schema) && typeof mapping === "string") {
+    return normFormData.map(dataItem => {
+      return options.find(option => {
+        if (option[mapping] === dataItem) {
+          return option
+        }
+      })
+    })
+  } else {
+    return normFormData;
   }
-  return normFormData;
 }
 
 class BaseTypeaheadField extends Component {
@@ -152,7 +176,7 @@ class BaseTypeaheadField extends Component {
           }
         }, 0);
       }
-    }
+    } 
   };
 
   componentDidMount() {
@@ -161,6 +185,13 @@ class BaseTypeaheadField extends Component {
       this.refs.typeahead.getInstance().focus();
     }
   }
+
+  handleBlur = evt => {
+    let selectedText = evt.target.value && evt.target.value.trim();
+    if (selectedText === "") {
+      this.props.onChange("");
+    }
+  };
 }
 
 export class TypeaheadField extends BaseTypeaheadField {
@@ -173,13 +204,16 @@ export class TypeaheadField extends BaseTypeaheadField {
     } = this.props;
 
     let labelKey = mapLabelKey(typeahead.labelKey);
-    let selected = toSelected(formData, schema, typeahead.mapping, labelKey);
+    let selected = toSelected(formData, schema, typeahead.mapping, labelKey, typeahead.options);
 
-    let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead, {
-      onChange: this.handleSelectionChange(typeahead),
-      labelKey,
-      selected,
-    });
+    let typeConf = Object.assign({}, DEFAULT_OPTIONS, {
+        onChange: this.handleSelectionChange(typeahead),
+        labelKey,
+        selected,
+        onBlur: this.handleBlur,
+      },
+      typeahead
+    );
 
     return (
       <div id={$id}>
@@ -236,6 +270,25 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       .then(options => this.setState({ options }));
   };
 
+  handleOnFocus = () => {
+    let {
+      uiSchema: {
+        asyncTypeahead: {
+          url,
+          optionsPath,
+          minLength
+        },
+      },
+    } = this.props;
+
+    if(minLength === 0) {
+      fetch(`${url}`).then(res => res.json())
+      .then(json => (optionsPath ? selectn(optionsPath, json) : json))
+      .then(options => this.setState({ options }));
+    }
+  }
+
+  
   render() {
     let {
       schema,
@@ -252,13 +305,17 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       labelKey
     );
 
-    let typeConf = Object.assign({}, DEFAULT_OPTIONS, asyncTypeahead, {
-      selected,
-      labelKey,
-      onChange: this.handleSelectionChange(asyncTypeahead),
-      onSearch: this.handleSearch,
-      options: this.state.options,
-    });
+    let typeConf = Object.assign({}, DEFAULT_OPTIONS, {
+        selected,
+        labelKey,
+        onChange: this.handleSelectionChange(asyncTypeahead),
+        onSearch: this.handleSearch,
+        options: this.state.options,
+        onFocus: this.handleOnFocus,
+        onBlur: this.handleBlur,
+      },
+      asyncTypeahead
+    );
 
     if (asyncTypeahead.overrideOptions) {
       typeConf.onInputChange = this.props.onChange;
