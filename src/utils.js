@@ -20,6 +20,10 @@ export function isStringSchema(schema) {
   return schema.type === "string"
 }
 
+export function isNumberSchema(schema) {
+  return schema.type === "number" || schema.type === "integer"
+}
+
 export function deepCopy(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
