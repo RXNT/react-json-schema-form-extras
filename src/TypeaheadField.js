@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { AsyncTypeahead, Typeahead } from "react-bootstrap-typeahead";
-import { isArraySchema, isObjectSchema, isStringSchema, toArray } from "./utils";
+import { isArraySchema, isObjectSchema, isStringSchema, isNumberSchema, toArray } from "./utils";
 import selectn from "selectn";
 import { DefaultLabel } from "./Label";
 
@@ -149,7 +149,7 @@ function toSelected(formData, schema, mapping, labelKey, options) {
     return normFormData.map(selected =>
       mapFromSchema(selected, mapping)
     );
-  } else if (options && isStringSchema(schema) && typeof mapping === "string") {
+  } else if (options && (isStringSchema(schema) || isNumberSchema(schema)) && typeof mapping === "string") {
     return normFormData.map(dataItem => {
       return options.find(option => {
         if (option[mapping] === dataItem) {
