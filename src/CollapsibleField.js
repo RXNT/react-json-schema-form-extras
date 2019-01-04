@@ -150,11 +150,16 @@ class CollapsibleField extends Component {
   }
 
   appendToArray = (formData = [], newVal) => {
+    let { uiSchema: { collapse: { addToBottom = true } = {} } } = this.props;
     if (formData.some(v => deepEquals(v, newVal))) {
       return formData;
     } else {
-      // newVal can be either array or a single element, concat flattens value
-      return formData.concat(newVal);
+        // newVal can be either array or a single element, concat flattens value
+      if(addToBottom) {
+        return formData.concat(newVal);
+      } else {
+        return [newVal].concat(formData)
+      }
     }
   };
 
