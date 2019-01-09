@@ -147,8 +147,9 @@ export default class ReactDatePicker extends Component {
         type: "text",
       },
     };
-    formData = loadFormatedDate(formData, defaultCurrentDate); // to load the formated date
     let { rdp = {}, defaultCurrentDate = false } = uiSchema;
+
+    formData = loadFormatedDate(formData, defaultCurrentDate); // to load the formated date
     let dayPickerInputProps = Object.assign(
       {
         onDayChange: this.handleDayChange,
@@ -172,7 +173,6 @@ export default class ReactDatePicker extends Component {
       rdp
     );
     dayPickerInputProps.inputProps.onBlur = this.handleBlur;
-    formData = loadFormatedDate(formData, defaultCurrentDate); // to load the formated date
 
     return (
       <div onKeyDown={this.handleKeyDown}>
