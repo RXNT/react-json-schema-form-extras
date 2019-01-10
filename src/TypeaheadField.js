@@ -111,7 +111,7 @@ function mapFromObject(data, mapping, defVal) {
     if (typeof eventField === "object") {
       Object.assign(agg, mapFromObject(data[field], mapping, {}));
     } else {
-      if(data[field]){
+      if (data[field]){
         agg[eventField] = data[field];
       }
     }
@@ -125,8 +125,8 @@ function mapFromObject(data, mapping, defVal) {
  * Mapped object is converted to the object mapping takes
  */
 export function mapFromSchema(data, mapping) {
-  if(isEmpty(data)) { 
-    return
+  if (isEmpty(data)) { 
+    return;
   }
   if (!mapping || mapping === null) {
     return data;
@@ -140,7 +140,7 @@ export function mapFromSchema(data, mapping) {
 }
 
 function isEmpty(obj) {
-  return Object.keys(obj).length === 0 && obj.constructor === Object
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
 function toSelected(formData, schema, mapping, labelKey, options) {
@@ -148,15 +148,15 @@ function toSelected(formData, schema, mapping, labelKey, options) {
   if (isObjectSchema(schema)) {
     return normFormData.map(selected =>
       mapFromSchema(selected, mapping)
-    );
+    ).filter(x => x !== undefined);
   } else if (options && (isStringSchema(schema) || isNumberSchema(schema)) && typeof mapping === "string") {
     return normFormData.map(dataItem => {
       return options.find(option => {
         if (option[mapping] === dataItem) {
-          return option
+          return option;
         }
-      })
-    })
+      });
+    });
   } else {
     return normFormData;
   }
@@ -206,13 +206,12 @@ export class TypeaheadField extends BaseTypeaheadField {
     let labelKey = mapLabelKey(typeahead.labelKey);
     let selected = toSelected(formData, schema, typeahead.mapping, labelKey, typeahead.options);
 
-    let typeConf = Object.assign({}, DEFAULT_OPTIONS, {
+    let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead, {
         onChange: this.handleSelectionChange(typeahead),
         labelKey,
         selected,
         onBlur: this.handleBlur,
-      },
-      typeahead
+      }
     );
 
     return (
@@ -281,7 +280,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       },
     } = this.props;
 
-    if(minLength === 0) {
+    if (minLength === 0) {
       fetch(`${url}`).then(res => res.json())
       .then(json => (optionsPath ? selectn(optionsPath, json) : json))
       .then(options => this.setState({ options }));
@@ -305,7 +304,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       labelKey
     );
 
-    let typeConf = Object.assign({}, DEFAULT_OPTIONS, {
+    let typeConf = Object.assign({}, DEFAULT_OPTIONS, asyncTypeahead, {
         selected,
         labelKey,
         onChange: this.handleSelectionChange(asyncTypeahead),
@@ -313,8 +312,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
         options: this.state.options,
         onFocus: this.handleOnFocus,
         onBlur: this.handleBlur,
-      },
-      asyncTypeahead
+      }
     );
 
     if (asyncTypeahead.overrideOptions) {
