@@ -275,13 +275,17 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
         asyncTypeahead: {
           url,
           optionsPath,
-          minLength
+          queryOnFocus= '',
+          minLength,
+          search = (url, query) =>
+            fetch(`${url}?query=${query}`).then(res => res.json()),
         },
       },
     } = this.props;
 
+    
     if (minLength === 0) {
-      fetch(`${url}`).then(res => res.json())
+      search(url, queryOnFocus)
       .then(json => (optionsPath ? selectn(optionsPath, json) : json))
       .then(options => this.setState({ options }));
     }
