@@ -32,6 +32,32 @@ function convertFields(cellValue, { type, format, default: def }) {
   }
   return cellValue;
 }
+function isEquivalentObject(a, b) {
+  // Create arrays of property names
+  var aProps = Object.getOwnPropertyNames(a);
+  var bProps = Object.getOwnPropertyNames(b);
+
+  // If number of properties is different,
+  // objects are not equivalent
+  if (aProps.length != bProps.length) {
+    return false;
+  }
+
+  for (var i = 0; i < aProps.length; i++) {
+    var propName = aProps[i];
+
+    // If values of same property are not equal,
+    // objects are not equivalent
+    if (a[propName] !== b[propName]) {
+      return false;
+    }
+  }
+
+  // If we made it this far, objects
+  // are considered equivalent
+
+  return true;
+}
 
 class TableField extends Component {
   constructor(props) {
@@ -39,6 +65,7 @@ class TableField extends Component {
     this.handleCellSave = this.handleCellSave.bind(this);
     this.handleRowsDelete = this.handleRowsDelete.bind(this);
     this.handleDeletedRow = this.handleDeletedRow.bind(this);
+    this.handleRowSelect = this.handleRowSelect.bind(this);
   }
   handleDeletedRow(row, rowIdx, c) {
     let { items: { defaultFilterKey = undefined } } = this.props.schema;
@@ -49,7 +76,7 @@ class TableField extends Component {
       let classAfterAction = rightActions.map(rightAction => {
         if (rightAction.action === "update") {
           let {
-            actionConfiguration: { actionCompletedClassName = false },
+            actionConfiguration: { actionCompletedClassName = false }
           } = rightAction;
           return actionCompletedClassName;
         }
@@ -102,6 +129,21 @@ class TableField extends Component {
 
     this.props.onChange(removePosition(filteredRows));
   }
+  handleRowSelect(row, isSelected, e) {
+    const {
+      data,
+      selectRow: { onSelectRow: { fieldToUpdate = "picked" } }
+    } = this.tableConf;
+    let filteredRows = (data || []).map(item => {
+      if (!isSelected && item[fieldToUpdate] !== undefined) {
+        delete item[fieldToUpdate];
+      } else if (isEquivalentObject(item, row)) {
+        item[fieldToUpdate] = isSelected;
+      }
+      return item;
+    });
+    this.props.onChange(filteredRows);
+  }
 
   componentWillReceiveProps(nextProps) {
     let { uiSchema: { table: { focusOnAdd } = {} } } = nextProps;
@@ -136,7 +178,7 @@ class TableField extends Component {
       formData,
       registry: { fields },
       idSchema: { $id } = {},
-      onChange,
+      onChange
     } = this.props;
 
     this.tableConf = tableConfFrom(
@@ -144,7 +186,8 @@ class TableField extends Component {
       formData,
       this.handleCellSave,
       this.handleRowsDelete,
-      this.handleDeletedRow
+      this.handleDeletedRow,
+      this.handleRowSelect
     );
 
     this.tableConf.cellEdit.beforeSaveCell = this.beforeSaveCell;
