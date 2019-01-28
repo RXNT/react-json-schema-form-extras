@@ -194,9 +194,11 @@ export function overrideColDataFormat(colConf, fieldSchema, formData) {
       if (typeof fieldVal === "string") {
         return moment(fieldVal).format(dataFormat);
       }
-      formData[row["_position"]][dataField] = moment(
-        fieldVal.toISOString()
-      ).format("YYYY-MM-DD"); //Updating the formdata for the default date picker
+      if(fieldSchema && fieldSchema.format === "date-time") {
+				formData[row['_position']][dataField] = moment(fieldVal.toISOString()).format('YYYY-MM-DDThh:mm:ssZ'); //Updating the formdata for the default date-time
+			} else {
+				formData[row['_position']][dataField] = moment(fieldVal.toISOString()).format('YYYY-MM-DD'); //Updating the formdata for the default date picker
+			}
       return moment(fieldVal.toISOString()).format(dataFormat);
     };
     colConf.dataFormat.bind(this);
