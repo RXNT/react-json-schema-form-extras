@@ -17,11 +17,19 @@ export function isArraySchema(schema) {
 }
 
 export function isStringSchema(schema) {
-  return schema.type === "string"
+  return schema.type === "string";
 }
 
 export function isNumberSchema(schema) {
-  return schema.type === "number" || schema.type === "integer"
+  return schema.type === "number" || schema.type === "integer";
+}
+
+export function getDefaultValueForSchema(schema) {
+  if (isArraySchema(schema)) return [];
+  if (isObjectSchema(schema)) return {};
+  if (isStringSchema(schema)) return "";
+  if (isNumberSchema(schema)) return NaN;
+  return "";
 }
 
 export function deepCopy(obj) {
