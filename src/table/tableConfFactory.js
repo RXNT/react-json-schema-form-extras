@@ -5,13 +5,13 @@ const POSITION_KEY = "_position";
 const DEFAULT_TABLE_CONF = {
   cellEdit: {
     mode: "click",
-    blurToSave: true,
+    blurToSave: true
   },
   options: {},
   keyBoardNav: {
-    enterToEdit: true,
+    enterToEdit: true
   },
-  handleConfirmDeleteRow: next => next(),
+  handleConfirmDeleteRow: next => next()
 };
 
 export function addPosition(data) {
@@ -33,7 +33,8 @@ export default function tableConfFrom(
   formData = [],
   afterSaveCell,
   afterDeleteRow,
-  highlightAfterDelete
+  highlightAfterDelete,
+  handleRowSelect
 ) {
   let { keyField = POSITION_KEY } = table;
   if (keyField === POSITION_KEY) {
@@ -50,6 +51,12 @@ export default function tableConfFrom(
   tableConf.cellEdit.afterSaveCell = afterSaveCell;
   tableConf.options.afterDeleteRow = afterDeleteRow;
   tableConf.trClassName = highlightAfterDelete;
+  if (
+    tableConf.selectRow !== undefined &&
+    tableConf.selectRow.onSelectRow !== undefined
+  ) {
+    tableConf.selectRow.onSelect = handleRowSelect;
+  }
 
   return tableConf;
 }
