@@ -189,6 +189,22 @@ export function toSelected(formData, schema, mapping, options) {
   }
 }
 
+function isFunction(functionToCheck) {
+  return functionToCheck instanceof Function;
+}
+
+ /*
+ this is done to prevent an edge case with a typeahead wrapped inside a table that has an item selected & uses a function as a labelKey
+ TODO: Need to find a better solution for this
+ */
+function transformLabelKey(labelKey, schema, selected,) {
+  if (isFunction(labelKey) && selected && selected.length > 0 && schema.type === "string" && selected.every(x => (typeof x === "string" || x instanceof String))) {
+    return "";
+  } else {
+    return labelKey
+  }
+}
+
 class BaseTypeaheadField extends Component {
   handleSelectionChange = conf => events => {
     let { mapping, cleanAfterSelection = false } = conf;
@@ -255,9 +271,11 @@ export class TypeaheadField extends BaseTypeaheadField {
   }
 
   render() {
-    let { uiSchema: { typeahead }, idSchema: { $id } = {} } = this.props;
+    let { uiSchema: { typeahead }, idSchema: { $id } = {}, schema } = this.props;
 
     let labelKey = mapLabelKey(typeahead.labelKey);
+    // if something is already selected and is a string - removing the label key so that the labelKey function can be ignored.
+    labelKey = transformLabelKey(labelKey, schema, this.state.selected);
 
     let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead, {
       onChange: this.handleSelectionChange(typeahead),
@@ -352,9 +370,11 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
   };
 
   render() {
-    let { uiSchema: { asyncTypeahead }, idSchema: { $id } = {} } = this.props;
+    let { uiSchema: { asyncTypeahead }, idSchema: { $id } = {}, schema } = this.props;
 
     let labelKey = mapLabelKey(asyncTypeahead.labelKey);
+    // if something is already selected and is a string - removing the label key so that the labelKey function can be ignored.
+    labelKey = transformLabelKey(labelKey, schema, this.state.selected);
 
     let typeConf = Object.assign({}, DEFAULT_OPTIONS, asyncTypeahead, {
       selected: this.state.selected,
