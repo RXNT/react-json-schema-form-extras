@@ -248,8 +248,9 @@ class BaseTypeaheadField extends Component {
       if (this.refs.typeahead) {
         this.refs.typeahead.getInstance() && this.refs.typeahead.getInstance().clear();
       }
-      let onChangeValue = getDefaultValueForSchema(schema);
-      this.props.onChange(onChangeValue);
+      // let onChangeValue = getDefaultValueForSchema(schema);
+      // remove the field if the value is empty
+      this.props.onChange(undefined);
     }
   };
 }
