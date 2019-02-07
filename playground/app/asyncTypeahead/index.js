@@ -15,12 +15,10 @@ const uiSchema = {
       url: "https://jsonplaceholder.typicode.com/users",
       minLength: 0,
       labelKey: "email",
-      mapping: "email"
-
+      mapping: "email",
     },
   },
 };
-
 
 // const schema = {
 //   title: "Tests ",
@@ -56,6 +54,5 @@ const uiSchema = {
 //     }
 //   }
 // }
-
 
 export default { schema, uiSchema };

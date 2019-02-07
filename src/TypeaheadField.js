@@ -193,15 +193,21 @@ function isFunction(functionToCheck) {
   return functionToCheck instanceof Function;
 }
 
- /*
+/*
  this is done to prevent an edge case with a typeahead wrapped inside a table that has an item selected & uses a function as a labelKey
  TODO: Need to find a better solution for this
  */
-function transformLabelKey(labelKey, schema, selected,) {
-  if (isFunction(labelKey) && selected && selected.length > 0 && schema.type === "string" && selected.every(x => (typeof x === "string" || x instanceof String))) {
+function transformLabelKey(labelKey, schema, selected) {
+  if (
+    isFunction(labelKey) &&
+    selected &&
+    selected.length > 0 &&
+    schema.type === "string" &&
+    selected.every(x => typeof x === "string" || x instanceof String)
+  ) {
     return "";
   } else {
-    return labelKey
+    return labelKey;
   }
 }
 
@@ -237,16 +243,13 @@ class BaseTypeaheadField extends Component {
   handleBlur = () => {
     let { selected } = this.state;
 
-    let {
-      schema,
-    } = this.props;
-
     if (selected.length === 0) {
       this.setState({
         selected: [],
       });
       if (this.refs.typeahead) {
-        this.refs.typeahead.getInstance() && this.refs.typeahead.getInstance().clear();
+        this.refs.typeahead.getInstance() &&
+          this.refs.typeahead.getInstance().clear();
       }
       // let onChangeValue = getDefaultValueForSchema(schema);
       // remove the field if the value is empty
@@ -272,7 +275,11 @@ export class TypeaheadField extends BaseTypeaheadField {
   }
 
   render() {
-    let { uiSchema: { typeahead }, idSchema: { $id } = {}, schema } = this.props;
+    let {
+      uiSchema: { typeahead },
+      idSchema: { $id } = {},
+      schema,
+    } = this.props;
 
     let labelKey = mapLabelKey(typeahead.labelKey);
     // if something is already selected and is a string - removing the label key so that the labelKey function can be ignored.
@@ -371,7 +378,11 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
   };
 
   render() {
-    let { uiSchema: { asyncTypeahead }, idSchema: { $id } = {}, schema } = this.props;
+    let {
+      uiSchema: { asyncTypeahead },
+      idSchema: { $id } = {},
+      schema,
+    } = this.props;
 
     let labelKey = mapLabelKey(asyncTypeahead.labelKey);
     // if something is already selected and is a string - removing the label key so that the labelKey function can be ignored.

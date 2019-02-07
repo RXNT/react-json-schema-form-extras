@@ -3,6 +3,7 @@ import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import tableConfFrom, { removePosition } from "./tableConfFactory";
 import columnHeadersFrom from "./columnHeadersFactory";
 import moment from "moment";
+import InsertModal from "./customModal/InsertModal";
 
 function convertFields(cellValue, { type, format, default: def }) {
   if (cellValue === undefined) {
@@ -76,7 +77,7 @@ class TableField extends Component {
       let classAfterAction = rightActions.map(rightAction => {
         if (rightAction.action === "update") {
           let {
-            actionConfiguration: { actionCompletedClassName = false }
+            actionConfiguration: { actionCompletedClassName = false },
           } = rightAction;
           return actionCompletedClassName;
         }
@@ -132,7 +133,7 @@ class TableField extends Component {
   handleRowSelect(row, isSelected, e) {
     const {
       data,
-      selectRow: { onSelectRow: { fieldToUpdate = "picked" } }
+      selectRow: { onSelectRow: { fieldToUpdate = "picked" } },
     } = this.tableConf;
     let filteredRows = (data || []).map(item => {
       if (!isSelected && item[fieldToUpdate] !== undefined) {
@@ -167,9 +168,36 @@ class TableField extends Component {
         console.error("Can't find body in the table");
         return;
       }
-      body.handleEditCell((focusRowIndex ? focusRowIndex : this.props.formData.length), focusOnAdd);
+      body.handleEditCell(
+        focusRowIndex ? focusRowIndex : this.props.formData.length,
+        focusOnAdd
+      );
     }
   }
+
+  createCustomModal = (
+    onModalClose,
+    onSave,
+    columns,
+    validateState,
+    ignoreEditable
+  ) => {
+    let { formData, schema, uiSchema, onChange, registry } = this.props;
+    const attr = {
+      onModalClose,
+      onSave,
+      columns,
+      validateState,
+      ignoreEditable,
+      formData,
+      onChange,
+      schema,
+      uiSchema,
+      registry,
+      version: "1",
+    };
+    return <InsertModal {...attr} />;
+  };
 
   render() {
     let {
@@ -178,7 +206,7 @@ class TableField extends Component {
       formData,
       registry: { fields },
       idSchema: { $id } = {},
-      onChange
+      onChange,
     } = this.props;
 
     this.tableConf = tableConfFrom(
@@ -189,6 +217,7 @@ class TableField extends Component {
       this.handleDeletedRow,
       this.handleRowSelect
     );
+    this.tableConf.options.insertModal = this.createCustomModal;
 
     this.tableConf.cellEdit.beforeSaveCell = this.beforeSaveCell;
     let columns = columnHeadersFrom(
