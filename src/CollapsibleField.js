@@ -154,11 +154,11 @@ class CollapsibleField extends Component {
     if (formData.some(v => deepEquals(v, newVal))) {
       return formData;
     } else {
-        // newVal can be either array or a single element, concat flattens value
-      if(addToBottom) {
+      // newVal can be either array or a single element, concat flattens value
+      if (addToBottom) {
         return formData.concat(newVal);
       } else {
-        return [newVal].concat(formData)
+        return [newVal].concat(formData);
       }
     }
   };

@@ -25,10 +25,21 @@ export function isNumberSchema(schema) {
 }
 
 export function getDefaultValueForSchema(schema) {
-  if (isArraySchema(schema)) return [];
-  if (isObjectSchema(schema)) return {};
-  if (isStringSchema(schema)) return "";
-  if (isNumberSchema(schema)) return NaN;
+  if (isArraySchema(schema)) {
+    return [];
+  }
+
+  if (isObjectSchema(schema)) {
+    return {};
+  }
+
+  if (isStringSchema(schema)) {
+    return "";
+  }
+
+  if (isNumberSchema(schema)) {
+    return NaN;
+  }
   return "";
 }
 

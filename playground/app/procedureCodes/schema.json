@@ -1,0 +1,36 @@
+{
+  "schema": {
+    "required": [],
+    "type": "object",
+    "properties": {
+      "procedureCodes": {
+        "type": "array",
+        "title": "Coding",
+        "default": [],
+        "rxnt": "ProcedureInfo.PatientProcedures",
+        "rxntMaster": "/EHRV8PatientEncounterAPIServices/ehrv8/rxntencounter/SyncPatientProcedures",
+        "items": {
+          "required": [
+            "code"
+          ],
+          "type": "object",
+          "properties": {
+            "code": {
+              "templatable": true,
+              "type": "string",
+              "title": "CPT",
+              "rxnt": "CPT.Code"
+            },
+            "description": {
+              "templatable": true,
+              "type": "string",
+              "title": "Description",
+              "rxnt": "CPT.Description"
+            }
+          },
+          "defaultFilterKey": false
+        }
+      }
+    }
+  }
+}

@@ -1353,3 +1353,7 @@
     -webkit-transform: rotate(1turn);
   }
 }
+
+.react-bs-table-insert-modal input.editor.edit-checkbox.checkbox.pull-right {
+  margin-top: -25px !important;
+}
