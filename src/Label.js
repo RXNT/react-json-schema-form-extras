@@ -1,7 +1,7 @@
 import React from "react";
-import DefaultDescriptionField from "react-jsonschema-form/lib/components/fields/DescriptionField";
 import {
   isMultiSelect,
+  getDefaultRegistry,
   getUiOptions,
   isFilesArray,
 } from "react-jsonschema-form/lib/utils";
@@ -29,7 +29,7 @@ export function DefaultLabel({
   required,
   id,
   name,
-  fields = {},
+  registry = getDefaultRegistry(),
   formContext,
 }) {
   const uiOptions = getUiOptions(uiSchema);
@@ -49,7 +49,8 @@ export function DefaultLabel({
   const label = uiSchema["ui:title"] || schema.title || name;
   const description = uiSchema["ui:description"] || schema.description;
 
-  const { DescriptionField = DefaultDescriptionField } = fields;
+  const { fields } = registry;
+  const { DescriptionField } = fields;
 
   if (displayLabel || forceLabelDisplay) {
     return [
