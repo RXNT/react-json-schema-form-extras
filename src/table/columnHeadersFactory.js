@@ -197,7 +197,7 @@ export function overrideColDataFormat(colConf, fieldSchema, formData) {
       if (fieldSchema && fieldSchema.format === "date-time") {
         formData[row["_position"]][dataField] = moment(
           fieldVal.toISOString()
-        ).format("YYYY-MM-DDThh:mm:ssZ"); //Updating the formdata for the default date-time
+        ).format("YYYY-MM-DDTHH:mm:ssZ"); //Updating the formdata for the default date-time
       } else {
         formData[row["_position"]][dataField] = moment(
           fieldVal.toISOString()
