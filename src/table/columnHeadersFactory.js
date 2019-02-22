@@ -173,6 +173,8 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
 };
 
 export function overrideColDataFormat(colConf, fieldSchema, formData) {
+
+  console.log("sdfasdfasdfasdf--=-=-=-");
   if (typeof colConf.dataFormat === "string" && fieldSchema.type === "object") {
     const { dataField, dataFormat: field } = colConf;
     colConf.dataFormat = function(cell, row) {
@@ -207,6 +209,29 @@ export function overrideColDataFormat(colConf, fieldSchema, formData) {
     };
     colConf.dataFormat.bind(this);
   }
+  else if (
+    colConf.field !== undefined &&
+     colConf.field === "asyncTypeahead"){ //Only handle Type head with Array 
+      if (fieldSchema.type === "array"){
+  
+      const { dataField=false, uiSchema:{ asyncTypeahead: { arrayItemIndicator="glyphicon glyphicon-record" } } } = colConf;
+       colConf.dataFormat = function(cell, row) {
+         let displayData = '';
+         if (dataField){
+           if ( cell !== undefined && Object.keys(cell).length >0){
+             Object.keys(cell).map((item)=>{
+                 displayData += `<i class='${arrayItemIndicator}'></i>${cell[item][dataField]}  `;                
+             });
+           }
+         } else {
+           displayData  ="Mapping Name not available";
+         }
+         return displayData;
+         
+       };
+       colConf.dataFormat.bind(this);
+      }     
+    }
 }
 
 const overrideColEditable = (colConf, fieldSchema, fields) => {
