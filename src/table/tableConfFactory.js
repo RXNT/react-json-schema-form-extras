@@ -34,7 +34,8 @@ export default function tableConfFrom(
   afterSaveCell,
   afterDeleteRow,
   highlightAfterDelete,
-  handleRowSelect
+  handleRowSelect,
+  handleAllRowSelect
 ) {
   let { keyField = POSITION_KEY } = table;
   if (keyField === POSITION_KEY) {
@@ -54,8 +55,14 @@ export default function tableConfFrom(
   if (
     tableConf.selectRow !== undefined &&
     tableConf.selectRow.onSelectRow !== undefined
-  ) {
+  ) {    
     tableConf.selectRow.onSelect = handleRowSelect;
+  }
+  if (
+    tableConf.selectRow !== undefined &&
+    tableConf.selectRow.onSelectAllRow !== undefined
+  ) {    
+    tableConf.selectRow.onSelectAll = handleAllRowSelect;
   }
 
   return tableConf;
