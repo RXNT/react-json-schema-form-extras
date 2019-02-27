@@ -67,6 +67,7 @@ class TableField extends Component {
     this.handleRowsDelete = this.handleRowsDelete.bind(this);
     this.handleDeletedRow = this.handleDeletedRow.bind(this);
     this.handleRowSelect = this.handleRowSelect.bind(this);
+    this.handleAllRowSelect = this.handleAllRowSelect.bind(this);
   }
   handleDeletedRow(row, rowIdx, c) {
     let { items: { defaultFilterKey = undefined } } = this.props.schema;
@@ -137,7 +138,9 @@ class TableField extends Component {
     } = this.tableConf;
     let filteredRows = (data || []).map(item => {
       if (!isSelected && item[fieldToUpdate] !== undefined) {
-        delete item[fieldToUpdate];
+        if (isEquivalentObject(item, row)) {
+          delete item[fieldToUpdate];
+        }       
       } else if (isEquivalentObject(item, row)) {
         item[fieldToUpdate] = isSelected;
       }
@@ -145,7 +148,23 @@ class TableField extends Component {
     });
     this.props.onChange(filteredRows);
   }
+  handleAllRowSelect(isSelected, rows, e) {
+    const {
+      data,
+      selectRow: { onSelectAllRow: { fieldToUpdate = "picked" } }
+    } = this.tableConf;
 
+
+    let filteredRows = (rows || []).map(item => {
+      if (!isSelected && item[fieldToUpdate] !== undefined) {
+        delete item[fieldToUpdate];
+      } else  {
+        item[fieldToUpdate] = isSelected;
+      }
+      return item;
+    });
+    this.props.onChange(filteredRows);
+  }
   componentWillReceiveProps(nextProps) {
     let { uiSchema: { table: { focusOnAdd } = {} } } = nextProps;
 
@@ -215,7 +234,8 @@ class TableField extends Component {
       this.handleCellSave,
       this.handleRowsDelete,
       this.handleDeletedRow,
-      this.handleRowSelect
+      this.handleRowSelect,
+      this.handleAllRowSelect
     );
     this.tableConf.options.insertModal = this.createCustomModal;
 
