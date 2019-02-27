@@ -7,7 +7,6 @@ const toColumnClassNames = (fieldProp, fieldUIProp, customRowConfiguration) => {
     fieldProp.type === "string" &&
     Object.keys(customRowConfiguration).length > 0
   ) {
-    console.log("CHECK");
     let classNameAdd = false;
     let fieldToValidate = false;
     Object.keys(customRowConfiguration.action).map(function(action) {
@@ -67,13 +66,10 @@ const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey) => {
       <div
         className={
           defaultFilterKey
-            ? !row[defaultFilterKey]
-              ? "deleted-row-boolean-column"
-              : ""
+            ? !row[defaultFilterKey] ? "deleted-row-boolean-column" : ""
             : ""
         }
-        style={{ textAlign: "right" }}
-      >
+        style={{ textAlign: "right" }}>
         <label>{cell ? "Yes" : "No"}</label>
       </div>
     );
@@ -103,46 +99,42 @@ const toEditable = fieldProp => {
       });
       return {
         type: "select",
-        options: { values }
+        options: { values },
       };
     } else {
       return {
         type: "select",
-        options: { values: fieldProp.enum }
+        options: { values: fieldProp.enum },
       };
     }
   } else if (fieldProp.type === "boolean") {
     return {
-      type: "checkbox"
+      type: "checkbox",
     };
   } else if (fieldProp.format === "date-time") {
     return {
-      type: "datetime-local"
+      type: "datetime-local",
     };
   } else if (fieldProp.format === "date") {
     return {
-      type: "date"
+      type: "date",
     };
   } else if (fieldProp.format === "time") {
     return {
-      type: "time"
+      type: "time",
     };
   } else if (fieldProp.type === "number") {
     return {
-      type: "number"
+      type: "number",
     };
   }
   return true;
 };
 
 const columnHeadersFromSchema = (schema, uiSchema) => {
-  let {
-    items: { properties, defaultFilterKey = false }
-  } = schema;
+  let { items: { properties, defaultFilterKey = false } } = schema;
 
-  let {
-    table: { tableCols, tableConfig = {} }
-  } = uiSchema;
+  let { table: { tableCols, tableConfig = {} } } = uiSchema;
   let schemaCols = Object.keys(properties).map(dataField => {
     let { title } = properties[dataField];
     let editable = toEditable(properties[dataField]);
@@ -174,14 +166,14 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
       dataFormat,
       dataAlign,
       columnTitle,
-      columnClassName
+      columnClassName,
     };
   });
   return schemaCols;
 };
 
 export function overrideColDataFormat(colConf, fieldSchema, formData) {
-
+  
   if (typeof colConf.dataFormat === "string" && fieldSchema.type === "object") {
     const { dataField, dataFormat: field } = colConf;
     colConf.dataFormat = function(cell, row) {
@@ -203,36 +195,48 @@ export function overrideColDataFormat(colConf, fieldSchema, formData) {
       if (typeof fieldVal === "string") {
         return moment(fieldVal).format(dataFormat);
       }
-      formData[row["_position"]][dataField] = moment(
-        fieldVal.toISOString()
-      ).format("YYYY-MM-DD"); //Updating the formdata for the default date picker
+      if (fieldSchema && fieldSchema.format === "date-time") {
+        formData[row["_position"]][dataField] = moment(
+          fieldVal.toISOString()
+        ).format("YYYY-MM-DDTHH:mm:ssZ"); //Updating the formdata for the default date-time
+      } else {
+        formData[row["_position"]][dataField] = moment(
+          fieldVal.toISOString()
+        ).format("YYYY-MM-DD"); //Updating the formdata for the default date picker
+      }
       return moment(fieldVal.toISOString()).format(dataFormat);
     };
     colConf.dataFormat.bind(this);
-  }
-  else if (
+  } else if (
     colConf.field !== undefined &&
-     colConf.field === "asyncTypeahead"){ //Only handle Type head with Array 
-      if (fieldSchema.type === "array"){
-  
-      const { dataField=false, uiSchema:{ asyncTypeahead: { arrayItemIndicator="glyphicon glyphicon-record" } } } = colConf;
-       colConf.dataFormat = function(cell, row) {
-         let displayData = '';
-         if (dataField){
-           if ( cell !== undefined && Object.keys(cell).length >0){
-             Object.keys(cell).map((item)=>{
-                 displayData += `<i class='${arrayItemIndicator}'></i>${cell[item][dataField]}  `;                
-             });
-           }
-         } else {
-           displayData  ="Mapping Name not available";
-         }
-         return displayData;
-         
-       };
-       colConf.dataFormat.bind(this);
-      }     
+    colConf.field === "asyncTypeahead"
+  ) {
+    //Only handle Type head with Array
+    if (fieldSchema.type === "array") {
+      const {
+        dataField = false,
+        uiSchema: {
+          asyncTypeahead: { arrayItemIndicator = "glyphicon glyphicon-record" },
+        },
+      } = colConf;
+      colConf.dataFormat = function(cell, row) {
+        let displayData = "";
+        if (dataField) {
+          if (cell !== undefined && Object.keys(cell).length > 0) {
+            Object.keys(cell).map(item => {
+              displayData += `<i class='${arrayItemIndicator}'></i>${cell[item][
+                dataField
+              ]}  `;
+            });
+          }
+        } else {
+          displayData = "Mapping Name not available";
+        }
+        return displayData;
+      };
+      colConf.dataFormat.bind(this);
     }
+  }
 }
 
 const overrideColEditable = (colConf, fieldSchema, fields) => {
@@ -254,8 +258,8 @@ const overrideColEditable = (colConf, fieldSchema, fields) => {
           schema={fieldSchemaWithoutTitle}
           uiSchema={fieldUISchema}
           onChange={onUpdate}
-        />   
-      )
+        />
+      ),
     };
   }
 };
@@ -311,7 +315,7 @@ const setColumnCSSIfMissing = (col, css) => {
   let {
     className = css,
     columnClassName = css,
-    editColumnClassName = css
+    editColumnClassName = css,
   } = col;
   Object.assign(col, { className, columnClassName, editColumnClassName });
 };

@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { AsyncTypeahead, Typeahead } from "react-bootstrap-typeahead";
-import { isArraySchema, isObjectSchema, toArray } from "./utils";
+import {
+  isArraySchema,
+  isObjectSchema,
+  isStringSchema,
+  isNumberSchema,
+  toArray,
+  getDefaultValueForSchema,
+} from "./utils";
 import selectn from "selectn";
 import { DefaultLabel } from "./Label";
 
@@ -22,6 +29,9 @@ function optionToString(fields, separator) {
         if (i === 0) {
           return fieldVal;
         } else {
+          if (Array.isArray(separator)) {
+            return `${agg}${separator[i - 1]}${fieldVal}`;
+          }
           return `${agg}${separator}${fieldVal}`;
         }
       }, "");
@@ -40,16 +50,6 @@ function mapLabelKey(labelKey) {
     return optionToString(fields, separator);
   }
   return labelKey;
-}
-
-function applyLabelKey(obj, labelKey) {
-  if (typeof labelKey === "function") {
-    return labelKey(obj);
-  } else if (typeof labelKey === "string") {
-    return obj[labelKey];
-  } else {
-    return obj;
-  }
 }
 
 function defaultValue(properties) {
@@ -76,13 +76,18 @@ function mapToObject(event, mapping, defVal) {
 }
 
 function mapEvents(events, { type, properties, items }, mapping) {
+  if (events.length === 0) {
+    return [getDefaultValueForSchema({ type })];
+  }
   if (!mapping || mapping === null) {
     if (type === "string") {
       return events.map(item => (typeof item === "object" ? item.label : item));
     }
     return events;
   } else if (typeof mapping === "string") {
-    return events.map(event => selectn(mapping, event));
+    return events.map(
+      event => (typeof event === "string" ? event : selectn(mapping, event))
+    );
   } else if (typeof mapping === "function") {
     return events.map(event => mapping(event));
   } else if (typeof mapping === "object") {
@@ -110,13 +115,23 @@ function mapFromObject(data, mapping, defVal) {
     if (typeof eventField === "object") {
       Object.assign(agg, mapFromObject(data[field], mapping, {}));
     } else {
-      agg[eventField] = data[field];
+      if (data[field]) {
+        agg[eventField] = data[field];
+      }
     }
     return agg;
   }, defVal);
 }
-
+/**
+ *
+ * @param {*} data
+ * @param {*} mapping
+ * Mapped object is converted to the object mapping takes
+ */
 export function mapFromSchema(data, mapping) {
+  if (isEmpty(data)) {
+    return;
+  }
   if (!mapping || mapping === null) {
     return data;
   } else if (typeof mapping === mapping) {
@@ -128,21 +143,84 @@ export function mapFromSchema(data, mapping) {
   }
 }
 
-function toSelected(formData, schema, mapping, labelKey) {
+function isEmpty(obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
+export function toSelected(formData, schema, mapping, options) {
   let normFormData = formData ? toArray(formData) : [];
   if (isObjectSchema(schema)) {
-    return normFormData.map(selected =>
-      applyLabelKey(mapFromSchema(selected, mapping), labelKey)
-    );
+    return normFormData
+      .map(selected => mapFromSchema(selected, mapping))
+      .filter(x => x !== undefined);
+  } else if (
+    options &&
+    (isStringSchema(schema) || isNumberSchema(schema)) &&
+    typeof mapping === "string"
+  ) {
+    return normFormData
+      .map(dataItem => {
+        return options.find(option => {
+          if (option[mapping] === dataItem) {
+            return option;
+          }
+        });
+      })
+      .filter(x => x !== undefined);
+  } else if (isArraySchema(schema)) {
+    return normFormData
+      .map(dataItem => {
+        if (typeof mapping === "object") {
+          return mapFromSchema(dataItem, mapping);
+        }
+        if (options) {
+          return options.find(option => {
+            if (option[mapping] === dataItem) {
+              return option;
+            }
+          });
+        } else {
+          return dataItem;
+        }
+      })
+      .filter(x => x !== undefined);
+  } else {
+    return normFormData;
   }
-  return normFormData;
+}
+
+function isFunction(functionToCheck) {
+  return functionToCheck instanceof Function;
+}
+
+/*
+ this is done to prevent an edge case with a typeahead wrapped inside a table that has an item selected & uses a function as a labelKey
+ TODO: Need to find a better solution for this
+ */
+function transformLabelKey(labelKey, schema, selected) {
+  if (
+    isFunction(labelKey) &&
+    selected &&
+    selected.length > 0 &&
+    schema.type === "string" &&
+    selected.every(x => typeof x === "string" || x instanceof String)
+  ) {
+    return "";
+  } else {
+    return labelKey;
+  }
 }
 
 class BaseTypeaheadField extends Component {
   handleSelectionChange = conf => events => {
+    let { mapping, cleanAfterSelection = false } = conf;
+    let { schema } = this.props;
+
+    this.setState({
+      selected: events,
+    });
+
     if (events.length > 0) {
-      let { mapping, cleanAfterSelection = false } = conf;
-      let { schema } = this.props;
       let schemaEvents = mapToSchema(events, schema, mapping);
       this.props.onChange(schemaEvents);
       if (cleanAfterSelection) {
@@ -161,24 +239,57 @@ class BaseTypeaheadField extends Component {
       this.refs.typeahead.getInstance().focus();
     }
   }
+
+  handleBlur = () => {
+    let { selected } = this.state;
+
+    if (selected.length === 0) {
+      this.setState({
+        selected: [],
+      });
+      if (this.refs.typeahead) {
+        this.refs.typeahead.getInstance() &&
+          this.refs.typeahead.getInstance().clear();
+      }
+      // let onChangeValue = getDefaultValueForSchema(schema);
+      // remove the field if the value is empty
+      this.props.onChange(undefined);
+    }
+  };
+}
+
+function isValidFormData(data) {
+  return data && !isEmpty(data);
 }
 
 export class TypeaheadField extends BaseTypeaheadField {
+  constructor(props) {
+    super(props);
+    let { schema, uiSchema: { typeahead }, formData } = this.props;
+
+    this.state = {
+      selected: isValidFormData(formData)
+        ? toSelected(formData, schema, typeahead.mapping, typeahead.options)
+        : [],
+    };
+  }
+
   render() {
     let {
       uiSchema: { typeahead },
-      formData,
-      schema,
       idSchema: { $id } = {},
+      schema,
     } = this.props;
 
     let labelKey = mapLabelKey(typeahead.labelKey);
-    let selected = toSelected(formData, schema, typeahead.mapping, labelKey);
+    // if something is already selected and is a string - removing the label key so that the labelKey function can be ignored.
+    labelKey = transformLabelKey(labelKey, schema, this.state.selected);
 
     let typeConf = Object.assign({}, DEFAULT_OPTIONS, typeahead, {
       onChange: this.handleSelectionChange(typeahead),
       labelKey,
-      selected,
+      selected: this.state.selected,
+      onBlur: this.handleBlur,
     });
 
     return (
@@ -210,8 +321,14 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
   constructor(props) {
     super(props);
 
+    let { schema, uiSchema: { asyncTypeahead }, formData } = this.props;
+
     this.state = {
       options: [],
+      isLoading: false,
+      selected: isValidFormData(formData)
+        ? toSelected(formData, schema, asyncTypeahead.mapping)
+        : [],
     };
   }
 
@@ -231,33 +348,55 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       },
     } = this.props;
 
+    this.setState({ isLoading: true });
+
     search(url, query)
       .then(json => (optionsPath ? selectn(optionsPath, json) : json))
-      .then(options => this.setState({ options }));
+      .then(options => this.setState({ options: options, isLoading: false }));
+  };
+
+  handleOnFocus = () => {
+    let {
+      uiSchema: {
+        asyncTypeahead: {
+          url,
+          optionsPath,
+          queryOnFocus = "",
+          minLength,
+          search = (url, query) =>
+            fetch(`${url}?query=${query}`).then(res => res.json()),
+        },
+      },
+    } = this.props;
+
+    if (minLength === 0) {
+      this.setState({ isLoading: true });
+      search(url, queryOnFocus)
+        .then(json => (optionsPath ? selectn(optionsPath, json) : json))
+        .then(options => this.setState({ options, isLoading: false }));
+    }
   };
 
   render() {
     let {
-      schema,
       uiSchema: { asyncTypeahead },
-      formData,
       idSchema: { $id } = {},
+      schema,
     } = this.props;
 
     let labelKey = mapLabelKey(asyncTypeahead.labelKey);
-    let selected = toSelected(
-      formData,
-      schema,
-      asyncTypeahead.mapping,
-      labelKey
-    );
+    // if something is already selected and is a string - removing the label key so that the labelKey function can be ignored.
+    labelKey = transformLabelKey(labelKey, schema, this.state.selected);
 
     let typeConf = Object.assign({}, DEFAULT_OPTIONS, asyncTypeahead, {
-      selected,
+      selected: this.state.selected,
+      isLoading: this.state.isLoading,
       labelKey,
       onChange: this.handleSelectionChange(asyncTypeahead),
       onSearch: this.handleSearch,
       options: this.state.options,
+      onFocus: this.handleOnFocus,
+      onBlur: this.handleBlur,
     });
 
     if (asyncTypeahead.overrideOptions) {

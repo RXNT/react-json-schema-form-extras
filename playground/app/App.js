@@ -17,6 +17,7 @@ import simpleLabel from "./simpleLabel";
 import aTypeahead from "./asyncTypeahead";
 import formContextField from "./formContextField";
 import SignatureCheckbox from "./formContextField/SignatureCheckbox";
+import procedureCodes from "./procedureCodes";
 
 const ALL_CONFS = [
   label,
@@ -32,6 +33,7 @@ const ALL_CONFS = [
   simpleLabel,
   aTypeahead,
   formContextField,
+  procedureCodes,
 ];
 
 export default function App() {
