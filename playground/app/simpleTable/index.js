@@ -46,15 +46,18 @@ let uiSchema = {
         clickToSelect: true,
         bgColor: "grey",
         onSelectRow: { fieldToUpdate: "picked" },
-      },
-    },
-  },
+        onSelectAllRow: { fieldToUpdate: "picked" }
+      }
+    }
+  }
 };
 
 export default {
   schema,
   uiSchema,
   formData: {
-    simpleTable: [{ str: "Some", dateTime: new Date().toISOString() }],
-  },
+    simpleTable: [{ str: "Some1", dateTime: new Date().toISOString() },
+    { str: "Some2", dateTime: new Date().toISOString() },
+    { str: "Some3", dateTime: new Date().toISOString() }]
+  }
 };
