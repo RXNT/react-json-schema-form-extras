@@ -66,7 +66,7 @@ export default class ReactDatePicker extends Component {
     super(props);
     this.handleYearMonthChange = this.handleYearMonthChange.bind(this);
     this.state = {
-      month: fromMonth
+      month: fromMonth,
     };
     let { schema: { format = "date-time" }, formData } = props;
     this.day = formData
@@ -106,7 +106,7 @@ export default class ReactDatePicker extends Component {
 
   handleBlur = () => {
     let {
-      uiSchema: { rdp: { updateDelay = DEFAULT_UPDATE_DELAY } = {} } = {} //eslint-disable-line
+      uiSchema: { rdp: { updateDelay = DEFAULT_UPDATE_DELAY } = {} } = {}, //eslint-disable-line
     } = this.props;
   };
 
@@ -131,7 +131,7 @@ export default class ReactDatePicker extends Component {
     let {
       uiSchema = {},
       formData,
-      schema: { format = "date-time" }
+      schema: { format = "date-time" },
     } = this.props;
     const dayPickerProps = {
       month: this.state.month,
@@ -144,8 +144,8 @@ export default class ReactDatePicker extends Component {
       ),
       inputProps: {
         className: "form-control",
-        type: "text"
-      }
+        type: "text",
+      },
     };
     let { rdp = {}, defaultCurrentDate = false } = uiSchema;
 
@@ -167,8 +167,8 @@ export default class ReactDatePicker extends Component {
         inputProps: {
           className: "form-control",
           type: "text",
-          autoFocus: uiSchema["ui:autofocus"]
-        }
+          autoFocus: uiSchema["ui:autofocus"],
+        },
       },
       rdp
     );
@@ -188,6 +188,6 @@ export default class ReactDatePicker extends Component {
 
 ReactDatePicker.propTypes = {
   schema: PropTypes.shape({
-    format: PropTypes.oneOf(["date-time", "date"])
-  })
+    format: PropTypes.oneOf(["date-time", "date"]),
+  }),
 };

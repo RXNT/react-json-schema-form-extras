@@ -33,7 +33,7 @@ export function DefaultLabel({
   formContext,
 }) {
   const uiOptions = getUiOptions(uiSchema);
-  let { label: displayLabel = true } = uiOptions;
+  let { label: displayLabel = true, forceLabelDisplay } = uiOptions;
   if (schema.type === "array") {
     displayLabel =
       isMultiSelect(schema, definitions) ||
@@ -51,7 +51,7 @@ export function DefaultLabel({
 
   const { DescriptionField = DefaultDescriptionField } = fields;
 
-  if (displayLabel) {
+  if (displayLabel || forceLabelDisplay) {
     return [
       <Label key={0} label={label} required={required} id={id} />,
       description ? (

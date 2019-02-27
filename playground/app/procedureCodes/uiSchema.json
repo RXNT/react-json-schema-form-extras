@@ -1,0 +1,69 @@
+{
+  "uiSchema": {
+    "procedureCodes": {
+      "classNames": "col-md-12 individualComponent",
+      "ui:field": "collapsible",
+      "table": {
+        "tableCols": [
+          {
+            "dataField": "code",
+            "columnWidth": "25%",
+            "width": "45%",
+            "field": "asyncTypeahead",
+            "uiSchema": {
+              "focusOnMount": true,
+              "asyncTypeahead": {
+                "url":
+                  "https://jsonplaceholder.typicode.com/users",
+                "bodyContainer": true,
+                "mapping": {
+                  "code": "username",
+                  "description": "name"
+                },
+                "labelKey": {
+                  "fields": ["name", "username"],
+                  "separator": " - "
+                },
+                "minLength": 2,
+                "multiple": false
+              }
+            }
+          },
+          {
+            "dataField": "description",
+            "columnWidth": "75%",
+            "width": "50%",
+            "editable": true
+          }
+        ],
+        "insertRow": true,
+        "focusOnAdd": 0,
+        "rightActions": [
+          {
+            "action": "delete",
+            "className": "table-action",
+            "columnClassName": "table-action",
+            "editColumnClassName": "table-action",
+            "icon": "glyphicons glyphicons-remove-circle glyPhiconRedColor"
+          }
+        ],
+        "striped": true,
+        "tableHeaderClass": "tableHeadingCell",
+        "hover": true
+      },
+      "nav": "clinical",
+      "ui:options": {
+        "label": false
+      },
+      "collapse": {
+        "field": "table",
+        "collapsed": false,
+        "icon": {
+          "add": "glyphicon glyphicon-plus-sign"
+        },
+        "addTo": "self"
+      },
+      "pdfRender": "table"
+    }
+  }
+}
