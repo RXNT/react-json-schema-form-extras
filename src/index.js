@@ -8,6 +8,7 @@ import rdp from "./ReactDatePicker";
 import SimpleLabel from "./SimpleLabel";
 import draftRte from "./DraftRte";
 import formContextField from "./FormContextField";
+import dateTimePicker from "./DateTimePicker";
 
 export default {
   table,
@@ -21,4 +22,5 @@ export default {
   simpleLabel: SimpleLabel,
   draftRte,
   formContextField,
+  dateTimePicker : dateTimePicker
 };
