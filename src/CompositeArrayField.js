@@ -14,9 +14,10 @@ class CompositeArrayField extends Component {
       uiSchema: { inputField, arrayField },
       registry: { fields },
       idSchema: { $id } = {},
+      formData=[]
     } = this.props;
 
-    let inputProps = Object.assign({}, this.props, { formData: undefined });
+    let inputProps = Object.assign({}, this.props, { formData: undefined, ArrayElementData: formData });//Passing Array elements data to the input field
 
     let InputElement = fields[inputField];
     let ArrayElement = fields[arrayField];
