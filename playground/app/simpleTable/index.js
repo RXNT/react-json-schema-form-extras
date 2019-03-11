@@ -27,11 +27,9 @@ let uiSchema = {
         {
           dataField: "dateTime",
           dataFormat: "YYYY-MM-DD",
-          editable: false,
-          field: "rdp",
-          uiSchema: {
-            rdp: {},
-          },
+
+          field: "dateTimePicker"
+         
         },
         {
           editable: false,
