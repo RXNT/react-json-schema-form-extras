@@ -279,6 +279,7 @@ export class TypeaheadField extends BaseTypeaheadField {
       uiSchema: { typeahead },
       idSchema: { $id } = {},
       schema,
+      disabled,
     } = this.props;
 
     let labelKey = mapLabelKey(typeahead.labelKey);
@@ -290,6 +291,7 @@ export class TypeaheadField extends BaseTypeaheadField {
       labelKey,
       selected: this.state.selected,
       onBlur: this.handleBlur,
+      disabled,
     });
 
     return (
@@ -382,6 +384,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       uiSchema: { asyncTypeahead },
       idSchema: { $id } = {},
       schema,
+      disabled,
     } = this.props;
 
     let labelKey = mapLabelKey(asyncTypeahead.labelKey);
@@ -397,6 +400,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       options: this.state.options,
       onFocus: this.handleOnFocus,
       onBlur: this.handleBlur,
+      disabled,
     });
 
     if (asyncTypeahead.overrideOptions) {
