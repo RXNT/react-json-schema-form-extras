@@ -140,7 +140,7 @@ class TableField extends Component {
       if (!isSelected && item[fieldToUpdate] !== undefined) {
         if (isEquivalentObject(item, row)) {
           delete item[fieldToUpdate];
-        }       
+        }
       } else if (isEquivalentObject(item, row)) {
         item[fieldToUpdate] = isSelected;
       }
@@ -150,15 +150,14 @@ class TableField extends Component {
   }
   handleAllRowSelect(isSelected, rows, e) {
     const {
-      data,
-      selectRow: { onSelectAllRow: { fieldToUpdate = "picked" } }
+      // data,
+      selectRow: { onSelectAllRow: { fieldToUpdate = "picked" } },
     } = this.tableConf;
-
 
     let filteredRows = (rows || []).map(item => {
       if (!isSelected && item[fieldToUpdate] !== undefined) {
         delete item[fieldToUpdate];
-      } else  {
+      } else {
         item[fieldToUpdate] = isSelected;
       }
       return item;

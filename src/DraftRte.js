@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { EditorState, convertToRaw, ContentState } from "draft-js";
-import { Editor } from "react-draft-wysiwyg";
+import Editor from "./modified-draft-rte";
 import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import PropTypes from "prop-types";
@@ -111,6 +111,7 @@ export default class DraftRTE extends Component {
         <DefaultLabel {...this.props} />
         <Editor
           wrapperClassName="draftRte-wrapper"
+          wrapperId="draftRte-wrapper-id"
           editorClassName="draftRte-editor"
           editorState={editorState}
           onEditorStateChange={this.onEditorStateChange}
@@ -118,6 +119,7 @@ export default class DraftRTE extends Component {
           editorRef={this.setEditorReference}
           spellCheck={true}
           handlePastedText={() => false}
+          getEditorState={() => this.state.editorState}
           {...draftRte}
         />
       </div>
