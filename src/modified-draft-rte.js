@@ -9,8 +9,8 @@ export default function(props) {
   customDecorators.push(
     ...getShortkeyDecorators({
       // ...props.mention,
-      separator: " ",
-      trigger: "@",
+      separator: "",
+      triggers: ["@", '{'],
       onChange: props.onEditorStateChange,
       getEditorState: props.getEditorState,
       getSuggestions: getSuggestions,
@@ -24,13 +24,13 @@ export default function(props) {
 
 function getSuggestions() {
   return [
-    { text: "APPLE", value: "apple", url: "apple" },
-    { text: "BANANA", value: "banana", url: "banana" },
-    { text: "CHERRY", value: "cherry", url: "cherry" },
-    { text: "DURIAN", value: "durian", url: "durian" },
-    { text: "EGGFRUIT", value: "eggfruit", url: "eggfruit" },
-    { text: "FIG", value: "fig", url: "fig" },
-    { text: "GRAPEFRUIT", value: "grapefruit", url: "grapefruit" },
-    { text: "HONEYDEW", value: "honeydew", url: "honeydew" },
+    { hotkey:"{", phrase:"one", text: "1"},
+    { hotkey:"{", phrase:"two", text: "2"},
+    { hotkey:"{", phrase:"three", text: "3"},
+    { hotkey:"{", phrase:"four", text: "4"},
+    { hotkey:"@", phrase:"one", text: "5"},
+    { hotkey:"@", phrase:"two", text: "6"},
+    { hotkey:"@", phrase:"three", text: "7"},
+    { hotkey:"@", phrase:"four", text: "8"},
   ];
 }
