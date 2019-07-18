@@ -171,6 +171,9 @@ function getSuggestionComponent() {
         SuggestionHandler.close();
       } else if (event.key === "Enter") {
         this.addMention();
+      } else if (event.key === "Space" && this.filterSuggestions.length === 1){
+        newState.activeOption = 0;
+        this.addMention()
       }
       this.setState(newState);
     };

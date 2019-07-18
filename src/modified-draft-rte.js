@@ -1,13 +1,13 @@
 import React from "react";
 // import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
-import getMentionDecorators from "./helpers/mention";
+import getShortkeyDecorators from "./helpers/shortkey"
 import ModalHandler from "./helpers/event-handler/modals";
 
 export default function(props) {
   let customDecorators = [];
   customDecorators.push(
-    ...getMentionDecorators({
+    ...getShortkeyDecorators({
       // ...props.mention,
       separator: " ",
       trigger: "@",

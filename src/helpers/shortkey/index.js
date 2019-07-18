@@ -1,9 +1,9 @@
-import Mention from "./Mention";
+import Shortkey from "./shortkey";
 import Suggestion from "./Suggestion";
 
 const getDecorators = config => {
   return [
-    new Mention(config.mentionClassName).getMentionDecorator(),
+    new Shortkey(config.mentionClassName).getShortkeyDecorator(),
     new Suggestion(config).getSuggestionDecorator(),
   ];
 };
