@@ -5,6 +5,7 @@ import draftToHtml from "draftjs-to-html";
 import htmlToDraft from "html-to-draftjs";
 import PropTypes from "prop-types";
 import { DefaultLabel } from "./Label";
+import KeyDownHandler from "./helpers/event-handler/keyDown";
 
 const debounce = require("lodash.debounce");
 
@@ -107,7 +108,7 @@ export default class DraftRTE extends Component {
     let { uiSchema: { draftRte }, idSchema: { $id } = {} } = this.props;
 
     return (
-      <div id={$id}>
+      <div id={$id} onKeyDown={KeyDownHandler.onKeyDown}>
         <DefaultLabel {...this.props} />
         <Editor
           wrapperClassName="draftRte-wrapper"

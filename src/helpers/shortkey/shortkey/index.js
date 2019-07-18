@@ -8,7 +8,7 @@ class Shortkey {
   }
   getShortkeyComponent = () => {
     const ShortkeyComponent = ({ entityKey, children, contentState }) => {
-      const { text } = contentState.getEntity(entityKey).getData();
+      // const { text } = contentState.getEntity(entityKey).getData();
       return <span>{children}</span>;
     };
     ShortkeyComponent.propTypes = {

@@ -173,7 +173,6 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
 };
 
 export function overrideColDataFormat(colConf, fieldSchema, formData) {
-  
   if (typeof colConf.dataFormat === "string" && fieldSchema.type === "object") {
     const { dataField, dataFormat: field } = colConf;
     colConf.dataFormat = function(cell, row) {
@@ -250,7 +249,7 @@ const overrideColEditable = (colConf, fieldSchema, fields) => {
     let fieldSchemaWithoutTitle = Object.assign(
       { ...fieldSchema },
       { title: "" }
-    );  
+    );
     colConf.customEditor = {
       getElement: (onUpdate, props) => (
         <FieldEditor
