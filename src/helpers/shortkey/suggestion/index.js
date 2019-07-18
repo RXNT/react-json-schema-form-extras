@@ -11,6 +11,7 @@ class Suggestion {
     const {
       separator,
       trigger,
+      triggers,
       getSuggestions,
       onChange,
       getEditorState,
@@ -23,6 +24,7 @@ class Suggestion {
     this.config = {
       separator,
       trigger,
+      triggers,
       getSuggestions,
       onChange,
       getEditorState,
@@ -39,6 +41,7 @@ class Suggestion {
       const {
         separator,
         trigger,
+        triggers,
         getSuggestions,
         getEditorState,
       } = this.config;
@@ -55,21 +58,37 @@ class Suggestion {
             ? text.length
             : selection.get("focusOffset") + 1
         );
-        let index = text.lastIndexOf(separator + trigger);
-        let preText = separator + trigger;
-        if ((index === undefined || index < 0) && text[0] === trigger) {
+        console.log('finding Match')
+        //Need to find the latest match with mutiple triggers, then pass that trigger along through.
+        let index;
+        let currentTrigger;
+        triggers.some((trigger)=> {
+          currentTrigger = trigger;
+          index = text.lastIndexOf(separator + trigger)
+          console.log('index', 'trigger', index, trigger)
+          if(index >= 0) return true;
+          
+
+        })
+        //let index = text.lastIndexOf(separator + trigger);
+        console.log('index of match', index)
+        console.log('trigger we matched on', currentTrigger)
+        let preText = separator + currentTrigger;
+        if ((index === undefined || index < 0) && text[0] === currentTrigger) {
           index = 0;
-          preText = trigger;
+          preText = currentTrigger;
         }
         if (index >= 0) {
           const mentionText = text.substr(index + preText.length, text.length);
           const suggestionPresent = getSuggestions().some(suggestion => {
-            if (suggestion.value) {
+            if (suggestion.phrase) {
               if (this.config.caseSensitive) {
-                return suggestion.value.indexOf(mentionText) >= 0;
+                this.config.trigger = currentTrigger;
+                return suggestion.phrase.indexOf(mentionText) >= 0;
               }
+              this.config.trigger = currentTrigger;
               return (
-                suggestion.value
+                suggestion.phrase
                   .toLowerCase()
                   .indexOf(mentionText && mentionText.toLowerCase()) >= 0
               );
@@ -101,7 +120,7 @@ function getSuggestionComponent() {
 
     state: Object = {
       style: { left: 15 },
-      activeOption: -1,
+      activeOption: 0,
       showSuggestions: true,
     };
 
@@ -153,6 +172,7 @@ function getSuggestionComponent() {
     onEditorKeyDown = event => {
       const { activeOption } = this.state;
       const newState = {};
+      console.log(event.key)
       if (event.key === "ArrowDown") {
         event.preventDefault();
         if (activeOption === this.filteredSuggestions.length - 1) {
@@ -179,7 +199,9 @@ function getSuggestionComponent() {
     };
 
     onOptionMouseEnter = event => {
+      console.log('Mouse enter event')
       const index = event.target.getAttribute("data-index");
+      console.log('index onMouseEnter', index)
       this.setState({
         activeOption: index,
       });
@@ -208,22 +230,31 @@ function getSuggestionComponent() {
     filteredSuggestions = [];
 
     filterSuggestions = props => {
-      const mentionText = props.children[0].props.text.substr(1);
+      const shortkeyText = props.children[0].props.text.substr(1);
       const suggestions = config.getSuggestions();
+      const trigger = config.trigger;
       this.filteredSuggestions =
         suggestions &&
         suggestions.filter(suggestion => {
-          if (!mentionText || mentionText.length === 0) {
-            return true;
+          
+          if (!shortkeyText || shortkeyText.length === 0) {
+            if(trigger === suggestion.hotkey){
+              return true;
+            }
           }
           if (config.caseSensitive) {
-            return suggestion.value.indexOf(mentionText) >= 0;
+           
+              return suggestion.phrase.indexOf(shortkeyText) >= 0;
           }
-          return (
-            suggestion.value
-              .toLowerCase()
-              .indexOf(mentionText && mentionText.toLowerCase()) >= 0
-          );
+
+          if(trigger === suggestion.hotkey){
+            return (
+              suggestion.phrase
+                .toLowerCase()
+                .indexOf(shortkeyText && shortkeyText.toLowerCase()) >= 0
+            );
+          }
+          
         });
     };
 
@@ -241,6 +272,7 @@ function getSuggestionComponent() {
       const { children } = this.props;
       const { activeOption, showSuggestions } = this.state;
       const { dropdownClassName, optionClassName } = config;
+      console.log('FilterSuggestions', this.filteredSuggestions)
       return (
         <span
           className="rdw-suggestion-wrapper"
@@ -272,9 +304,9 @@ function getSuggestionComponent() {
                     optionClassName,
                     { "rdw-suggestion-option-active": index === activeOption }
                   )}>
-                  {suggestion.text}
+                  {suggestion.phrase}
                   <br />
-                  <span style={{ fontSize: "11px" }}>{suggestion.value}</span>
+                  <span style={{ fontSize: "11px" }}>{suggestion.text}</span>
                 </span>
               ))}
             </span>

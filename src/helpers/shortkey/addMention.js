@@ -8,7 +8,7 @@ export default function addMention(
   trigger: string,
   suggestion: Object
 ): void {
-  const { value, text } = suggestion;
+  const { phrase, text } = suggestion;
   const entityKey = editorState
     .getCurrentContent()
     .createEntity("SHORTKEY", "MUTABLE", {text: text})
@@ -29,6 +29,7 @@ export default function addMention(
     anchorOffset: mentionIndex,
     focusOffset,
   });
+  console.log('updatedSelection', updatedSelection)
   let newEditorState = EditorState.acceptSelection(
     editorState,
     updatedSelection
@@ -49,9 +50,11 @@ export default function addMention(
 
   if (!spaceAlreadyPresent) {
     // insert a blank space after mention
+    console.log('phrasae and trigger', phrase, trigger)
     updatedSelection = newEditorState.getSelection().merge({
-      anchorOffset: mentionIndex + value.length + trigger.length,
-      focusOffset: mentionIndex + value.length + trigger.length,
+      
+      anchorOffset: mentionIndex + phrase.length + trigger.length,
+      focusOffset: mentionIndex + phrase.length + trigger.length,
     });
     newEditorState = EditorState.acceptSelection(
       newEditorState,
