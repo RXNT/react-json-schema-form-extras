@@ -18,7 +18,7 @@ class Suggestion {
       getWrapperRef,
       caseSensitive,
       dropdownClassName,
-      optionClassName,
+      optionClassName = "",
       modalHandler,
     } = config;
     this.config = {
@@ -40,7 +40,7 @@ class Suggestion {
     if (this.config.getEditorState()) {
       const {
         separator,
-        trigger,
+        // trigger,
         triggers,
         getSuggestions,
         getEditorState,
@@ -51,28 +51,23 @@ class Suggestion {
         selection.get("anchorKey") === selection.get("focusKey")
       ) {
         let text = contentBlock.getText();
-        console.log(selection.get("focusOffset"));
         text = text.substr(
           0,
           selection.get("focusOffset") === text.length - 1
             ? text.length
             : selection.get("focusOffset") + 1
         );
-        console.log('finding Match')
         //Need to find the latest match with mutiple triggers, then pass that trigger along through.
         let index;
         let currentTrigger;
-        triggers.some((trigger)=> {
+        triggers.some(trigger => {
           currentTrigger = trigger;
-          index = text.lastIndexOf(separator + trigger)
-          console.log('index', 'trigger', index, trigger)
-          if(index >= 0) return true;
-          
-
-        })
+          index = text.lastIndexOf(separator + trigger);
+          if (index >= 0) {
+            return true;
+          }
+        });
         //let index = text.lastIndexOf(separator + trigger);
-        console.log('index of match', index)
-        console.log('trigger we matched on', currentTrigger)
         let preText = separator + currentTrigger;
         if ((index === undefined || index < 0) && text[0] === currentTrigger) {
           index = 0;
@@ -172,7 +167,6 @@ function getSuggestionComponent() {
     onEditorKeyDown = event => {
       const { activeOption } = this.state;
       const newState = {};
-      console.log(event.key)
       if (event.key === "ArrowDown") {
         event.preventDefault();
         if (activeOption === this.filteredSuggestions.length - 1) {
@@ -191,17 +185,17 @@ function getSuggestionComponent() {
         SuggestionHandler.close();
       } else if (event.key === "Enter") {
         this.addMention();
-      } else if (event.key === "Space" && this.filterSuggestions.length === 1){
-        newState.activeOption = 0;
-        this.addMention()
+      } else if (
+        event.keyCode === 32 &&
+        this.filteredSuggestions.length === 1
+      ) {
+        this.addMention();
       }
       this.setState(newState);
     };
 
     onOptionMouseEnter = event => {
-      console.log('Mouse enter event')
       const index = event.target.getAttribute("data-index");
-      console.log('index onMouseEnter', index)
       this.setState({
         activeOption: index,
       });
@@ -209,7 +203,7 @@ function getSuggestionComponent() {
 
     onOptionMouseLeave = () => {
       this.setState({
-        activeOption: -1,
+        activeOption: 0,
       });
     };
 
@@ -236,25 +230,22 @@ function getSuggestionComponent() {
       this.filteredSuggestions =
         suggestions &&
         suggestions.filter(suggestion => {
-          
           if (!shortkeyText || shortkeyText.length === 0) {
-            if(trigger === suggestion.hotkey){
+            if (trigger === suggestion.hotkey) {
               return true;
             }
           }
           if (config.caseSensitive) {
-           
-              return suggestion.phrase.indexOf(shortkeyText) >= 0;
+            return suggestion.phrase.indexOf(shortkeyText) >= 0;
           }
 
-          if(trigger === suggestion.hotkey){
+          if (trigger === suggestion.hotkey) {
             return (
               suggestion.phrase
                 .toLowerCase()
                 .indexOf(shortkeyText && shortkeyText.toLowerCase()) >= 0
             );
           }
-          
         });
     };
 
@@ -272,7 +263,6 @@ function getSuggestionComponent() {
       const { children } = this.props;
       const { activeOption, showSuggestions } = this.state;
       const { dropdownClassName, optionClassName } = config;
-      console.log('FilterSuggestions', this.filteredSuggestions)
       return (
         <span
           className="rdw-suggestion-wrapper"
@@ -302,7 +292,7 @@ function getSuggestionComponent() {
                   className={classNames(
                     "rdw-suggestion-option",
                     optionClassName,
-                    { "rdw-suggestion-option-active": index === activeOption }
+                    { "rdw-suggestion-option-active": index == activeOption }
                   )}>
                   {suggestion.phrase}
                   <br />

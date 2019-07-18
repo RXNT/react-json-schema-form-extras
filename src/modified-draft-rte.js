@@ -1,7 +1,7 @@
 import React from "react";
 // import { EditorState, convertToRaw, ContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
-import getShortkeyDecorators from "./helpers/shortkey"
+import getShortkeyDecorators from "./helpers/shortkey";
 import ModalHandler from "./helpers/event-handler/modals";
 
 export default function(props) {
@@ -10,7 +10,7 @@ export default function(props) {
     ...getShortkeyDecorators({
       // ...props.mention,
       separator: "",
-      triggers: ["@", '{'],
+      triggers: ["@", "{"],
       onChange: props.onEditorStateChange,
       getEditorState: props.getEditorState,
       getSuggestions: getSuggestions,
@@ -24,13 +24,13 @@ export default function(props) {
 
 function getSuggestions() {
   return [
-    { hotkey:"{", phrase:"one", text: "1"},
-    { hotkey:"{", phrase:"two", text: "2"},
-    { hotkey:"{", phrase:"three", text: "3"},
-    { hotkey:"{", phrase:"four", text: "4"},
-    { hotkey:"@", phrase:"one", text: "5"},
-    { hotkey:"@", phrase:"two", text: "6"},
-    { hotkey:"@", phrase:"three", text: "7"},
-    { hotkey:"@", phrase:"four", text: "8"},
+    { hotkey: "{", phrase: "one", text: "1" },
+    { hotkey: "{", phrase: "two", text: "2" },
+    { hotkey: "{", phrase: "three", text: "3" },
+    { hotkey: "{", phrase: "four", text: "4" },
+    { hotkey: "@", phrase: "one", text: "5" },
+    { hotkey: "@", phrase: "two", text: "6" },
+    { hotkey: "@", phrase: "three", text: "7" },
+    { hotkey: "@", phrase: "four", text: "8" },
   ];
 }

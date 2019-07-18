@@ -990,6 +990,7 @@
 }
 .rdw-suggestion-option-active {
   background-color: #F1F1F1;
+  cursor: pointer;
 }
 .rdw-hashtag-link {
   text-decoration: none;
