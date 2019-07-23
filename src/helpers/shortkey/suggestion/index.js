@@ -91,7 +91,7 @@ class Suggestion {
             return false;
           });
           if (suggestionPresent) {
-            callback(index === 0 ? 0 : index + 1, text.length);
+            callback(index === 0 ? 0 : index, text.length);
           }
         }
       }
@@ -175,6 +175,7 @@ function getSuggestionComponent() {
           newState.activeOption = activeOption + 1;
         }
       } else if (event.key === "ArrowUp") {
+        event.preventDefault();
         if (activeOption <= 0) {
           newState.activeOption = this.filteredSuggestions.length - 1;
         } else {
