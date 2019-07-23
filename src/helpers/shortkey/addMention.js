@@ -9,15 +9,15 @@ export default function addMention(
   suggestion: Object
 ): void {
   const { text } = suggestion;
-  const entityKey = editorState
-    .getCurrentContent()
-    .createEntity("SHORTKEY", "MUTABLE", { text: text })
-    .getLastCreatedEntityKey();
+  // const entityKey = editorState
+  //   .getCurrentContent()
+  //   .createEntity("SHORTKEYS", "MUTABLE", { text: text })
+  //   .getLastCreatedEntityKey();
   const selectedBlock = getSelectedBlock(editorState);
   const selectedBlockText = selectedBlock.getText();
   let focusOffset = editorState.getSelection().focusOffset;
   const mentionIndex =
-    (selectedBlockText.lastIndexOf(separator + trigger, focusOffset) || 0) + 1;
+    selectedBlockText.lastIndexOf(separator + trigger, focusOffset) || 0;
   let spaceAlreadyPresent = false;
   if (selectedBlockText.length === mentionIndex + 1) {
     focusOffset = selectedBlockText.length;
@@ -29,7 +29,7 @@ export default function addMention(
     anchorOffset: mentionIndex,
     focusOffset,
   });
-  console.log("updatedSelection", updatedSelection);
+
   let newEditorState = EditorState.acceptSelection(
     editorState,
     updatedSelection
@@ -39,7 +39,7 @@ export default function addMention(
     updatedSelection,
     `${text}`,
     newEditorState.getCurrentInlineStyle(),
-    entityKey
+    undefined
   );
   newEditorState = EditorState.push(
     newEditorState,
@@ -50,8 +50,8 @@ export default function addMention(
   if (!spaceAlreadyPresent) {
     // insert a blank space after mention
     updatedSelection = newEditorState.getSelection().merge({
-      anchorOffset: mentionIndex + text.length,
-      focusOffset: mentionIndex + text.length,
+      anchorOffset: mentionIndex + text.length + separator.length,
+      focusOffset: mentionIndex + text.length + separator.length,
     });
     newEditorState = EditorState.acceptSelection(
       newEditorState,

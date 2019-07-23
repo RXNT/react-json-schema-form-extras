@@ -1,9 +1,9 @@
-import Shortkey from "./shortkey";
+// import Shortkey from "./shortkey";
 import Suggestion from "./Suggestion";
 
 const getDecorators = config => {
   return [
-    new Shortkey(config.mentionClassName).getShortkeyDecorator(),
+    // new Shortkey(config.mentionClassName).getShortkeyDecorator(),
     new Suggestion(config).getSuggestionDecorator(),
   ];
 };
