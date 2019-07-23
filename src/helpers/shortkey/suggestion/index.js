@@ -225,7 +225,10 @@ function getSuggestionComponent() {
     filteredSuggestions = [];
 
     filterSuggestions = props => {
-      const shortkeyText = props.children[0].props.text.substr(1);
+      const separator = config.separator;
+      const shortkeyText = props.children[0].props.text.substr(
+        separator.length + 1
+      );
       const suggestions = config.getSuggestions();
       const trigger = config.trigger;
       this.filteredSuggestions =
