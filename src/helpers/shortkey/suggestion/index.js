@@ -4,7 +4,6 @@ import classNames from "classnames";
 import addMention from "../addMention";
 import KeyDownHandler from "../../event-handler/keyDown";
 import SuggestionHandler from "../../event-handler/suggestions";
-import "./styles.css";
 
 class Suggestion {
   constructor(config) {
@@ -18,7 +17,7 @@ class Suggestion {
       caseSensitive,
       dropdownClassName,
       optionClassName = "",
-      modalHandler
+      modalHandler,
     } = config;
     this.config = {
       separator,
@@ -30,7 +29,7 @@ class Suggestion {
       caseSensitive,
       dropdownClassName,
       optionClassName,
-      modalHandler
+      modalHandler,
     };
   }
 
@@ -40,7 +39,7 @@ class Suggestion {
         separator,
         getTriggers,
         getSuggestions,
-        getEditorState
+        getEditorState,
       } = this.config;
       const selection = getEditorState().getSelection();
       if (
@@ -99,7 +98,7 @@ class Suggestion {
 
   getSuggestionDecorator = () => ({
     strategy: this.findSuggestionEntities,
-    component: this.getSuggestionComponent()
+    component: this.getSuggestionComponent(),
   });
 }
 
@@ -107,13 +106,13 @@ function getSuggestionComponent() {
   const { config } = this;
   return class SuggestionComponent extends Component {
     static propTypes = {
-      children: PropTypes.array
+      children: PropTypes.array,
     };
 
     state: Object = {
       style: { left: 15 },
       activeOption: 0,
-      showSuggestions: true
+      showSuggestions: true,
     };
 
     componentDidMount() {
@@ -138,7 +137,7 @@ function getSuggestionComponent() {
       }
       this.setState({
         // eslint-disable-line react/no-did-mount-set-state
-        style: { left, right, bottom }
+        style: { left, right, bottom },
       });
       KeyDownHandler.registerCallBack(this.onEditorKeyDown);
       SuggestionHandler.open();
@@ -150,7 +149,7 @@ function getSuggestionComponent() {
       if (this.props.children !== props.children) {
         this.filterSuggestions(props);
         this.setState({
-          showSuggestions: true
+          showSuggestions: true,
         });
       }
     }
@@ -182,7 +181,11 @@ function getSuggestionComponent() {
         newState.showSuggestions = false;
         SuggestionHandler.close();
       } else if (event.key === "Enter") {
-        this.addMention();
+        if (this.state.showSuggestions === true) {
+          newState.showSuggestions = false;
+          this.addMention();
+          newState.activeOption = -1;
+        }
       } else if (
         event.keyCode === 32 &&
         this.filteredSuggestions.length === 1
@@ -195,13 +198,13 @@ function getSuggestionComponent() {
     onOptionMouseEnter = event => {
       const index = event.target.getAttribute("data-index");
       this.setState({
-        activeOption: index
+        activeOption: index,
       });
     };
 
     onOptionMouseLeave = () => {
       this.setState({
-        activeOption: 0
+        activeOption: 0,
       });
     };
 
@@ -215,7 +218,7 @@ function getSuggestionComponent() {
 
     closeSuggestionDropdown: Function = (): void => {
       this.setState({
-        showSuggestions: false
+        showSuggestions: false,
       });
     };
 
@@ -270,8 +273,7 @@ function getSuggestionComponent() {
           ref={this.setSuggestionReference}
           onClick={config.modalHandler.onSuggestionClick}
           aria-haspopup="true"
-          aria-label="rdw-suggestion-popup"
-        >
+          aria-label="rdw-suggestion-popup">
           <span>{children}</span>
           {showSuggestions && (
             <span
@@ -282,8 +284,7 @@ function getSuggestionComponent() {
               contentEditable="false"
               suppressContentEditableWarning
               style={this.state.style}
-              ref={this.setDropdownReference}
-            >
+              ref={this.setDropdownReference}>
               {this.filteredSuggestions.map((suggestion, index) => (
                 <span
                   key={index}
@@ -296,8 +297,7 @@ function getSuggestionComponent() {
                     "rdw-suggestion-option",
                     optionClassName,
                     { "rdw-suggestion-option-active": index == activeOption }
-                  )}
-                >
+                  )}>
                   {suggestion.phrase}
                   <br />
                   <span style={{ fontSize: "11px" }}>{suggestion.text}</span>
