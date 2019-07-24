@@ -120,7 +120,7 @@ export default class DraftRTE extends Component {
     this.state = {
       editorState,
       suggestions: [],
-      triggers: []
+      triggers: [],
     };
   }
   /**
@@ -144,8 +144,8 @@ export default class DraftRTE extends Component {
     let {
       uiSchema: {
         updateOnBlur = false,
-        draftRte: { debounce: { interval, shouldDebounce = false } = {} } = {}
-      }
+        draftRte: { debounce: { interval, shouldDebounce = false } = {} } = {},
+      },
     } = this.props;
     this.setState({ editorState }, () => {
       !updateOnBlur && !shouldDebounce && this.updateFormData();
@@ -168,9 +168,7 @@ export default class DraftRTE extends Component {
    * handles the logic to update formData on blur
    */
   handleBlur = () => {
-    let {
-      uiSchema: { updateOnBlur = false }
-    } = this.props;
+    let { uiSchema: { updateOnBlur = false } } = this.props;
     if (updateOnBlur) {
       this.updateFormData();
     }
@@ -189,9 +187,7 @@ export default class DraftRTE extends Component {
   handleOnFocus = () => {
     const { suggestions = [] } = this.state;
     let {
-      uiSchema: {
-        draftRte: { enableAutocomplete = false, autocomplete = {} }
-      }
+      uiSchema: { draftRte: { enableAutocomplete = false, autocomplete = {} } },
     } = this.props;
     if (!enableAutocomplete) {
       return false;
@@ -202,12 +198,12 @@ export default class DraftRTE extends Component {
         shortKeysPath,
         keyToDisplay,
         keyToMaping,
-        loadSuggestions = url => fetch(`${url}`).then(res => res.json())
+        loadSuggestions = url => fetch(`${url}`).then(res => res.json()),
       } = autocomplete;
 
       loadSuggestions(url)
-        .then(json =>
-          shortKeysPath !== "" ? selectn(shortKeysPath, json) : json
+        .then(
+          json => (shortKeysPath !== "" ? selectn(shortKeysPath, json) : json)
         )
         .then(suggestions => {
           let dynamicSuggestions = []; //
@@ -235,7 +231,7 @@ export default class DraftRTE extends Component {
           }
           this.setState({
             suggestions: dynamicSuggestions,
-            triggers: dynamicShortkeys
+            triggers: dynamicShortkeys,
           });
         });
     }
@@ -246,10 +242,7 @@ export default class DraftRTE extends Component {
    */
   render() {
     const { editorState } = this.state;
-    let {
-      uiSchema: { draftRte },
-      idSchema: { $id } = {}
-    } = this.props;
+    let { uiSchema: { draftRte }, idSchema: { $id } = {} } = this.props;
 
     return (
       <div id={$id} onKeyDown={KeyDownHandler.onKeyDown}>
@@ -278,6 +271,6 @@ export default class DraftRTE extends Component {
 DraftRTE.propTypes = {
   uiSchema: PropTypes.shape({
     updateOnBlur: PropTypes.bool,
-    draftRte: PropTypes.object
-  })
+    draftRte: PropTypes.object,
+  }),
 };

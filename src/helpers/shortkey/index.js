@@ -1,5 +1,5 @@
 // import Shortkey from "./shortkey";
-import Suggestion from "./Suggestion";
+import Suggestion from "./suggestion";
 
 const getDecorators = config => {
   return [

@@ -14,7 +14,7 @@ export default function(props) {
       getEditorState: props.getEditorState,
       getSuggestions: props.customSuggestions,
       getWrapperRef: () => props.wrapperRef,
-      modalHandler: new ModalHandler()
+      modalHandler: new ModalHandler(),
     })
   );
 
