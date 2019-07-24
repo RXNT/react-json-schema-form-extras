@@ -8,20 +8,20 @@ export default function(props) {
   let customDecorators = [];
   customDecorators.push(
     ...getShortkeyDecorators({
-      // ...props.mention,
       separator: "",
-      triggers: ["@", "{"],
+      getTriggers: props.customSuggestionTriggers,
       onChange: props.onEditorStateChange,
       getEditorState: props.getEditorState,
-      getSuggestions: getSuggestions,
+      getSuggestions: props.customSuggestions,
       getWrapperRef: () => props.wrapperRef,
-      modalHandler: new ModalHandler(),
+      modalHandler: new ModalHandler()
     })
   );
 
   return <Editor {...props} customDecorators={customDecorators} />;
 }
 
+/* 
 function getSuggestions() {
   return [
     { hotkey: "{", phrase: "one", text: "1andone" },
@@ -33,4 +33,4 @@ function getSuggestions() {
     { hotkey: "@", phrase: "three", text: "7andtw" },
     { hotkey: "@", phrase: "four", text: "8" },
   ];
-}
+} */
