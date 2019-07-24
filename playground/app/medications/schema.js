@@ -15,6 +15,7 @@ export default {
           items: {
             required: [],
             type: "object",
+            defaultFilterKey: "isSelected",
             properties: {
               drugId: {
                 type: "string",
@@ -34,7 +35,8 @@ export default {
               unit: {
                 type: "string",
                 title: "Units",
-                enum: [
+                enum: ["1", "2"],
+                enumNames: [
                   "Ampule",
                   "Applicator",
                   "Applicatorful",
@@ -134,6 +136,11 @@ export default {
                 type: "string",
                 format: "date",
                 title: "Start Date",
+              },
+              isSelected: {
+                default: true,
+                type: "boolean",
+                title: "IsSelected",
               },
             },
           },

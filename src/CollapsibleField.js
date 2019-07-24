@@ -21,9 +21,7 @@ class CollapseMenuAction extends Component {
         );
         return (
           <h2 className="warning bg-error" style={{ color: "red" }}>
-            Can't find <b>{action.component}</b> in <b>formContext</b>.<b>
-              allActions
-            </b>
+            Can't find <b>{action.component}</b> in <b>formContext</b>.<b>allActions</b>
           </h2>
         );
       }
@@ -45,6 +43,20 @@ function CollapseMenu(props) {
         addTo,
         wrapClassName = "lead",
         actions = [],
+        classNames = "collapsibleHeading",
+        collapseDivStyles: {
+          textColor = "white",
+          background = "linear-gradient(to right, #0472B6, white)",
+          collapseGlyphColor = "white",
+          addGlyphColor = "white",
+          padding = "14px",
+          margin = "",
+          marginLeft = "-5px",
+          marginBottom = "5px",
+          zIndex = -1,
+          divCursor = "pointer",
+          addCursor = "copy",
+        } = {},
       },
     },
     formContext = {},
@@ -54,24 +66,48 @@ function CollapseMenu(props) {
     name,
     collapsed,
   } = props;
+
+  const handleAdd = event => {
+    event.stopPropagation();
+    onAdd(event);
+  };
+
   return (
-    <div className={wrapClassName}>
-      <span>{title || name}</span>&nbsp;
-      {addTo && (
-        <a onClick={onAdd}>
-          <i className={add} />
+    <div className={`${wrapClassName}`}>
+      <div
+        className={classNames}
+        onClick={onChange}
+        style={{
+          padding,
+          margin,
+          marginLeft,
+          marginBottom,
+          zIndex,
+          cursor: divCursor,
+          background,
+        }}>
+        <span style={{ color: textColor }}>{title || name}</span>&nbsp;
+        {addTo && (
+          <a
+            onClick={handleAdd}
+            style={{ color: addGlyphColor, cursor: addCursor }}>
+            <i style={{ cursor: addCursor }} className={add} />
+          </a>
+        )}
+        <a>
+          <i
+            style={{ color: collapseGlyphColor }}
+            className={collapsed ? disabled : enabled}
+          />
         </a>
-      )}
-      <a onClick={onChange}>
-        <i className={collapsed ? disabled : enabled} />
-      </a>
-      {actions.map((action, i) => (
-        <CollapseMenuAction
-          key={i}
-          action={action}
-          allActions={formContext.allActions}
-        />
-      ))}
+        {actions.map((action, i) => (
+          <CollapseMenuAction
+            key={i}
+            action={action}
+            allActions={formContext.allActions}
+          />
+        ))}
+      </div>
       {separate && <hr />}
     </div>
   );
@@ -94,9 +130,7 @@ class CollapseLegend extends Component {
         console.error(`Can't find ${legend.components} in formContext.legends`);
         return (
           <h2 className="warning bg-error" style={{ color: "red" }}>
-            Can't find <b>{legend.component}</b> in <b>formContext</b>.<b>
-              legends
-            </b>
+            Can't find <b>{legend.component}</b> in <b>formContext</b>.<b>legends</b>
           </h2>
         );
       }
@@ -116,11 +150,16 @@ class CollapsibleField extends Component {
   }
 
   appendToArray = (formData = [], newVal) => {
+    let { uiSchema: { collapse: { addToBottom = true } = {} } } = this.props;
     if (formData.some(v => deepEquals(v, newVal))) {
       return formData;
     } else {
       // newVal can be either array or a single element, concat flattens value
-      return formData.concat(newVal);
+      if (addToBottom) {
+        return formData.concat(newVal);
+      } else {
+        return [newVal].concat(formData);
+      }
     }
   };
 
@@ -141,7 +180,14 @@ class CollapsibleField extends Component {
       let { collapse: { addTo, addElement } } = uiSchema;
 
       let fieldSchema =
-        addTo === "self" ? schema.items : schema.properties[addTo].items;
+        addTo === "self"
+          ? schema.items
+          : schema.properties
+            ? schema.properties[addTo] ? schema.properties[addTo].items : null
+            : null;
+      if (!fieldSchema) {
+        return false;
+      }
       let fieldUiSchema = addTo === "self" ? uiSchema : uiSchema[addTo];
 
       if (addElement) {
@@ -194,6 +240,8 @@ class CollapsibleField extends Component {
     let { collapsed, AddElement } = this.state;
     let { collapse: { field } } = uiSchema;
     let CollapseElement = fields[field];
+    // uischema retains the value form the state
+    uiSchema.collapse.collapsed = this.state.collapsed;
 
     title = uiSchema["ui:title"] ? uiSchema["ui:title"] : title ? title : name;
     let customizedId = collapsed ? $id : undefined;

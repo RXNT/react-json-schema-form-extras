@@ -13,7 +13,11 @@ import dx from "./dx";
 import label from "./labels";
 import simpleTable from "./simpleTable";
 import ros from "./ros";
-import custom from "./custom";
+import simpleLabel from "./simpleLabel";
+import aTypeahead from "./asyncTypeahead";
+import formContextField from "./formContextField";
+import SignatureCheckbox from "./formContextField/SignatureCheckbox";
+import procedureCodes from "./procedureCodes";
 
 const ALL_CONFS = [
   label,
@@ -26,7 +30,10 @@ const ALL_CONFS = [
   rte(),
   dx,
   ros,
-  custom,
+  simpleLabel,
+  aTypeahead,
+  formContextField,
+  procedureCodes,
 ];
 
 export default function App() {
@@ -36,6 +43,7 @@ export default function App() {
       LanguageLegend: props => <h1>Expected {props.language} characters</h1>,
     },
     allActions: {
+      SignatureComponent: props => <SignatureCheckbox {...props} />,
       Button: props => (
         <a className="btn btn-info pull-right">Update allergies</a>
       ),

@@ -26,6 +26,7 @@ export default {
       classNames: "col-md-12",
       table: {
         focusOnAdd: 1,
+        insertRow: true,
         tableCols: [
           {
             dataField: "drugId",
@@ -33,174 +34,27 @@ export default {
           },
           {
             dataField: "drugName",
-            field: "typeahead",
+            field: "asyncTypeahead",
             uiSchema: {
               focusOnMount: true,
-              typeahead: {
-                options: [
-                  {
-                    DrugId: 471154,
-                    DrugName:
-                      "AmLactin Distribution Pack (pramoxine) 1 %-12 % topical kit",
-                  },
-                  {
-                    DrugId: 471211,
-                    DrugName:
-                      "AmLactin Distribution Pack 12 %-12 % topical kit",
-                  },
-                  {
-                    DrugId: 237930,
-                    DrugName: "ceftibuten 180 mg/5 mL oral suspension",
-                  },
-                  {
-                    DrugId: 195800,
-                    DrugName: "ceftibuten 400 mg capsule",
-                  },
-                  {
-                    DrugId: 445980,
-                    DrugName: "Child Ibuprofen 100 mg/5 mL oral suspension",
-                  },
-                  {
-                    DrugId: 273242,
-                    DrugName:
-                      "Children's Ibu-Drops 50 mg/1.25 mL oral drops,suspension",
-                  },
-                  {
-                    DrugId: 436727,
-                    DrugName:
-                      "Children's Ibuprofen 100 mg/5 mL oral suspension",
-                  },
-                  {
-                    DrugId: 557123,
-                    DrugName: "Comfort Pac-Ibuprofen 800 mg kit",
-                  },
-                  {
-                    DrugId: 219132,
-                    DrugName: "dibucaine 1 % topical ointment",
-                  },
-                  {
-                    DrugId: 292795,
-                    DrugName: "dibucaine HCl (bulk) 100 % powder",
-                  },
-                  {
-                    DrugId: 554201,
-                    DrugName: "hydrocodone 10 mg-ibuprofen 200 mg tablet",
-                  },
-                  {
-                    DrugId: 469644,
-                    DrugName: "hydrocodone 5 mg-ibuprofen 200 mg tablet",
-                  },
-                  {
-                    DrugId: 156812,
-                    DrugName: "hydrocodone 7.5 mg-ibuprofen 200 mg tablet",
-                  },
-                  {
-                    DrugId: 290029,
-                    DrugName: "Ibu-Drops 50 mg/1.25 mL oral drops,suspension",
-                  },
-                  { DrugId: 554209, DrugName: "Ibudone 10 mg-200 mg tablet" },
-                  {
-                    DrugId: 554208,
-                    DrugName: "Ibudone 5 mg-200 mg tablet",
-                  },
-                  { DrugId: 227645, DrugName: "ibuprofen (bulk) 100 % powder" },
-                  {
-                    DrugId: 298404,
-                    DrugName: "ibuprofen 100 mg chewable tablet",
-                  },
-                  { DrugId: 234997, DrugName: "ibuprofen 100 mg tablet" },
-                  {
-                    DrugId: 278995,
-                    DrugName: "ibuprofen 100 mg/5 mL oral suspension",
-                  },
-                  { DrugId: 182478, DrugName: "ibuprofen 200 mg capsule" },
-                  {
-                    DrugId: 256217,
-                    DrugName: "ibuprofen 200 mg tablet",
-                  },
-                  { DrugId: 250621, DrugName: "ibuprofen 400 mg tablet" },
-                  {
-                    DrugId: 237650,
-                    DrugName: "ibuprofen 50 mg/1.25 mL oral drops,suspension",
-                  },
-                  { DrugId: 275877, DrugName: "ibuprofen 600 mg tablet" },
-                  {
-                    DrugId: 173420,
-                    DrugName: "ibuprofen 800 mg tablet",
-                  },
-                  {
-                    DrugId: 449425,
-                    DrugName:
-                      "Ibuprofen Cold-Sinus (with pseudoephedrine) 30 mg-200 mg tablet",
-                  },
-                  {
-                    DrugId: 472085,
-                    DrugName: "Ibuprofen IB 100 mg chewable tablet",
-                  },
-                  {
-                    DrugId: 281309,
-                    DrugName: "Ibuprofen IB 200 mg tablet",
-                  },
-                  {
-                    DrugId: 471498,
-                    DrugName: "Ibuprofen Jr Strength 100 mg chewable tablet",
-                  },
-                  {
-                    DrugId: 545552,
-                    DrugName:
-                      "ibuprofen lysine (PF) 20 mg/2 mL intravenous solution",
-                  },
-                  {
-                    DrugId: 581894,
-                    DrugName: "Ibuprofen PM 200 mg-25 mg capsule",
-                  },
-                  {
-                    DrugId: 557264,
-                    DrugName: "Ibuprofen PM 200 mg-38 mg tablet",
-                  },
-                  {
-                    DrugId: 550378,
-                    DrugName:
-                      "ibuprofen-diphenhydramine citrate 200 mg-38 mg tablet",
-                  },
-                  {
-                    DrugId: 472620,
-                    DrugName: "ibuprofen-oxycodone 400 mg-5 mg tablet",
-                  },
-                  {
-                    DrugId: 281153,
-                    DrugName:
-                      "ibutilide fumarate 0.1 mg/mL intravenous solution",
-                  },
-                  {
-                    DrugId: 449511,
-                    DrugName:
-                      "Infant's Ibuprofen 50 mg/1.25 mL oral drops,suspension",
-                  },
-                  {
-                    DrugId: 472123,
-                    DrugName:
-                      "Infants Ibu-Drops 50 mg/1.25 mL oral drops,suspension",
-                  },
-                  {
-                    DrugId: 454370,
-                    DrugName: "squaric acid dibutylest.(bulk) 100 % liquid",
-                  },
-                  {
-                    DrugId: 185726,
-                    DrugName: "squaric acid dibutylester powder",
-                  },
-                ],
-                mapping: {
-                  drugName: "DrugName",
-                  drugId: "DrugId",
-                },
-                minLength: 2,
-                labelKey: "DrugName",
+              asyncTypeahead: {
+                url: "https://jsonplaceholder.typicode.com/users",
                 bodyContainer: true,
-                cleanAfterSelection: true,
+                mapping: {
+                  drugName: "name",
+                  allergyName: "username",
+                },
+                labelKey: "name",
+                minLength: 2,
+                multiple: false,
               },
             },
+          },
+          {
+            dataField: "allergyReaction",
+            className: "col-md-1",
+            columnClassName: "col-md-1",
+            editColumnClassName: "col-md-1",
           },
           {
             dataField: "dosage",
@@ -213,12 +67,14 @@ export default {
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
+            enableHelpText: true,
           },
           {
             dataField: "unit",
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
+            enableHelpText: true,
           },
           {
             dataField: "refills",
@@ -232,14 +88,64 @@ export default {
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
           },
+          {
+            dataField: "startDate",
+            dataFormat: "MM/DD/YYYY",
+            field: "rdp",
+            uiSchema: {
+              rdp: {
+                placeholder: "MM/DD/YYYY",
+                inputProps: {
+                  className: "form-control",
+                  type: "text",
+                },
+              },
+            },
+            defaultCurrentDate: true,
+          },
+          {
+            dataField: "isSelected",
+
+            //  filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
+          },
         ],
+        tableConfig: {
+          // row, added by manually by external action
+          customRowConfiguration: {
+            mandatoryField: ["description"],
+            action: {
+              updateClassNames: {
+                // Upadating Class Names for the custom rows
+                classToAdd: {
+                  classNameToAdd: "disableEdit",
+                  columnsToAdd: ["drugName"],
+                },
+                classToDelete: {
+                  classNameToDelete: "DeleteClass",
+                  columnsToDelete: [],
+                },
+                validate: {
+                  field: "isCustomRow",
+                },
+              },
+            },
+          },
+        },
         rightActions: [
           {
-            action: "delete",
-            className: "col-md-1",
-            columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1",
-            icon: "glyphicon glyphicon-minus",
+            action: "update",
+            className: "table-action",
+            columnClassName: "table-action",
+            editColumnClassName: "table-action",
+            icon: "glyphicon glyphicon-plus",
+            actionConfiguration: {
+              action: "update",
+              fieldToUpdate: ["isSelected"],
+              filterField: "isSelected",
+              actionCompletedIcon: "glyphicon glyphicon-refresh",
+              actionCompletedClassName: "deleted-row",
+              mandatoryField: ["drugName"],
+            },
           },
           {
             action: "moveup",
@@ -285,19 +191,43 @@ export default {
           },
           {
             dataField: "allergyName",
+            enableHelpText: true,
+
+            // hidden : true,
+            // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
+          },
+          {
+            dataField: "allergyReaction",
+            className: "col-md-1",
+            columnClassName: "col-md-1",
+            editColumnClassName: "col-md-1",
+          },
+          {
+            dataField: "isSelected",
+
+            // hidden : true,
+            // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
+          },
+          {
+            dataField: "allergyActive",
+            // hidden : true,
+            // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
+          },
+          {
+            dataField: "allergyName",
             field: "asyncTypeahead",
+            enableHelpText: true,
             uiSchema: {
               focusOnMount: true,
               asyncTypeahead: {
-                url:
-                  "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchAllergies",
+                url: "https://jsonplaceholder.typicode.com/users",
                 bodyContainer: true,
-                optionsPath: "Allergies",
                 mapping: {
-                  allergyId: "AllergyId",
-                  allergyName: "AllergyName",
+                  allergyId: "username",
+                  allergyName: "name",
                 },
-                labelKey: "AllergyName",
+                labelKey: "name",
+                minLength: 2,
               },
             },
           },
@@ -309,7 +239,7 @@ export default {
             className: "table-action",
             columnClassName: "table-action",
             editColumnClassName: "table-action",
-            icon: "glyphicons glyphicons-remove-circle glyPhiconRedColor",
+            icon: "glyphicons glyphicons-remove-circle ",
           },
         ],
       },

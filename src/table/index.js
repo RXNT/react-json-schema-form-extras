@@ -3,6 +3,7 @@ import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
 import tableConfFrom, { removePosition } from "./tableConfFactory";
 import columnHeadersFrom from "./columnHeadersFactory";
 import moment from "moment";
+import InsertModal from "./customModal/InsertModal";
 
 function convertFields(cellValue, { type, format, default: def }) {
   if (cellValue === undefined) {
@@ -12,7 +13,9 @@ function convertFields(cellValue, { type, format, default: def }) {
   if (type === "boolean") {
     return cellValue === "true";
   } else if (type === "number") {
-    return parseFloat(cellValue);
+    return cellValue !== undefined && cellValue != ""
+      ? parseFloat(cellValue)
+      : "";
   } else if (type === "string" && format === "date-time") {
     if (cellValue === "") {
       return def;
@@ -30,18 +33,65 @@ function convertFields(cellValue, { type, format, default: def }) {
   }
   return cellValue;
 }
+function isEquivalentObject(a, b) {
+  // Create arrays of property names
+  var aProps = Object.getOwnPropertyNames(a);
+  var bProps = Object.getOwnPropertyNames(b);
+
+  // If number of properties is different,
+  // objects are not equivalent
+  if (aProps.length != bProps.length) {
+    return false;
+  }
+
+  for (var i = 0; i < aProps.length; i++) {
+    var propName = aProps[i];
+
+    // If values of same property are not equal,
+    // objects are not equivalent
+    if (a[propName] !== b[propName]) {
+      return false;
+    }
+  }
+
+  // If we made it this far, objects
+  // are considered equivalent
+
+  return true;
+}
 
 class TableField extends Component {
   constructor(props) {
     super(props);
-
     this.handleCellSave = this.handleCellSave.bind(this);
     this.handleRowsDelete = this.handleRowsDelete.bind(this);
+    this.handleDeletedRow = this.handleDeletedRow.bind(this);
+    this.handleRowSelect = this.handleRowSelect.bind(this);
+    this.handleAllRowSelect = this.handleAllRowSelect.bind(this);
   }
+  handleDeletedRow(row, rowIdx, c) {
+    let { items: { defaultFilterKey = undefined } } = this.props.schema;
+    let { table: { rightActions } } = this.props.uiSchema;
 
+    let highlightRow = "";
+    if (rightActions) {
+      let classAfterAction = rightActions.map(rightAction => {
+        if (rightAction.action === "update") {
+          let {
+            actionConfiguration: { actionCompletedClassName = false },
+          } = rightAction;
+          return actionCompletedClassName;
+        }
+        return undefined;
+      });
+      if (!row[defaultFilterKey] && row[defaultFilterKey] !== undefined) {
+        highlightRow = classAfterAction;
+      }
+    }
+    return highlightRow;
+  }
   handleCellSave(updRow, cellName, cellValue) {
     let { keyField, data } = this.tableConf;
-
     let fieldSchema = this.props.schema.items.properties[cellName];
     updRow[cellName] = convertFields(cellValue, fieldSchema);
     // Small hack to support object returned from async autocomplete
@@ -55,6 +105,19 @@ class TableField extends Component {
       row => (row[keyField] === targetKey ? updRow : row)
     );
 
+    /* Number field Validation => if Number is Undefined Or Empty, it should removed from the FormData */
+    let { type } = fieldSchema;
+    if (type === "number") {
+      Object.keys(updTable[targetKey]).map(function(column) {
+        if (
+          (column === cellName && updTable[targetKey][column] === undefined) ||
+          updTable[targetKey][column] === ""
+        ) {
+          delete updTable[targetKey][column];
+        }
+      });
+    }
+    /* end Number Filed validation  */
     this.props.onChange(removePosition(updTable));
   }
 
@@ -68,19 +131,54 @@ class TableField extends Component {
 
     this.props.onChange(removePosition(filteredRows));
   }
+  handleRowSelect(row, isSelected, e) {
+    const {
+      data,
+      selectRow: { onSelectRow: { fieldToUpdate = "picked" } },
+    } = this.tableConf;
+    let filteredRows = (data || []).map(item => {
+      if (!isSelected && item[fieldToUpdate] !== undefined) {
+        if (isEquivalentObject(item, row)) {
+          delete item[fieldToUpdate];
+        }
+      } else if (isEquivalentObject(item, row)) {
+        item[fieldToUpdate] = isSelected;
+      }
+      return item;
+    });
+    this.props.onChange(filteredRows);
+  }
+  handleAllRowSelect(isSelected, rows, e) {
+    const {
+      // data,
+      selectRow: { onSelectAllRow: { fieldToUpdate = "picked" } },
+    } = this.tableConf;
 
+    let filteredRows = (rows || []).map(item => {
+      if (!isSelected && item[fieldToUpdate] !== undefined) {
+        delete item[fieldToUpdate];
+      } else {
+        item[fieldToUpdate] = isSelected;
+      }
+      return item;
+    });
+    this.props.onChange(filteredRows);
+  }
   componentWillReceiveProps(nextProps) {
     let { uiSchema: { table: { focusOnAdd } = {} } } = nextProps;
+
     this.adding =
       focusOnAdd !== undefined &&
       nextProps.formData &&
       this.props.formData &&
       nextProps.formData.length > this.props.formData.length;
   }
+  // adds current date to default for table schema
 
   componentDidUpdate() {
     if (this.adding) {
-      let { uiSchema: { table: { focusOnAdd } } } = this.props;
+      let { uiSchema: { table: { focusOnAdd, focusRowIndex } } } = this.props;
+
       let body = this.refs.table.refs.body
         ? this.refs.table.refs.body
         : this.refs.table.body;
@@ -88,9 +186,36 @@ class TableField extends Component {
         console.error("Can't find body in the table");
         return;
       }
-      body.handleEditCell(this.props.formData.length, focusOnAdd);
+      body.handleEditCell(
+        focusRowIndex ? focusRowIndex : this.props.formData.length,
+        focusOnAdd
+      );
     }
   }
+
+  createCustomModal = (
+    onModalClose,
+    onSave,
+    columns,
+    validateState,
+    ignoreEditable
+  ) => {
+    let { formData, schema, uiSchema, onChange, registry } = this.props;
+    const attr = {
+      onModalClose,
+      onSave,
+      columns,
+      validateState,
+      ignoreEditable,
+      formData,
+      onChange,
+      schema,
+      uiSchema,
+      registry,
+      version: "1",
+    };
+    return <InsertModal {...attr} />;
+  };
 
   render() {
     let {
@@ -106,8 +231,12 @@ class TableField extends Component {
       uiSchema,
       formData,
       this.handleCellSave,
-      this.handleRowsDelete
+      this.handleRowsDelete,
+      this.handleDeletedRow,
+      this.handleRowSelect,
+      this.handleAllRowSelect
     );
+    this.tableConf.options.insertModal = this.createCustomModal;
 
     this.tableConf.cellEdit.beforeSaveCell = this.beforeSaveCell;
     let columns = columnHeadersFrom(

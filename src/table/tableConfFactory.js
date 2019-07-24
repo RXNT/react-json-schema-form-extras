@@ -8,6 +8,9 @@ const DEFAULT_TABLE_CONF = {
     blurToSave: true,
   },
   options: {},
+  keyBoardNav: {
+    enterToEdit: true,
+  },
   handleConfirmDeleteRow: next => next(),
 };
 
@@ -29,7 +32,10 @@ export default function tableConfFrom(
   { table = {} },
   formData = [],
   afterSaveCell,
-  afterDeleteRow
+  afterDeleteRow,
+  highlightAfterDelete,
+  handleRowSelect,
+  handleAllRowSelect
 ) {
   let { keyField = POSITION_KEY } = table;
   if (keyField === POSITION_KEY) {
@@ -45,6 +51,19 @@ export default function tableConfFrom(
 
   tableConf.cellEdit.afterSaveCell = afterSaveCell;
   tableConf.options.afterDeleteRow = afterDeleteRow;
+  tableConf.trClassName = highlightAfterDelete;
+  if (
+    tableConf.selectRow !== undefined &&
+    tableConf.selectRow.onSelectRow !== undefined
+  ) {
+    tableConf.selectRow.onSelect = handleRowSelect;
+  }
+  if (
+    tableConf.selectRow !== undefined &&
+    tableConf.selectRow.onSelectAllRow !== undefined
+  ) {
+    tableConf.selectRow.onSelectAll = handleAllRowSelect;
+  }
 
   return tableConf;
 }

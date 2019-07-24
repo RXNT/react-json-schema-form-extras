@@ -2,20 +2,90 @@ import React from "react";
 import actionHeaderFrom from "./actionHeaderFactory";
 import moment from "moment";
 
-const toDataFormat = fieldProp => {
+const toColumnClassNames = (fieldProp, fieldUIProp, customRowConfiguration) => {
+  if (
+    fieldProp.type === "string" &&
+    Object.keys(customRowConfiguration).length > 0
+  ) {
+    let classNameAdd = false;
+    let fieldToValidate = false;
+    Object.keys(customRowConfiguration.action).map(function(action) {
+      if (action === "updateClassNames") {
+        let { classToAdd, validate } = customRowConfiguration.action[action];
+        //adding class into the row
+        let { classNameToAdd, columnsToAdd } = classToAdd;
+        let { field } = validate;
+        let fieldToAddClass = columnsToAdd
+          ? columnsToAdd.find(cols => cols === fieldUIProp.dataField)
+          : false;
+        if (fieldToAddClass) {
+          classNameAdd = classNameToAdd;
+          fieldToValidate = field;
+        }
+      }
+    });
+    if (classNameAdd && fieldToValidate) {
+      return (cell, row) =>
+        typeof row[fieldToValidate] === "undefined" || !(fieldToValidate in row)
+          ? classNameAdd
+          : "";
+    }
+  }
+};
+const toDataAlignment = fieldProp => {
+  if (fieldProp.type === "number") {
+    return "right";
+  } else if (fieldProp.format === "date" || fieldProp.format === "date-time") {
+    return "right";
+  }
+};
+const toDataHelpText = (fieldProp, fieldUIProp) => {
+  let { enableHelpText = false } = fieldUIProp;
+  if (fieldProp && fieldUIProp) {
+    if (enableHelpText) {
+      if (fieldProp.type === "boolean") {
+        return cell => {
+          return cell ? "Yes" : "No";
+        };
+      } else if (fieldProp.enum && fieldProp.enumNames) {
+        return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
+      } else {
+        return cell => {
+          return cell ? cell.toString() : "";
+        };
+      }
+    }
+  }
+  return undefined;
+};
+const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey) => {
   if (fieldProp.enum && fieldProp.enumNames) {
     return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
   } else if (fieldProp.type === "boolean") {
-    return cell => (
-      <div style={{ textAlign: "right" }}>
-        <input
-          type="checkbox"
-          checked={cell}
-          onChange={() => {}}
-          style={{ position: "relative" }}
-        />
+    return (cell, row) => (
+      <div
+        className={
+          defaultFilterKey
+            ? !row[defaultFilterKey] ? "deleted-row-boolean-column" : ""
+            : ""
+        }
+        style={{ textAlign: "right" }}>
+        <label>{cell ? "Yes" : "No"}</label>
       </div>
     );
+  } else if (
+    fieldUIProp !== undefined &&
+    fieldUIProp.columnCustomFormat !== undefined
+  ) {
+    let columnCustomFormat = JSON.parse(fieldUIProp.columnCustomFormat);
+    let funcBody = JSON.parse(
+      JSON.stringify(columnCustomFormat.function.body).replace(/&nbsp;/g, " ")
+    );
+    let customFunc = new Function(
+      columnCustomFormat.function.arguments,
+      funcBody
+    );
+    return (cell, row) => customFunc(cell, row, fieldProp);
   }
   return undefined;
 };
@@ -61,19 +131,48 @@ const toEditable = fieldProp => {
   return true;
 };
 
-const columnHeadersFromSchema = schema => {
-  let { items: { properties } } = schema;
+const columnHeadersFromSchema = (schema, uiSchema) => {
+  let { items: { properties, defaultFilterKey = false } } = schema;
+
+  let { table: { tableCols, tableConfig = {} } } = uiSchema;
   let schemaCols = Object.keys(properties).map(dataField => {
     let { title } = properties[dataField];
     let editable = toEditable(properties[dataField]);
-    let dataFormat = toDataFormat(properties[dataField]);
-    return { dataField, displayName: title, editable, dataFormat };
-  });
+    let uiProperties = tableCols
+      ? tableCols.find(cols => cols.dataField === dataField)
+      : false;
+    let { customRowConfiguration = {} } = tableConfig;
+    let dataFormat = toDataFormat(
+      properties[dataField],
+      uiProperties,
+      defaultFilterKey
+    );
+    let dataAlign = toDataAlignment(properties[dataField]);
+    let columnClassName = toColumnClassNames(
+      properties[dataField],
+      uiProperties,
+      customRowConfiguration
+    );
 
+    let columnTitle = false;
+    if (uiProperties) {
+      columnTitle = toDataHelpText(properties[dataField], uiProperties);
+    }
+
+    return {
+      dataField,
+      displayName: title,
+      editable,
+      dataFormat,
+      dataAlign,
+      columnTitle,
+      columnClassName,
+    };
+  });
   return schemaCols;
 };
 
-export function overrideColDataFormat(colConf, fieldSchema) {
+export function overrideColDataFormat(colConf, fieldSchema, formData) {
   if (typeof colConf.dataFormat === "string" && fieldSchema.type === "object") {
     const { dataField, dataFormat: field } = colConf;
     colConf.dataFormat = function(cell, row) {
@@ -85,26 +184,66 @@ export function overrideColDataFormat(colConf, fieldSchema) {
     fieldSchema.type === "string" &&
     (fieldSchema.format === "date-time" || fieldSchema.format === "date")
   ) {
-    const { dataField, dataFormat } = colConf;
+    const { dataField, dataFormat, defaultCurrentDate = false } = colConf;
     colConf.dataFormat = function(cell, row) {
-      if (!row[dataField]) {
+      if (!row[dataField] && !defaultCurrentDate) {
         return undefined;
       }
-      let fieldVal = row[dataField];
+      let fieldVal =
+        defaultCurrentDate && !row[dataField] ? new Date() : row[dataField];
       if (typeof fieldVal === "string") {
         return moment(fieldVal).format(dataFormat);
+      }
+      if (fieldSchema && fieldSchema.format === "date-time") {
+        formData[row["_position"]][dataField] = moment(
+          fieldVal.toISOString()
+        ).format("YYYY-MM-DDTHH:mm:ssZ"); //Updating the formdata for the default date-time
+      } else {
+        formData[row["_position"]][dataField] = moment(
+          fieldVal.toISOString()
+        ).format("YYYY-MM-DD"); //Updating the formdata for the default date picker
       }
       return moment(fieldVal.toISOString()).format(dataFormat);
     };
     colConf.dataFormat.bind(this);
+  } else if (
+    colConf.field !== undefined &&
+    colConf.field === "asyncTypeahead"
+  ) {
+    //Only handle Type head with Array
+    if (fieldSchema.type === "array") {
+      const {
+        dataField = false,
+        uiSchema: {
+          asyncTypeahead: { arrayItemIndicator = "glyphicon glyphicon-record" },
+        },
+      } = colConf;
+      colConf.dataFormat = function(cell, row) {
+        let displayData = "";
+        if (dataField) {
+          if (cell !== undefined && Object.keys(cell).length > 0) {
+            Object.keys(cell).map(item => {
+              displayData += `<i class='${arrayItemIndicator}'></i>${cell[item][
+                dataField
+              ]}  `;
+            });
+          }
+        } else {
+          displayData = "Mapping Name not available";
+        }
+        return displayData;
+      };
+      colConf.dataFormat.bind(this);
+    }
   }
 }
 
 const overrideColEditable = (colConf, fieldSchema, fields) => {
   if (colConf.field && fields[colConf.field]) {
     let FieldEditor = fields[colConf.field];
+    let { defaultCurrentDate = false } = colConf;
     let fieldUISchema = Object.assign(
-      { "ui:autofocus": true },
+      { "ui:autofocus": true, defaultCurrentDate: defaultCurrentDate },
       colConf.uiSchema
     );
     let fieldSchemaWithoutTitle = Object.assign(
@@ -128,7 +267,8 @@ const overrideColumns = (
   columns,
   { items: { properties } },
   uiSchema,
-  fields
+  fields,
+  formData
 ) => {
   let { table: { tableCols = [] } = {} } = uiSchema;
 
@@ -140,7 +280,7 @@ const overrideColumns = (
       return col;
     }
     let updCol = Object.assign({}, col, colConf);
-    overrideColDataFormat(updCol, properties[col.dataField]);
+    overrideColDataFormat(updCol, properties[col.dataField], formData);
     overrideColEditable(updCol, properties[col.dataField], fields);
     return updCol;
   });
@@ -203,11 +343,18 @@ const columnHeadersFactory = (
   formData,
   onChange
 ) => {
-  let allColumns = columnHeadersFromSchema(schema);
+  let allColumns = columnHeadersFromSchema(schema, uiSchema);
   let orderedColumns = orderColumns(allColumns, uiSchema);
-  let withOverrides = overrideColumns(orderedColumns, schema, uiSchema, fields);
+  let withOverrides = overrideColumns(
+    orderedColumns,
+    schema,
+    uiSchema,
+    fields,
+    formData
+  );
   let columnsWithCSS = withColumnCss(withOverrides);
   let { rightColumns, leftColumns } = actionHeaderFrom(
+    schema,
     uiSchema,
     formData,
     onChange
