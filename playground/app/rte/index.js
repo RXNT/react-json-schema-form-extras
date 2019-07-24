@@ -5,14 +5,14 @@ export default function goalsField() {
       rte: {
         type: "string",
         title: "RTE",
-        default: "<p><br></p>",
+        default: "<p><br></p>"
       },
       draftRte: {
         type: "string",
         title: "Draft RTE",
-        default: "<p>Lets see if this works</p>",
-      },
-    },
+        default: "<p>Lets see if this works</p>"
+      }
+    }
   };
 
   let uiSchema = {
@@ -21,10 +21,10 @@ export default function goalsField() {
       "ui:field": "collapsible",
       collapse: {
         field: "rte",
-        collapsed: true,
+        collapsed: true
       },
       "ui:autofocus": true,
-      classNames: "col-md-12",
+      classNames: "col-md-12"
     },
     draftRte: {
       updateOnBlur: true,
@@ -34,8 +34,8 @@ export default function goalsField() {
         collapsed: false,
         collapseDivStyles: {
           textColor: "white",
-          background: "linear-gradient(to right, blue, black)",
-        },
+          background: "linear-gradient(to right, blue, black)"
+        }
       },
       draftRte: {
         debounce: { interval: 600, shouldDebounce: true },
@@ -48,7 +48,7 @@ export default function goalsField() {
             "list",
             "colorPicker",
             "link",
-            "history",
+            "history"
           ],
           inline: {
             options: [
@@ -56,23 +56,64 @@ export default function goalsField() {
               "italic",
               "underline",
               "strikethrough",
-              "monospace",
-            ],
-          },
+              "monospace"
+            ]
+          }
         },
-        mention: {
-          separator: " ",
-          trigger: "#",
-          suggestions: [{ text: "Diagnosis", value: "Diagnosis" }],
-        },
+        enableAutocomplete: true,
+        autocomplete: {
+          url: "https://jsonplaceholder.typicode.com/users",
+          separator: "",
+          keyToMaping: { hotkey: "@", phrase: "phrase" },
+          keyToDisplay: "phone",
+          shortKeysPath: ""
+        }
       },
       "ui:autofocus": true,
-      classNames: "col-md-12",
+      classNames: "col-md-12"
     },
+    draftRte1: {
+      updateOnBlur: true,
+      "ui:field": "collapsible",
+      collapse: {
+        field: "draftRte",
+        collapsed: false,
+        collapseDivStyles: {
+          textColor: "white",
+          background: "linear-gradient(to right, blue, black)"
+        }
+      },
+      draftRte: {
+        debounce: { interval: 600, shouldDebounce: true },
+        toolbar: {
+          options: [
+            "inline",
+            "blockType",
+            "fontSize",
+            "fontFamily",
+            "list",
+            "colorPicker",
+            "link",
+            "history"
+          ],
+          inline: {
+            options: [
+              "bold",
+              "italic",
+              "underline",
+              "strikethrough",
+              "monospace"
+            ]
+          }
+        }
+      },
+      "ui:autofocus": true,
+      classNames: "col-md-12"
+    }
   };
 
   let formData = {
-    rte: "This must <b>be rendered</b>",
+    rte: "This must <b>be rendered</b>"
   };
 
   return { schema, uiSchema, formData };
