@@ -54,12 +54,14 @@ class Suggestion {
             : selection.get("focusOffset") + 1
         );
         //Need to find the latest match with mutiple triggers, then pass that trigger along through.
-        let index;
+        let index = -1;
+        
         let currentTrigger;
         getTriggers().some(trigger => {
           currentTrigger = trigger;
-          index = text.lastIndexOf(separator + trigger);
-          if (index >= 0) {
+          let internalIndex = text.lastIndexOf(separator + trigger);
+          if (internalIndex >= 0 && text[internalIndex-1] !== trigger) {
+            index = internalIndex
             return true;
           }
         });
@@ -273,8 +275,9 @@ function getSuggestionComponent() {
           ref={this.setSuggestionReference}
           onClick={config.modalHandler.onSuggestionClick}
           aria-haspopup="true"
-          aria-label="rdw-suggestion-popup">
-          <span>{children}</span>
+          aria-label="rdw-suggestion-popup"
+          data-offset-key={children[0] && children[0].key ? children[0].key : ""}>
+           {children}
           {showSuggestions && (
             <span
               className={classNames(
@@ -284,7 +287,8 @@ function getSuggestionComponent() {
               contentEditable="false"
               suppressContentEditableWarning
               style={this.state.style}
-              ref={this.setDropdownReference}>
+              ref={this.setDropdownReference}
+              data-offset-key={children[0] && children[0].key ? children[0].key : ""}>
               {this.filteredSuggestions.map((suggestion, index) => (
                 <span
                   key={index}
