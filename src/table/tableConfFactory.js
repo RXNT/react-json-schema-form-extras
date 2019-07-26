@@ -55,13 +55,13 @@ export default function tableConfFrom(
   if (
     tableConf.selectRow !== undefined &&
     tableConf.selectRow.onSelectRow !== undefined
-  ) {    
+  ) {
     tableConf.selectRow.onSelect = handleRowSelect;
   }
   if (
     tableConf.selectRow !== undefined &&
     tableConf.selectRow.onSelectAllRow !== undefined
-  ) {    
+  ) {
     tableConf.selectRow.onSelectAll = handleAllRowSelect;
   }
 

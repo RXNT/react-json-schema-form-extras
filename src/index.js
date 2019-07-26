@@ -22,5 +22,5 @@ export default {
   simpleLabel: SimpleLabel,
   draftRte,
   formContextField,
-  dateTimePicker : dateTimePicker
+  dateTimePicker: dateTimePicker,
 };
