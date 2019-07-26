@@ -53,6 +53,7 @@
   "dependencies": {
     "classnames": "^2.2.6",
     "draftjs-to-html": "^0.8.4",
+    "es6-shim": "^0.35.5",
     "html-to-draftjs": "^1.4.0",
     "lodash.debounce": "^4.0.8",
     "react-draft-wysiwyg": "^1.12.13",
