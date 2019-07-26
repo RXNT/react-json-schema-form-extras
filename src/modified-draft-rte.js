@@ -8,7 +8,7 @@ export default function(props) {
   let customDecorators = [];
   customDecorators.push(
     ...getShortkeyDecorators({
-      separator: "",
+      separator: '',
       getTriggers: props.customSuggestionTriggers,
       onChange: props.onEditorStateChange,
       getEditorState: props.getEditorState,
