@@ -134,9 +134,9 @@ function getSuggestionComponent() {
       } else {
         left = 15;
       }
-      if (editorRect.bottom < dropdownRect.bottom) {
-        bottom = 0;
-      }
+      // if (editorRect.bottom < dropdownRect.bottom) {
+      //   bottom = 0;
+      // }
       this.setState({
         // eslint-disable-line react/no-did-mount-set-state
         style: { left, right, bottom },
