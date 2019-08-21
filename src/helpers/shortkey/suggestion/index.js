@@ -61,7 +61,7 @@ class Suggestion {
           currentTrigger = trigger;
           let internalIndex = text.lastIndexOf(separator + trigger);
           if (internalIndex >= 0 && text[internalIndex-1] !== trigger) {
-            index = internalIndex
+            index = internalIndex;
             return true;
           }
         });
@@ -264,6 +264,11 @@ function getSuggestionComponent() {
         addMention(editorState, onChange, separator, trigger, selectedMention);
       }
     };
+    
+    getSanatizedHtml = (html) => {
+      return ;
+
+    }
 
     render() {
       const { children } = this.props;
@@ -304,7 +309,7 @@ function getSuggestionComponent() {
                   )}>
                   {suggestion.phrase}
                   <br />
-                  <span style={{ fontSize: "11px" }}>{suggestion.text}</span>
+                  <div style={{ overflow: 'hidden',maxWidth: '30ch',height: '18px', fontSize: '12px' }} dangerouslySetInnerHTML={{ __html: suggestion.text }}></div>
                 </span>
               ))}
             </span>
