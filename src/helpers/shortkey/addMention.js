@@ -1,6 +1,7 @@
 import { EditorState, Modifier } from "draft-js";
 import { getSelectedBlock } from "draftjs-utils";
-
+import htmlToDraft from 'html-to-draftjs';
+import { OrderedMap, List } from "immutable";
 export default function addMention(
   editorState: EditorState,
   onChange: Function,
@@ -34,13 +35,29 @@ export default function addMention(
     editorState,
     updatedSelection
   );
-  let contentState = Modifier.replaceText(
-    newEditorState.getCurrentContent(),
-    updatedSelection,
-    `${text}`,
-    newEditorState.getCurrentInlineStyle(),
-    undefined
-  );
+  let contentState = {};
+  const contentBlock = htmlToDraft(text);
+  if (suggestion.advanced){
+    contentState = editorState.getCurrentContent();
+    contentBlock.entityMap.forEach((value, key) => {
+      contentState = contentState.mergeEntityData(key, value);
+    });
+    contentState = Modifier.replaceWithFragment(
+      contentState,
+      updatedSelection,
+      new List(contentBlock.contentBlocks)
+    );
+  } else {
+    
+    contentState = Modifier.replaceText(
+      newEditorState.getCurrentContent(),
+      updatedSelection,
+      `${text}`,
+      newEditorState.getCurrentInlineStyle(),
+      undefined
+    );
+  }
+ 
   newEditorState = EditorState.push(
     newEditorState,
     contentState,
@@ -49,10 +66,17 @@ export default function addMention(
 
   if (!spaceAlreadyPresent) {
     // insert a blank space after mention
-    updatedSelection = newEditorState.getSelection().merge({
-      anchorOffset: mentionIndex + text.length + separator.length,
-      focusOffset: mentionIndex + text.length + separator.length,
-    });
+    if (suggestion.advanced){
+      updatedSelection = newEditorState.getSelection().merge({
+        anchorOffset: mentionIndex + contentBlock.contentBlocks[0].text.length + separator.length,
+        focusOffset: mentionIndex + contentBlock.contentBlocks[0].text.length + separator.length,
+      });
+    } else {
+      updatedSelection = newEditorState.getSelection().merge({
+        anchorOffset: mentionIndex + text.length + separator.length,
+        focusOffset: mentionIndex + text.length + separator.length,
+      });
+    }
     newEditorState = EditorState.acceptSelection(
       newEditorState,
       updatedSelection
