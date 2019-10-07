@@ -121,6 +121,9 @@ export default class DraftRTE extends Component {
       editorState,
       suggestions: [],
       triggers: [],
+      startingCharacter: props.startingCharacter,
+      endingCharacter: props.endingCharacter,
+      placeholderKeyPairs: props.placeholderKeyPairs,
     };
   }
   /**
@@ -261,6 +264,9 @@ export default class DraftRTE extends Component {
           onFocus={this.handleOnFocus}
           customSuggestions={() => this.state.suggestions}
           customSuggestionTriggers={() => this.state.triggers}
+          startingCharacter={this.state.startingCharacter}
+          endingCharacter={this.state.endingCharacter}
+          placeholderKeyPairs={this.state.placeholderKeyPairs}
           {...draftRte}
         />
       </div>

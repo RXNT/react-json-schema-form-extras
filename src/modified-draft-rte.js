@@ -13,6 +13,9 @@ export default function(props) {
       onChange: props.onEditorStateChange,
       getEditorState: props.getEditorState,
       getSuggestions: props.customSuggestions,
+      startingCharacter: props.startingCharacter,
+      endingCharacter: props.endingCharacter,
+      placeholderKeyPairs: props.placeholderKeyPairs,
       getWrapperRef: () => props.wrapperRef,
       modalHandler: new ModalHandler(),
     })
@@ -21,16 +24,3 @@ export default function(props) {
   return <Editor {...props} customDecorators={customDecorators} />;
 }
 
-/* 
-function getSuggestions() {
-  return [
-    { hotkey: "{", phrase: "one", text: "1andone" },
-    { hotkey: "{", phrase: "two", text: "2and two" },
-    { hotkey: "{", phrase: "three", text: "3" },
-    { hotkey: "{", phrase: "four", text: "4" },
-    { hotkey: "@", phrase: "one", text: "5and six" },
-    { hotkey: "@", phrase: "two", text: "6" },
-    { hotkey: "@", phrase: "three", text: "7andtw" },
-    { hotkey: "@", phrase: "four", text: "8" },
-  ];
-} */

@@ -2,18 +2,80 @@ import { EditorState, Modifier } from "draft-js";
 import { getSelectedBlock } from "draftjs-utils";
 import htmlToDraft from 'html-to-draftjs';
 import { OrderedMap, List } from "immutable";
+import { strictEqual } from "assert";
 export default function addMention(
   editorState: EditorState,
   onChange: Function,
   separator: string,
   trigger: string,
-  suggestion: Object
+  suggestion: Object,
+  startingCharacter: string,
+  endingCharacter: string,
+  placeholderKeyPairs: Object
 ): void {
-  const { text } = suggestion;
+  let { text } = suggestion;
   // const entityKey = editorState
   //   .getCurrentContent()
   //   .createEntity("SHORTKEYS", "MUTABLE", { text: text })
   //   .getLastCreatedEntityKey();
+
+  //Before we start our manipulation to insert this into the editor, lets process our placeholder replacements first.
+
+  console.log(startingCharacter, endingCharacter, placeholderKeyPairs);
+
+  let availableReplacements = true;
+  let searchStartingIndex = 0;
+  while (availableReplacements){ 
+    let startIndex = 0;
+    let endIndex = 0;
+    startIndex = text.indexOf(startingCharacter, searchStartingIndex);
+    // If we don't even find a starting character, we can just return now.
+
+    if (startIndex === -1){
+      availableReplacements = false;
+    }
+
+    endIndex = text.indexOf(endingCharacter, searchStartingIndex);
+
+    // If we don't find an ending character, just return
+
+    if (endIndex === -1) {
+      availableReplacements = false;
+    }
+
+    // Lets make sure that our endingCharacter is not located before the starting one.
+
+    if (endIndex < startIndex){
+     // If we do find an end character, it could be possible that there is still another valid replacement afterwards.
+
+     //Need to implement logic here to check for that, adjust index to search past inital ending bracket.
+     searchStartingIndex = endIndex;
+    }
+
+    let textToMatch = text.slice(startIndex+1, endIndex);
+    let fullText = text.slice(startIndex, endIndex+1);
+    //Now that we have the text in our match, lets see if there is a pair for it.
+    let matchedReplacement = null;
+    placeholderKeyPairs.some((pair) => {
+      console.log('pair vs texToMatch', pair.match, textToMatch);
+      if (pair.match === textToMatch){
+        // match found, return this pair.
+        console.log('match Found');
+        matchedReplacement = pair;
+        return true;
+      }
+    }); 
+
+    // Let's replace it, and then repeat until we don't find any more matches to replace.
+   if (matchedReplacement && matchedReplacement !== undefined && matchedReplacement !== null){
+    text = text.replace(fullText, matchedReplacement.replacement);
+    console.log('replaced text', text);
+    } else {
+      availableReplacements = false;
+    }
+  }
+    
+
   const selectedBlock = getSelectedBlock(editorState);
   const selectedBlockText = selectedBlock.getText();
   let focusOffset = editorState.getSelection().focusOffset;
