@@ -68,6 +68,19 @@ export default {
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
             enableHelpText: true,
+            cellCustomEditor:{
+              type : 'number',              
+              cellCustomEditorProps:{
+                allowDigitAfterDecimal : 3,
+                roundDecimal :false,
+                maxlength: 10,
+              },
+              editorFieldProps : {  
+                min : 0.001,
+                max: 9999999999,
+                style : { display: 'inline',width: '100%'}
+              }
+            }
           },
           {
             dataField: "unit",
