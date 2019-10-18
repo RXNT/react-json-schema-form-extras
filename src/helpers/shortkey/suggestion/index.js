@@ -126,7 +126,7 @@ function getSuggestionComponent() {
 
     componentDidMount() {
       // originally this is gotten from the parent ref. Need to do more research on this.
-      let wrapper = document.getElementById("rdw-wrapper-draftRte-wrapper-id");
+      let wrapper = document.getElementById("rjfe-draft-rte-wrapper");
       const editorRect = wrapper.getBoundingClientRect();
       const suggestionRect = this.suggestion.getBoundingClientRect();
       const dropdownRect = this.dropdown.getBoundingClientRect();
@@ -134,8 +134,7 @@ function getSuggestionComponent() {
       let right;
       let bottom;
       if (
-        editorRect.width <
-        suggestionRect.left - editorRect.left + dropdownRect.width
+        editorRect.width < suggestionRect.left - editorRect.left + dropdownRect.width
       ) {
         right = 15;
       } else {
