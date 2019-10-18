@@ -250,25 +250,26 @@ export default class DraftRTE extends Component {
     return (
       <div id={$id} onKeyDown={KeyDownHandler.onKeyDown}>
         <DefaultLabel {...this.props} />
-        <Editor
-          wrapperClassName="draftRte-wrapper"
-          wrapperId="draftRte-wrapper-id"
-          editorClassName="draftRte-editor"
-          editorState={editorState}
-          onEditorStateChange={this.onEditorStateChange}
-          onBlur={this.handleBlur}
-          editorRef={this.setEditorReference}
-          spellCheck={true}
-          handlePastedText={() => false}
-          getEditorState={() => this.state.editorState}
-          onFocus={this.handleOnFocus}
-          customSuggestions={() => this.state.suggestions}
-          customSuggestionTriggers={() => this.state.triggers}
-          startingCharacter={this.state.startingCharacter}
-          endingCharacter={this.state.endingCharacter}
-          placeholderKeyPairs={this.state.placeholderKeyPairs}
-          {...draftRte}
-        />
+        <div id="rjfe-draft-rte-wrapper">
+          <Editor
+            wrapperClassName="draftRte-wrapper"
+            editorClassName="draftRte-editor"
+            editorState={editorState}
+            onEditorStateChange={this.onEditorStateChange}
+            onBlur={this.handleBlur}
+            editorRef={this.setEditorReference}
+            spellCheck={true}
+            handlePastedText={() => false}
+            getEditorState={() => this.state.editorState}
+            onFocus={this.handleOnFocus}
+            customSuggestions={() => this.state.suggestions}
+            customSuggestionTriggers={() => this.state.triggers}
+            startingCharacter={this.state.startingCharacter}
+            endingCharacter={this.state.endingCharacter}
+            placeholderKeyPairs={this.state.placeholderKeyPairs}
+            {...draftRte}
+          />
+        </div>
       </div>
     );
   }
