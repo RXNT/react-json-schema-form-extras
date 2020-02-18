@@ -5,13 +5,10 @@ const POSITION_KEY = "_position";
 const DEFAULT_TABLE_CONF = {
   cellEdit: {
     mode: "click",
-    blurToSave: true,
+    blurToSave: true
   },
   options: {},
-  keyBoardNav: {
-    enterToEdit: true,
-  },
-  handleConfirmDeleteRow: next => next(),
+  handleConfirmDeleteRow: next => next()
 };
 
 export function addPosition(data) {
