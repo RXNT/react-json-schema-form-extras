@@ -226,7 +226,12 @@ class BaseTypeaheadField extends Component {
       if (cleanAfterSelection) {
         setTimeout(() => {
           if (this.refs.typeahead) {
-            this.refs.typeahead.getInstance().clear();
+            if(this.refs.typeahead.getInstance){
+              this.refs.typeahead.getInstance().clear();
+            } else if (this.refs.typeahead.clear) {
+              this.refs.typeahead.clear();
+            }
+            
           }
         }, 0);
       }
