@@ -93,7 +93,7 @@ class Suggestion {
               return (
                 suggestion.phrase
                   .toLowerCase()
-                  .indexOf(mentionText.toLowerCase()) >= 0
+                  .indexOf(mentionText && mentionText.toLowerCase()) >= 0
               );
             }
             return false;
@@ -274,7 +274,6 @@ function getSuggestionComponent() {
       } = config;
       const selectedMention = this.filteredSuggestions[activeOption];
       if (selectedMention) {
-        console.log("firing addMention");
         addMention(
           editorState,
           onChange,
@@ -286,10 +285,6 @@ function getSuggestionComponent() {
           placeholderKeyPairs
         );
       }
-    };
-
-    getSanatizedHtml = html => {
-      return;
     };
 
     render() {
