@@ -2,26 +2,26 @@ export default {
   medicationData: {
     "ui:field": "collapsible",
     "ui:options": {
-      label: false,
+      label: false
     },
     label: false,
     collapse: {
       field: "ObjectField",
       collapsed: false,
       legend: {
-        component: "LanguageLegend",
+        component: "LanguageLegend"
       },
       actions: [
         {
-          component: "Button",
-        },
+          component: "Button"
+        }
       ],
-      addTo: "medications",
+      addTo: "medications"
     },
     medications: {
       "ui:field": "table",
       "ui:options": {
-        label: false,
+        label: false
       },
       classNames: "col-md-12",
       table: {
@@ -30,7 +30,7 @@ export default {
         tableCols: [
           {
             dataField: "drugId",
-            hidden: true,
+            hidden: true
           },
           {
             dataField: "drugName",
@@ -42,25 +42,25 @@ export default {
                 bodyContainer: true,
                 mapping: {
                   drugName: "name",
-                  allergyName: "username",
+                  allergyName: "username"
                 },
                 labelKey: "name",
                 minLength: 2,
-                multiple: false,
-              },
-            },
+                multiple: false
+              }
+            }
           },
           {
             dataField: "allergyReaction",
             className: "col-md-1",
             columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1",
+            editColumnClassName: "col-md-1"
           },
           {
             dataField: "dosage",
             className: "col-md-1",
             columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1",
+            editColumnClassName: "col-md-1"
           },
           {
             dataField: "quantity",
@@ -68,17 +68,17 @@ export default {
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
             enableHelpText: true,
-            cellCustomEditor:{
-              type : 'number',              
-              cellCustomEditorProps:{
-                allowDigitAfterDecimal : 3,
-                roundDecimal :false,
-                maxlength: 10,
+            cellCustomEditor: {
+              type: "number",
+              cellCustomEditorProps: {
+                allowDigitAfterDecimal: 3,
+                roundDecimal: false,
+                maxlength: 10
               },
-              editorFieldProps : {  
-                min : 0.001,
+              editorFieldProps: {
+                min: 0.001,
                 max: 9999999999,
-                style : { display: 'inline',width: '100%'}
+                style: { display: "inline", width: "100%" }
               }
             }
           },
@@ -87,19 +87,19 @@ export default {
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
-            enableHelpText: true,
+            enableHelpText: true
           },
           {
             dataField: "refills",
             className: "col-md-1",
             columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1",
+            editColumnClassName: "col-md-1"
           },
           {
             dataField: "useGeneric",
             className: "col-md-1",
             columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1",
+            editColumnClassName: "col-md-1"
           },
           {
             dataField: "startDate",
@@ -110,17 +110,17 @@ export default {
                 placeholder: "MM/DD/YYYY",
                 inputProps: {
                   className: "form-control",
-                  type: "text",
-                },
-              },
+                  type: "text"
+                }
+              }
             },
-            defaultCurrentDate: true,
+            defaultCurrentDate: true
           },
           {
-            dataField: "isSelected",
+            dataField: "isSelected"
 
             //  filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
-          },
+          }
         ],
         tableConfig: {
           // row, added by manually by external action
@@ -131,18 +131,18 @@ export default {
                 // Upadating Class Names for the custom rows
                 classToAdd: {
                   classNameToAdd: "disableEdit",
-                  columnsToAdd: ["drugName"],
+                  columnsToAdd: ["drugName"]
                 },
                 classToDelete: {
                   classNameToDelete: "DeleteClass",
-                  columnsToDelete: [],
+                  columnsToDelete: []
                 },
                 validate: {
-                  field: "isCustomRow",
-                },
-              },
-            },
-          },
+                  field: "isCustomRow"
+                }
+              }
+            }
+          }
         },
         rightActions: [
           {
@@ -157,30 +157,30 @@ export default {
               filterField: "isSelected",
               actionCompletedIcon: "glyphicon glyphicon-refresh",
               actionCompletedClassName: "deleted-row",
-              mandatoryField: ["drugName"],
-            },
+              mandatoryField: ["drugName"]
+            }
           },
           {
             action: "moveup",
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
-            icon: "glyphicon glyphicon-arrow-up",
+            icon: "glyphicon glyphicon-arrow-up"
           },
           {
             action: "movedown",
             className: "col-md-1",
             columnClassName: "col-md-1",
             editColumnClassName: "col-md-1",
-            icon: "glyphicon glyphicon-arrow-down",
-          },
-        ],
-      },
+            icon: "glyphicon glyphicon-arrow-down"
+          }
+        ]
+      }
     },
     medications_no_active: {
       classNames: "col-md-6",
-      nav: ["medications"],
-    },
+      nav: ["medications"]
+    }
   },
   allergyData: {
     classNames: "col-md-12",
@@ -188,10 +188,10 @@ export default {
     "ui:order": ["noKnownAllergies", "noKnownDrugAllergies", "allergies"],
     "ui:field": "collapsible",
     noKnownAllergies: {
-      classNames: "col-md-6",
+      classNames: "col-md-6"
     },
     noKnownDrugAllergies: {
-      classNames: "col-md-6",
+      classNames: "col-md-6"
     },
     allergies: {
       classNames: "col-md-12",
@@ -200,11 +200,11 @@ export default {
         tableCols: [
           {
             dataField: "allergyId",
-            hidden: true,
+            hidden: true
           },
           {
             dataField: "allergyName",
-            enableHelpText: true,
+            enableHelpText: true
 
             // hidden : true,
             // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
@@ -213,16 +213,16 @@ export default {
             dataField: "allergyReaction",
             className: "col-md-1",
             columnClassName: "col-md-1",
-            editColumnClassName: "col-md-1",
+            editColumnClassName: "col-md-1"
           },
           {
-            dataField: "isSelected",
+            dataField: "isSelected"
 
             // hidden : true,
             // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
           },
           {
-            dataField: "allergyActive",
+            dataField: "allergyActive"
             // hidden : true,
             // filter : { type: 'SelectFilter', options: {true : 'Active', false : 'InActive'}, defaultValue: true }  ,
           },
@@ -237,13 +237,13 @@ export default {
                 bodyContainer: true,
                 mapping: {
                   allergyId: "username",
-                  allergyName: "name",
+                  allergyName: "name"
                 },
                 labelKey: "name",
-                minLength: 2,
-              },
-            },
-          },
+                minLength: 2
+              }
+            }
+          }
         ],
         focusOnAdd: 1,
         rightActions: [
@@ -252,22 +252,22 @@ export default {
             className: "table-action",
             columnClassName: "table-action",
             editColumnClassName: "table-action",
-            icon: "glyphicons glyphicons-remove-circle ",
-          },
-        ],
-      },
+            icon: "glyphicons glyphicons-remove-circle "
+          }
+        ]
+      }
     },
     "ui:options": {
-      label: false,
+      label: false
     },
     collapse: {
       field: "ObjectField",
       collapsed: false,
       icon: {
-        add: "glyphicon glyphicon-plus-sign glyPhiconGreen",
+        add: "glyphicon glyphicon-plus-sign glyPhiconGreen"
       },
       actions: [],
-      addTo: "allergies",
-    },
-  },
+      addTo: "allergies"
+    }
+  }
 };
