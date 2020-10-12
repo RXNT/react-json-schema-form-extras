@@ -34,7 +34,7 @@ export default function tableConfFrom(
   handleRowSelect,
   handleAllRowSelect,
   myRowExpand,
-  checkMyRow,
+  isRowIsExpandable,
   expandColumnComponent
 ) {
   let { keyField = POSITION_KEY } = table;
@@ -64,7 +64,7 @@ export default function tableConfFrom(
     tableConf.selectRow.onSelectAll = handleAllRowSelect;
   }
   tableConf.expandComponent = myRowExpand;
-  tableConf.expandableRow = checkMyRow;
+  tableConf.expandableRow = isRowIsExpandable;
   tableConf.expandColumnOptions = {
     expandColumnVisible: true,
     expandColumnComponent: expandColumnComponent,
