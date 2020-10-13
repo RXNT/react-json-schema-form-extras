@@ -4,6 +4,7 @@
       "classNames": "col-md-12 individualComponent",
       "ui:field": "collapsible",
       "table": {
+        "isTableExpandable":true,
         "tableCols": [
           {
             "dataField": "code",

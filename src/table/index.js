@@ -68,17 +68,23 @@ class TableField extends Component {
     this.handleDeletedRow = this.handleDeletedRow.bind(this);
     this.handleRowSelect = this.handleRowSelect.bind(this);
     this.handleAllRowSelect = this.handleAllRowSelect.bind(this);
+    this.isRowExpandable = this.isRowExpandable.bind(this);
+    this.myRowExpand = this.myRowExpand.bind(this);
   }
   handleDeletedRow(row, rowIdx, c) {
-    let { items: { defaultFilterKey = undefined } } = this.props.schema;
-    let { table: { rightActions } } = this.props.uiSchema;
+    let {
+      items: { defaultFilterKey = undefined }
+    } = this.props.schema;
+    let {
+      table: { rightActions }
+    } = this.props.uiSchema;
 
     let highlightRow = "";
     if (rightActions) {
       let classAfterAction = rightActions.map(rightAction => {
         if (rightAction.action === "update") {
           let {
-            actionConfiguration: { actionCompletedClassName = false },
+            actionConfiguration: { actionCompletedClassName = false }
           } = rightAction;
           return actionCompletedClassName;
         }
@@ -101,8 +107,8 @@ class TableField extends Component {
     }
 
     const targetKey = updRow[keyField];
-    let updTable = data.map(
-      row => (row[keyField] === targetKey ? updRow : row)
+    let updTable = data.map(row =>
+      row[keyField] === targetKey ? updRow : row
     );
 
     /* Number field Validation => if Number is Undefined Or Empty, it should removed from the FormData */
@@ -134,7 +140,9 @@ class TableField extends Component {
   handleRowSelect(row, isSelected, e) {
     const {
       data,
-      selectRow: { onSelectRow: { fieldToUpdate = "picked" } },
+      selectRow: {
+        onSelectRow: { fieldToUpdate = "picked" }
+      }
     } = this.tableConf;
     let filteredRows = (data || []).map(item => {
       if (!isSelected && item[fieldToUpdate] !== undefined) {
@@ -151,7 +159,9 @@ class TableField extends Component {
   handleAllRowSelect(isSelected, rows, e) {
     const {
       // data,
-      selectRow: { onSelectAllRow: { fieldToUpdate = "picked" } },
+      selectRow: {
+        onSelectAllRow: { fieldToUpdate = "picked" }
+      }
     } = this.tableConf;
 
     let filteredRows = (rows || []).map(item => {
@@ -165,7 +175,9 @@ class TableField extends Component {
     this.props.onChange(filteredRows);
   }
   componentWillReceiveProps(nextProps) {
-    let { uiSchema: { table: { focusOnAdd } = {} } } = nextProps;
+    let {
+      uiSchema: { table: { focusOnAdd } = {} }
+    } = nextProps;
 
     this.adding =
       focusOnAdd !== undefined &&
@@ -177,7 +189,11 @@ class TableField extends Component {
 
   componentDidUpdate() {
     if (this.adding) {
-      let { uiSchema: { table: { focusOnAdd, focusRowIndex } } } = this.props;
+      let {
+        uiSchema: {
+          table: { focusOnAdd, focusRowIndex }
+        }
+      } = this.props;
 
       let body = this.refs.table.refs.body
         ? this.refs.table.refs.body
@@ -212,11 +228,49 @@ class TableField extends Component {
       schema,
       uiSchema,
       registry,
-      version: "1",
+      version: "1"
     };
     return <InsertModal {...attr} />;
   };
+  isRowExpandable(isTableExpandable) {
+    return (
+      this.props.uiSchema.table && this.props.uiSchema.table.isTableExpandable
+    );
+  }
 
+  myRowExpand(currentTableData) {
+    let currentTableObj = Object.keys(currentTableData);
+    let tableList = currentTableObj.map(function(item, i) {
+      if (typeof currentTableData[item] === "object") {
+        let currentable = currentTableData[item];
+        let diagnosisList = Object.keys(currentTableData[item]);
+        return (
+          <div className="expandedItems">
+            <span className="itemHeading">{item} :</span>
+            <br />
+            <ul>
+              {diagnosisList.map(function(item, i) {
+                return <li>{currentable[item].description}</li>;
+              })}
+            </ul>
+          </div>
+        );
+      }
+    });
+    return <div className="expandedContent">{tableList}</div>;
+  }
+  expandColumnComponent({ isExpandableRow, isExpanded }) {
+    let expandClassName = "";
+
+    if (isExpandableRow) {
+      expandClassName = isExpanded
+        ? "glyphicon-chevron-down"
+        : "glyphicon-chevron-up";
+    } else {
+      expandClassName = " ";
+    }
+    return <span className={`fa fa-plus glyphicon ${expandClassName}`}></span>;
+  }
   render() {
     let {
       uiSchema,
@@ -224,7 +278,7 @@ class TableField extends Component {
       formData,
       registry: { fields },
       idSchema: { $id } = {},
-      onChange,
+      onChange
     } = this.props;
 
     this.tableConf = tableConfFrom(
@@ -234,7 +288,10 @@ class TableField extends Component {
       this.handleRowsDelete,
       this.handleDeletedRow,
       this.handleRowSelect,
-      this.handleAllRowSelect
+      this.handleAllRowSelect,
+      this.myRowExpand,
+      this.isRowExpandable,
+      this.expandColumnComponent
     );
     this.tableConf.options.insertModal = this.createCustomModal;
 
