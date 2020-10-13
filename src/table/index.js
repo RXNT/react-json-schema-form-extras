@@ -68,7 +68,7 @@ class TableField extends Component {
     this.handleDeletedRow = this.handleDeletedRow.bind(this);
     this.handleRowSelect = this.handleRowSelect.bind(this);
     this.handleAllRowSelect = this.handleAllRowSelect.bind(this);
-    this.isRowIsExpandable = this.isRowIsExpandable.bind(this);
+    this.isRowExpandable = this.isRowExpandable.bind(this);
     this.myRowExpand = this.myRowExpand.bind(this);
   }
   handleDeletedRow(row, rowIdx, c) {
@@ -232,7 +232,7 @@ class TableField extends Component {
     };
     return <InsertModal {...attr} />;
   };
-  isRowIsExpandable(isTableExpandable) {
+  isRowExpandable(isTableExpandable) {
     return (
       this.props.uiSchema.table && this.props.uiSchema.table.isTableExpandable
     );
@@ -290,7 +290,7 @@ class TableField extends Component {
       this.handleRowSelect,
       this.handleAllRowSelect,
       this.myRowExpand,
-      this.isRowIsExpandable,
+      this.isRowExpandable,
       this.expandColumnComponent
     );
     this.tableConf.options.insertModal = this.createCustomModal;
