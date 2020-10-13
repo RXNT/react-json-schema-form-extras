@@ -32,7 +32,10 @@ export default function tableConfFrom(
   afterDeleteRow,
   highlightAfterDelete,
   handleRowSelect,
-  handleAllRowSelect
+  handleAllRowSelect,
+  myRowExpand,
+  isRowExpandable,
+  expandColumnComponent
 ) {
   let { keyField = POSITION_KEY } = table;
   if (keyField === POSITION_KEY) {
@@ -45,7 +48,6 @@ export default function tableConfFrom(
     table,
     { keyField }
   );
-
   tableConf.cellEdit.afterSaveCell = afterSaveCell;
   tableConf.options.afterDeleteRow = afterDeleteRow;
   tableConf.trClassName = highlightAfterDelete;
@@ -61,6 +63,13 @@ export default function tableConfFrom(
   ) {
     tableConf.selectRow.onSelectAll = handleAllRowSelect;
   }
+  tableConf.expandComponent = myRowExpand;
+  tableConf.expandableRow = isRowExpandable;
+  tableConf.expandColumnOptions = {
+    expandColumnVisible: true,
+    expandColumnComponent: expandColumnComponent,
+    columnWidth: 50
+  };
 
   return tableConf;
 }
