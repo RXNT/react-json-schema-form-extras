@@ -50,6 +50,7 @@ export default function tableConfFrom(
   );
   tableConf.cellEdit.afterSaveCell = afterSaveCell;
   tableConf.options.afterDeleteRow = afterDeleteRow;
+  tableConf.options.onlyOneExpanding = isRowExpandable;
   tableConf.trClassName = highlightAfterDelete;
   if (
     tableConf.selectRow !== undefined &&
