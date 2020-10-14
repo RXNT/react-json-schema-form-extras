@@ -237,7 +237,6 @@ class TableField extends Component {
       this.props.uiSchema.table && this.props.uiSchema.table.isTableExpandable
     );
   }
-
   myRowExpand(currentTableData) {
     let currentTableObj = Object.keys(currentTableData);
     let tableList = currentTableObj.map(function(item, i) {
@@ -271,7 +270,6 @@ class TableField extends Component {
   }
   expandColumnComponent({ isExpandableRow, isExpanded }) {
     let expandClassName = "";
-
     if (isExpandableRow) {
       expandClassName = isExpanded
         ? "glyphicon-chevron-down"
