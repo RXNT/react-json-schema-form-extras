@@ -242,18 +242,28 @@ class TableField extends Component {
     let currentTableObj = Object.keys(currentTableData);
     let tableList = currentTableObj.map(function(item, i) {
       if (typeof currentTableData[item] === "object") {
-        let currentable = currentTableData[item];
-        let diagnosisList = Object.keys(currentTableData[item]);
+        let isComponentDataAvailable = false;
+        let currenTable = currentTableData[item];
+        let tableList = Object.keys(currentTableData[item]);
+        let tableListData = tableList.map(function(item, i) {
+          if (Object.keys(currenTable[item]).length > 0) {
+            isComponentDataAvailable = true;
+            return (
+              <li>
+                {currenTable[item].code + " - " + currenTable[item].description}
+              </li>
+            );
+          }
+          return;
+        });
         return (
-          <div className="expandedItems">
-            <span className="itemHeading">{item} :</span>
-            <br />
-            <ul>
-              {diagnosisList.map(function(item, i) {
-                return <li>{currentable[item].description}</li>;
-              })}
-            </ul>
-          </div>
+          isComponentDataAvailable && (
+            <div className="expandedItems">
+              <span className="itemHeading">{item} :</span>
+              <br />
+              <ul>{tableListData}</ul>
+            </div>
+          )
         );
       }
     });
