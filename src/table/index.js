@@ -246,7 +246,7 @@ class TableField extends Component {
         let currenTable = currentTableData[item];
         let tableList = Object.keys(currentTableData[item]);
         let tableListData = tableList.map(function(item, i) {
-          if (Object.keys(currenTable[item]).length > 0) {
+          if (currenTable[item] !== undefined && Object.keys(currenTable[item]).length > 0) {
             isComponentDataAvailable = true;
             return (
               <li>
