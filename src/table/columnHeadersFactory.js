@@ -69,7 +69,8 @@ const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey) => {
             ? !row[defaultFilterKey] ? "deleted-row-boolean-column" : ""
             : ""
         }
-        style={{ textAlign: "right" }}>
+        style={{ textAlign: "right" }}
+      >
         <label>{cell ? "Yes" : "No"}</label>
       </div>
     );
@@ -99,33 +100,33 @@ const toEditable = fieldProp => {
       });
       return {
         type: "select",
-        options: { values },
+        options: { values }
       };
     } else {
       return {
         type: "select",
-        options: { values: fieldProp.enum },
+        options: { values: fieldProp.enum }
       };
     }
   } else if (fieldProp.type === "boolean") {
     return {
-      type: "checkbox",
+      type: "checkbox"
     };
   } else if (fieldProp.format === "date-time") {
     return {
-      type: "datetime-local",
+      type: "datetime-local"
     };
   } else if (fieldProp.format === "date") {
     return {
-      type: "date",
+      type: "date"
     };
   } else if (fieldProp.format === "time") {
     return {
-      type: "time",
+      type: "time"
     };
   } else if (fieldProp.type === "number") {
     return {
-      type: "number",
+      type: "number"
     };
   }
   return true;
@@ -166,7 +167,7 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
       dataFormat,
       dataAlign,
       columnTitle,
-      columnClassName,
+      columnClassName
     };
   });
   return schemaCols;
@@ -215,8 +216,8 @@ export function overrideColDataFormat(colConf, fieldSchema, formData) {
       const {
         dataField = false,
         uiSchema: {
-          asyncTypeahead: { arrayItemIndicator = "glyphicon glyphicon-record" },
-        },
+          asyncTypeahead: { arrayItemIndicator = "glyphicon glyphicon-record" }
+        }
       } = colConf;
       colConf.dataFormat = function(cell, row) {
         let displayData = "";
@@ -258,71 +259,109 @@ const overrideColEditable = (colConf, fieldSchema, fields) => {
           uiSchema={fieldUISchema}
           onChange={onUpdate}
         />
-      ),
+      )
     };
-  }else if (colConf.cellCustomEditor){ // Block to customeditorCell , html input(not json form)
-    colConf.customEditor = 
-     { getElement: cellCustomEditor,
-       customEditorParameters: { fieldSchema: fieldSchema, fieldConf : colConf }
-     }        
-}
+  } else if (colConf.cellCustomEditor) {
+    // Block to customeditorCell , html input(not json form)
+    colConf.customEditor = {
+      getElement: cellCustomEditor,
+      customEditorParameters: { fieldSchema: fieldSchema, fieldConf: colConf }
+    };
+  } else if (colConf.cellCustomEditor) {
+    // Block to customeditorCell , html input(not json form)
+    colConf.customEditor = {
+      getElement: cellCustomEditor,
+      customEditorParameters: { fieldSchema: fieldSchema, fieldConf: colConf }
+    };
+  }
 };
-const cellCustomEditor = (onUpdate, props) => (<CustomCellEditor onUpdate={ onUpdate } {...props}/>);
-  class CustomCellEditor extends React.Component {
+const cellCustomEditor = (onUpdate, props) => (
+  <CustomCellEditor onUpdate={onUpdate} {...props} />
+);
+class CustomCellEditor extends React.Component {
   constructor(props) {
     super(props);
     this.updateData = this.updateData.bind(this);
     this.updateField = this.updateField.bind(this);
     this.state = {
-      value: props.defaultValue,      
+      value: props.defaultValue
     };
   }
   focus() {
     this.refs.inputRef.focus();
   }
   updateData(e) {
-    this.props.onUpdate(e.currentTarget.value );
+    this.props.onUpdate(e.currentTarget.value);
   }
   updateField(newValue, props) {
-    const  { cellCustomEditorProps :{ maxlength = 10}, editorFieldProps={}, type='number'} = props;
-     if(type === 'number'){
-      const  {cellCustomEditorProps:{ allowDigitAfterDecimal = 3 ,roundDecimal =false}} = props;
-      let parseNumber = (newValue.toString().split('.')); 
-      if(allowDigitAfterDecimal!== undefined){
-        if(roundDecimal && (parseNumber[1] !== undefined && parseNumber[1].length > allowDigitAfterDecimal)) { // to round as decimal
-        newValue = parseFloat(newValue).toFixed(allowDigitAfterDecimal);         
-        }else{
-          if(parseNumber[1] !== undefined && parseNumber[1].length > allowDigitAfterDecimal){
-            parseNumber[1]  =  parseNumber[1].toString().substring(0, allowDigitAfterDecimal);// truncating the sting if reached the max
-            newValue = parseNumber.join('.')
+    const {
+      cellCustomEditorProps: { maxlength = 10 },
+      type = "number"
+    } = props;
+    if (type === "number") {
+      const {
+        cellCustomEditorProps: {
+          allowDigitAfterDecimal = 3,
+          roundDecimal = false
+        }
+      } = props;
+      let parseNumber = newValue.toString().split(".");
+      if (allowDigitAfterDecimal !== undefined) {
+        if (
+          roundDecimal &&
+          (parseNumber[1] !== undefined &&
+            parseNumber[1].length > allowDigitAfterDecimal)
+        ) {
+          // to round as decimal
+          newValue = parseFloat(newValue).toFixed(allowDigitAfterDecimal);
+        } else {
+          if (
+            parseNumber[1] !== undefined &&
+            parseNumber[1].length > allowDigitAfterDecimal
+          ) {
+            parseNumber[1] = parseNumber[1]
+              .toString()
+              .substring(0, allowDigitAfterDecimal); // truncating the sting if reached the max
+            newValue = parseNumber.join(".");
           }
-          newValue = newValue ? ( newValue.toString().match(/^-?\d+(?:\.\d{0,3})?/) ? newValue.toString().match(/^-?\d+(?:\.\d{0,3})?/)[0] : newValue)   : newValue;          
-        }        
-      }             
-     } else {
-      newValue = newValue;
-     } 
-     if(maxlength !== undefined){    
-      if( newValue.toString().length > maxlength){
-        newValue =  newValue.toString().substring(0, maxlength)
+          newValue = newValue
+            ? newValue.toString().match(/^-?\d+(?:\.\d{0,3})?/)
+              ? newValue.toString().match(/^-?\d+(?:\.\d{0,3})?/)[0]
+              : newValue
+            : newValue;
+        }
       }
-    }   
-     this.setState({ value: newValue });   
+    } else {
+      let newValue = newValue;
     }
+    if (maxlength !== undefined) {
+      if (newValue.toString().length > maxlength) {
+        newValue = newValue.toString().substring(0, maxlength);
+      }
+    }
+    this.setState({ value: newValue });
+  }
 
   render() {
-    const {fieldConf : { cellCustomEditor = {}, cellCustomEditor:  {editorFieldProps={}}},  type = 'number'} = this.props;
+    const {
+      fieldConf: {
+        cellCustomEditor = {},
+        cellCustomEditor: { editorFieldProps = {} }
+      },
+      type = "number"
+    } = this.props;
     return (
-            <div >
-             <input
-                ref='inputRef'
-                type={type}
-                value={ this.state.value }
-                 {...editorFieldProps}
-                onChange= {event => this.updateField(event.currentTarget.value, cellCustomEditor)}
-                onBlur = {this.updateData}
-                />
-            </div>           
+      <div>
+        <input
+          ref="inputRef"
+          type={type}
+          value={this.state.value}
+          {...editorFieldProps}
+          onChange={event =>
+            this.updateField(event.currentTarget.value, cellCustomEditor)}
+          onBlur={this.updateData}
+        />
+      </div>
     );
   }
 }
@@ -377,7 +416,7 @@ const setColumnCSSIfMissing = (col, css) => {
   let {
     className = css,
     columnClassName = css,
-    editColumnClassName = css,
+    editColumnClassName = css
   } = col;
   Object.assign(col, { className, columnClassName, editColumnClassName });
 };

@@ -20,8 +20,7 @@ class Suggestion {
       modalHandler,
       startingCharacter,
       endingCharacter,
-      placeholderKeyPairs,
-
+      placeholderKeyPairs
     } = config;
     this.config = {
       separator,
@@ -36,7 +35,7 @@ class Suggestion {
       modalHandler,
       startingCharacter,
       endingCharacter,
-      placeholderKeyPairs,
+      placeholderKeyPairs
     };
   }
 
@@ -46,7 +45,7 @@ class Suggestion {
         separator,
         getTriggers,
         getSuggestions,
-        getEditorState,
+        getEditorState
       } = this.config;
       const selection = getEditorState().getSelection();
       if (
@@ -62,12 +61,12 @@ class Suggestion {
         );
         //Need to find the latest match with mutiple triggers, then pass that trigger along through.
         let index = -1;
-        
+
         let currentTrigger;
         getTriggers().some(trigger => {
           currentTrigger = trigger;
           let internalIndex = text.lastIndexOf(separator + trigger);
-          if (internalIndex >= 0 && text[internalIndex-1] !== trigger) {
+          if (internalIndex >= 0 && text[internalIndex - 1] !== trigger) {
             index = internalIndex;
             return true;
           }
@@ -87,6 +86,10 @@ class Suggestion {
                 return suggestion.phrase.indexOf(mentionText) >= 0;
               }
               this.config.trigger = currentTrigger;
+
+              if (mentionText && mentionText.trim().length <= 0) {
+                return false;
+              }
               return (
                 suggestion.phrase
                   .toLowerCase()
@@ -107,7 +110,7 @@ class Suggestion {
 
   getSuggestionDecorator = () => ({
     strategy: this.findSuggestionEntities,
-    component: this.getSuggestionComponent(),
+    component: this.getSuggestionComponent()
   });
 }
 
@@ -115,18 +118,18 @@ function getSuggestionComponent() {
   const { config } = this;
   return class SuggestionComponent extends Component {
     static propTypes = {
-      children: PropTypes.array,
+      children: PropTypes.array
     };
 
     state: Object = {
       style: { left: 15 },
       activeOption: 0,
-      showSuggestions: true,
+      showSuggestions: true
     };
 
     componentDidMount() {
       // originally this is gotten from the parent ref. Need to do more research on this.
-      let wrapper = document.getElementById("rdw-wrapper-draftRte-wrapper-id");
+      let wrapper = document.getElementById("rjfe-draft-rte-wrapper");
       const editorRect = wrapper.getBoundingClientRect();
       const suggestionRect = this.suggestion.getBoundingClientRect();
       const dropdownRect = this.dropdown.getBoundingClientRect();
@@ -146,7 +149,7 @@ function getSuggestionComponent() {
       // }
       this.setState({
         // eslint-disable-line react/no-did-mount-set-state
-        style: { left, right, bottom },
+        style: { left, right, bottom }
       });
       KeyDownHandler.registerCallBack(this.onEditorKeyDown);
       SuggestionHandler.open();
@@ -158,7 +161,7 @@ function getSuggestionComponent() {
       if (this.props.children !== props.children) {
         this.filterSuggestions(props);
         this.setState({
-          showSuggestions: true,
+          showSuggestions: true
         });
       }
     }
@@ -189,17 +192,13 @@ function getSuggestionComponent() {
       } else if (event.key === "Escape") {
         newState.showSuggestions = false;
         SuggestionHandler.close();
+        newState.activeOption = -1;
       } else if (event.key === "Enter") {
         if (this.state.showSuggestions === true) {
           newState.showSuggestions = false;
           this.addMention();
           newState.activeOption = -1;
         }
-      } else if (
-        event.keyCode === 32 &&
-        this.filteredSuggestions.length === 1
-      ) {
-        this.addMention();
       }
       this.setState(newState);
     };
@@ -207,13 +206,13 @@ function getSuggestionComponent() {
     onOptionMouseEnter = event => {
       const index = event.target.getAttribute("data-index");
       this.setState({
-        activeOption: index,
+        activeOption: index
       });
     };
 
     onOptionMouseLeave = () => {
       this.setState({
-        activeOption: 0,
+        activeOption: 0
       });
     };
 
@@ -227,7 +226,7 @@ function getSuggestionComponent() {
 
     closeSuggestionDropdown: Function = (): void => {
       this.setState({
-        showSuggestions: false,
+        showSuggestions: false
       });
     };
 
@@ -265,18 +264,28 @@ function getSuggestionComponent() {
     addMention = () => {
       const { activeOption } = this.state;
       const editorState = config.getEditorState();
-      const { onChange, separator, trigger, startingCharacter, endingCharacter, placeholderKeyPairs  } = config;
+      const {
+        onChange,
+        separator,
+        trigger,
+        startingCharacter,
+        endingCharacter,
+        placeholderKeyPairs
+      } = config;
       const selectedMention = this.filteredSuggestions[activeOption];
       if (selectedMention) {
-        console.log('firing addMention');
-        addMention(editorState, onChange, separator, trigger, selectedMention,startingCharacter ,endingCharacter ,placeholderKeyPairs );
+        addMention(
+          editorState,
+          onChange,
+          separator,
+          trigger,
+          selectedMention,
+          startingCharacter,
+          endingCharacter,
+          placeholderKeyPairs
+        );
       }
     };
-    
-    getSanatizedHtml = (html) => {
-      return ;
-
-    }
 
     render() {
       const { children } = this.props;
@@ -289,8 +298,11 @@ function getSuggestionComponent() {
           onClick={config.modalHandler.onSuggestionClick}
           aria-haspopup="true"
           aria-label="rdw-suggestion-popup"
-          data-offset-key={children[0] && children[0].key ? children[0].key : ""}>
-           {children}
+          data-offset-key={
+            children[0] && children[0].key ? children[0].key : ""
+          }
+        >
+          {children}
           {showSuggestions && (
             <span
               className={classNames(
@@ -301,7 +313,10 @@ function getSuggestionComponent() {
               suppressContentEditableWarning
               style={this.state.style}
               ref={this.setDropdownReference}
-              data-offset-key={children[0] && children[0].key ? children[0].key : ""}>
+              data-offset-key={
+                children[0] && children[0].key ? children[0].key : ""
+              }
+            >
               {this.filteredSuggestions.map((suggestion, index) => (
                 <span
                   key={index}
@@ -314,10 +329,19 @@ function getSuggestionComponent() {
                     "rdw-suggestion-option",
                     optionClassName,
                     { "rdw-suggestion-option-active": index == activeOption }
-                  )}>
+                  )}
+                >
                   {suggestion.phrase}
                   <br />
-                  <div style={{ overflow: 'hidden',maxWidth: '30ch',height: '18px', fontSize: '12px' }} dangerouslySetInnerHTML={{ __html: suggestion.text }}></div>
+                  <div
+                    style={{
+                      overflow: "hidden",
+                      maxWidth: "30ch",
+                      height: "18px",
+                      fontSize: "12px"
+                    }}
+                    dangerouslySetInnerHTML={{ __html: suggestion.text }}
+                  />
                 </span>
               ))}
             </span>

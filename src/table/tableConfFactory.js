@@ -5,13 +5,10 @@ const POSITION_KEY = "_position";
 const DEFAULT_TABLE_CONF = {
   cellEdit: {
     mode: "click",
-    blurToSave: true,
+    blurToSave: true
   },
   options: {},
-  keyBoardNav: {
-    enterToEdit: true,
-  },
-  handleConfirmDeleteRow: next => next(),
+  handleConfirmDeleteRow: next => next()
 };
 
 export function addPosition(data) {
@@ -35,7 +32,10 @@ export default function tableConfFrom(
   afterDeleteRow,
   highlightAfterDelete,
   handleRowSelect,
-  handleAllRowSelect
+  handleAllRowSelect,
+  myRowExpand,
+  isRowExpandable,
+  expandColumnComponent
 ) {
   let { keyField = POSITION_KEY } = table;
   if (keyField === POSITION_KEY) {
@@ -48,9 +48,9 @@ export default function tableConfFrom(
     table,
     { keyField }
   );
-
   tableConf.cellEdit.afterSaveCell = afterSaveCell;
   tableConf.options.afterDeleteRow = afterDeleteRow;
+  tableConf.options.onlyOneExpanding = isRowExpandable;
   tableConf.trClassName = highlightAfterDelete;
   if (
     tableConf.selectRow !== undefined &&
@@ -64,6 +64,13 @@ export default function tableConfFrom(
   ) {
     tableConf.selectRow.onSelectAll = handleAllRowSelect;
   }
+  tableConf.expandComponent = myRowExpand;
+  tableConf.expandableRow = isRowExpandable;
+  tableConf.expandColumnOptions = {
+    expandColumnVisible: true,
+    expandColumnComponent: expandColumnComponent,
+    columnWidth: 50
+  };
 
   return tableConf;
 }

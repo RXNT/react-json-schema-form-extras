@@ -123,7 +123,7 @@ export default class DraftRTE extends Component {
       triggers: [],
       startingCharacter: props.startingCharacter,
       endingCharacter: props.endingCharacter,
-      placeholderKeyPairs: props.placeholderKeyPairs,
+      placeholderKeyPairs: props.placeholderKeyPairs
     };
   }
   /**
@@ -147,8 +147,8 @@ export default class DraftRTE extends Component {
     let {
       uiSchema: {
         updateOnBlur = false,
-        draftRte: { debounce: { interval, shouldDebounce = false } = {} } = {},
-      },
+        draftRte: { debounce: { interval, shouldDebounce = false } = {} } = {}
+      }
     } = this.props;
     this.setState({ editorState }, () => {
       !updateOnBlur && !shouldDebounce && this.updateFormData();
@@ -190,7 +190,7 @@ export default class DraftRTE extends Component {
   handleOnFocus = () => {
     const { suggestions = [] } = this.state;
     let {
-      uiSchema: { draftRte: { enableAutocomplete = false, autocomplete = {} } },
+      uiSchema: { draftRte: { enableAutocomplete = false, autocomplete = {} } }
     } = this.props;
     if (!enableAutocomplete) {
       return false;
@@ -201,7 +201,7 @@ export default class DraftRTE extends Component {
         shortKeysPath,
         keyToDisplay,
         keyToMaping,
-        loadSuggestions = url => fetch(`${url}`).then(res => res.json()),
+        loadSuggestions = url => fetch(`${url}`).then(res => res.json())
       } = autocomplete;
 
       loadSuggestions(url)
@@ -234,7 +234,7 @@ export default class DraftRTE extends Component {
           }
           this.setState({
             suggestions: dynamicSuggestions,
-            triggers: dynamicShortkeys,
+            triggers: dynamicShortkeys
           });
         });
     }
@@ -250,25 +250,26 @@ export default class DraftRTE extends Component {
     return (
       <div id={$id} onKeyDown={KeyDownHandler.onKeyDown}>
         <DefaultLabel {...this.props} />
-        <Editor
-          wrapperClassName="draftRte-wrapper"
-          wrapperId="draftRte-wrapper-id"
-          editorClassName="draftRte-editor"
-          editorState={editorState}
-          onEditorStateChange={this.onEditorStateChange}
-          onBlur={this.handleBlur}
-          editorRef={this.setEditorReference}
-          spellCheck={true}
-          handlePastedText={() => false}
-          getEditorState={() => this.state.editorState}
-          onFocus={this.handleOnFocus}
-          customSuggestions={() => this.state.suggestions}
-          customSuggestionTriggers={() => this.state.triggers}
-          startingCharacter={this.state.startingCharacter}
-          endingCharacter={this.state.endingCharacter}
-          placeholderKeyPairs={this.state.placeholderKeyPairs}
-          {...draftRte}
-        />
+        <div id="rjfe-draft-rte-wrapper">
+          <Editor
+            wrapperClassName="draftRte-wrapper"
+            editorClassName="draftRte-editor"
+            editorState={editorState}
+            onEditorStateChange={this.onEditorStateChange}
+            onBlur={this.handleBlur}
+            editorRef={this.setEditorReference}
+            spellCheck={true}
+            handlePastedText={() => false}
+            getEditorState={() => this.state.editorState}
+            onFocus={this.handleOnFocus}
+            customSuggestions={() => this.state.suggestions}
+            customSuggestionTriggers={() => this.state.triggers}
+            startingCharacter={this.state.startingCharacter}
+            endingCharacter={this.state.endingCharacter}
+            placeholderKeyPairs={this.state.placeholderKeyPairs}
+            {...draftRte}
+          />
+        </div>
       </div>
     );
   }
@@ -277,6 +278,6 @@ export default class DraftRTE extends Component {
 DraftRTE.propTypes = {
   uiSchema: PropTypes.shape({
     updateOnBlur: PropTypes.bool,
-    draftRte: PropTypes.object,
-  }),
+    draftRte: PropTypes.object
+  })
 };
