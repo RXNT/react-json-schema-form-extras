@@ -5,10 +5,10 @@ const POSITION_KEY = "_position";
 const DEFAULT_TABLE_CONF = {
   cellEdit: {
     mode: "click",
-    blurToSave: true
+    blurToSave: true,
   },
   options: {},
-  handleConfirmDeleteRow: next => next()
+  handleConfirmDeleteRow: (next) => next(),
 };
 
 export function addPosition(data) {
@@ -17,7 +17,7 @@ export function addPosition(data) {
 
 export function removePosition(data) {
   if (Array.isArray(data)) {
-    return data.map(el => removePosition(el));
+    return data.map((el) => removePosition(el));
   } else {
     let dataCopy = Object.assign({}, data);
     delete dataCopy[POSITION_KEY];
@@ -50,7 +50,6 @@ export default function tableConfFrom(
   );
   tableConf.cellEdit.afterSaveCell = afterSaveCell;
   tableConf.options.afterDeleteRow = afterDeleteRow;
-  tableConf.options.onlyOneExpanding = isRowExpandable;
   tableConf.trClassName = highlightAfterDelete;
   if (
     tableConf.selectRow !== undefined &&
@@ -64,13 +63,16 @@ export default function tableConfFrom(
   ) {
     tableConf.selectRow.onSelectAll = handleAllRowSelect;
   }
-  tableConf.expandComponent = myRowExpand;
-  tableConf.expandableRow = isRowExpandable;
-  tableConf.expandColumnOptions = {
-    expandColumnVisible: true,
-    expandColumnComponent: expandColumnComponent,
-    columnWidth: 50
-  };
+  let { isTableExpandable = false, allowOneRowExpanding = true} = table;
+  if (isTableExpandable) {
+    tableConf.options.onlyOneExpanding = allowOneRowExpanding;
+    tableConf.expandComponent = myRowExpand;
+    tableConf.expandableRow = isRowExpandable;
+    tableConf.expandColumnOptions = {
+      expandColumnVisible: isTableExpandable,
+      expandColumnComponent: expandColumnComponent,
+    };
+  }
 
   return tableConf;
 }
