@@ -234,8 +234,8 @@ class TableField extends Component {
   };
   isRowExpandable(isTableExpandable) {
     return (
-      this.props.uiSchema.table && this.props.uiSchema.table.isTableExpandable
-    );
+      this.props.uiSchema.table && (this.props.uiSchema.table.isTableExpandable || this.props.uiSchema.table.isTableExpandable !== undefined)
+      );
   }
 
   myRowExpand(currentTableData) {
