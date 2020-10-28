@@ -737,6 +737,40 @@ For example to enable `Today` button, you would need to specify following uiSche
 ```
 For the full list of properties refer to [React Day Picker](http://react-day-picker.js.org).
 
+
+## Table Expandable Row Component
+
+### Purpose
+
+ to enable expandable row in table component
+
+### Use
+
+to expand table rows 
+ ```json
+{
+  "table": {
+    "isTableExpandable":false,
+    "allowOneRowExpanding":true
+  }
+}
+ ```
+
+### Properties
+
+All configurations, that you'll configure under `uiSchema` `table` field will be transferred to the actual component.
+
+For example to enable `ExpandRow` button, you would need to specify following uiSchema  
+```json
+{
+  "table": {
+    "isTableExpandable":false,
+    "allowOneRowExpanding":true
+  }
+}
+
+```
+
 ## Contribute
 
 - Issue Tracker: github.com/RxNT/react-jsonschema-extras/issues
