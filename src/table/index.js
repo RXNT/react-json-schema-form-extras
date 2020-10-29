@@ -33,6 +33,30 @@ function convertFields(cellValue, { type, format, default: def }) {
   }
   return cellValue;
 }
+function getFieldValue(cellValue, type, format, dataFormat) {
+  if (type === "boolean") {
+    return cellValue === "true";
+  } else if (type === "number") {
+    return cellValue !== undefined && cellValue != ""
+      ? parseFloat(cellValue)
+      : "";
+  } else if (type === "string" && format === "date-time") {
+    if (cellValue === "") {
+      return "";
+    } else {
+      let date = new Date(cellValue);
+      return date.toISOString();
+    }
+  } else if (type === "string" && format === "date") {
+    if (cellValue === "") {
+      return "";
+    } else {
+      let date = moment(cellValue).format(dataFormat);
+      return date;
+    }
+  }
+  return cellValue;
+}
 function isEquivalentObject(a, b) {
   // Create arrays of property names
   var aProps = Object.getOwnPropertyNames(a);
@@ -114,7 +138,7 @@ class TableField extends Component {
     /* Number field Validation => if Number is Undefined Or Empty, it should removed from the FormData */
     let { type } = fieldSchema;
     if (type === "number") {
-      Object.keys(updTable[targetKey]).map(function(column) {
+      Object.keys(updTable[targetKey]).map(function (column) {
         if (
           (column === cellName && updTable[targetKey][column] === undefined) ||
           updTable[targetKey][column] === ""
@@ -234,23 +258,76 @@ class TableField extends Component {
   };
   isRowExpandable(isTableExpandable) {
     return (
-      this.props.uiSchema.table && (this.props.uiSchema.table.isTableExpandable || this.props.uiSchema.table.isTableExpandable !== undefined)
-      );
+      this.props.uiSchema.table &&
+      (this.props.uiSchema.table.isTableExpandable ||
+        this.props.uiSchema.table.isTableExpandable !== undefined)
+    );
   }
 
   myRowExpand(currentTableData) {
     let currentTableObj = Object.keys(currentTableData);
-    let tableList = currentTableObj.map(function(item, i) {
+    let tableList = currentTableObj.map(function (item, i) {
       if (typeof currentTableData[item] === "object") {
         let isComponentDataAvailable = false;
         let currenTable = currentTableData[item];
         let tableList = Object.keys(currentTableData[item]);
-        let tableListData = tableList.map(function(item, i) {
+        let tableListData = tableList.map(function (item, i) {
           if (currenTable[item] !== undefined && Object.keys(currenTable[item]).length > 0) {
+            isComponentDataAvailable = true;
+            if (
+              fieldData[fieldName] !== undefined &&
+              fieldData[fieldName] !== "" &&
+              includeInExpandedRow
+            ) {
+              switch (type) {
+                case "string":
+                  return (
+                    <li>
+                      {title +
+                        " - " +
+                        getFieldValue(
+                          fieldData[fieldName],
+                          type,
+                          format,
+                          dataFormat
+                        )}
+                    </li>
+                  );
+                case "object":
+                  if (Object.keys(fieldData[fieldName]).length > 0) {
+                    return (
+                      <li>
+                        {title + " - " + fieldData[fieldName].description}
+                      </li>
+                    );
+                  }
+              }
+            }
+            return;
+          });
+        return (
+          isComponentDataAvailable && (
+            <div className="expandedItems">
+              <span className="itemHeading">{title} :</span>
+              <br />
+              <ul>{tableListData}</ul>
+            </div>
+          )
+        );
+      } else {
+        let isComponentDataAvailable = false;
+        let tableList = Object.keys(fieldData);
+        let tableListData = tableList.map(function (fieldName, i) {
+          if (
+            fieldData[fieldName] !== undefined &&
+            Object.keys(fieldData[fieldName]).length > 0
+          ) {
             isComponentDataAvailable = true;
             return (
               <li>
-                {currenTable[item].code + " - " + currenTable[item].description}
+                {fieldData[fieldName].code +
+                  " - " +
+                  fieldData[fieldName].description}
               </li>
             );
           }
@@ -259,75 +336,76 @@ class TableField extends Component {
         return (
           isComponentDataAvailable && (
             <div className="expandedItems">
-              <span className="itemHeading">{item} :</span>
+              <span className="itemHeading">{title} :</span>
               <br />
               <ul>{tableListData}</ul>
             </div>
           )
         );
       }
-    });
-    return <div className="expandedContent">{tableList}</div>;
-  }
-  expandColumnComponent({ isExpandableRow, isExpanded }) {
-    let expandClassName = "";
-
-    if (isExpandableRow) {
-      expandClassName = isExpanded
-        ? "glyphicon-chevron-down"
-        : "glyphicon-chevron-up";
-    } else {
-      expandClassName = " ";
     }
-    return <span className={`fa fa-plus glyphicon ${expandClassName}`}></span>;
+    });
+  return<div className = "expandedContent">{ tableList }</div>;
   }
-  render() {
-    let {
-      uiSchema,
-      schema,
-      formData,
-      registry: { fields },
-      idSchema: { $id } = {},
-      onChange
-    } = this.props;
+expandColumnComponent({ isExpandableRow, isExpanded }) {
+  let expandClassName = "";
 
-    this.tableConf = tableConfFrom(
-      uiSchema,
-      formData,
-      this.handleCellSave,
-      this.handleRowsDelete,
-      this.handleDeletedRow,
-      this.handleRowSelect,
-      this.handleAllRowSelect,
-      this.myRowExpand,
-      this.isRowExpandable,
-      this.expandColumnComponent
-    );
-    this.tableConf.options.insertModal = this.createCustomModal;
-
-    this.tableConf.cellEdit.beforeSaveCell = this.beforeSaveCell;
-    let columns = columnHeadersFrom(
-      schema,
-      uiSchema,
-      fields,
-      formData,
-      onChange
-    );
-
-    return (
-      <div id={$id}>
-        <BootstrapTable {...this.tableConf} ref="table">
-          {columns.map((column, i) => {
-            return (
-              <TableHeaderColumn key={i} {...column}>
-                {column.displayName}
-              </TableHeaderColumn>
-            );
-          })}
-        </BootstrapTable>
-      </div>
-    );
+  if (isExpandableRow) {
+    expandClassName = isExpanded
+      ? "glyphicon-chevron-down"
+      : "glyphicon-chevron-up";
+  } else {
+    expandClassName = " ";
   }
+  return <span className={`fa fa-plus glyphicon ${expandClassName}`}></span>;
+}
+render() {
+  let {
+    uiSchema,
+    schema,
+    formData,
+    registry: { fields },
+    idSchema: { $id } = {},
+    onChange
+  } = this.props;
+
+  this.tableConf = tableConfFrom(
+    uiSchema,
+    formData,
+    this.handleCellSave,
+    this.handleRowsDelete,
+    this.handleDeletedRow,
+    this.handleRowSelect,
+    this.handleAllRowSelect,
+    this.myRowExpand,
+    this.isRowExpandable,
+    this.expandColumnComponent
+  );
+  this.tableConf.options.insertModal = this.createCustomModal;
+
+  this.tableConf.cellEdit.beforeSaveCell = this.beforeSaveCell;
+  let columns = columnHeadersFrom(
+    schema,
+    uiSchema,
+    fields,
+    formData,
+    onChange
+  );
+
+  return (
+    <div id={$id}>
+      <BootstrapTable {...this.tableConf} ref="table">
+        {columns.map((column, i) => {
+          return (
+            <TableHeaderColumn key={i} {...column}>
+              {column.displayName}
+            </TableHeaderColumn>
+          );
+        })}
+      </BootstrapTable>
+    </div>
+  );
+}
 }
 
 export default TableField;
