@@ -9,7 +9,7 @@ const toColumnClassNames = (fieldProp, fieldUIProp, customRowConfiguration) => {
   ) {
     let classNameAdd = false;
     let fieldToValidate = false;
-    Object.keys(customRowConfiguration.action).map(function(action) {
+    Object.keys(customRowConfiguration.action).map(function (action) {
       if (action === "updateClassNames") {
         let { classToAdd, validate } = customRowConfiguration.action[action];
         //adding class into the row
@@ -176,7 +176,7 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
 export function overrideColDataFormat(colConf, fieldSchema, formData) {
   if (typeof colConf.dataFormat === "string" && fieldSchema.type === "object") {
     const { dataField, dataFormat: field } = colConf;
-    colConf.dataFormat = function(cell, row) {
+    colConf.dataFormat = function (cell, row) {
       return row[dataField] ? row[dataField][field] : undefined;
     };
     colConf.dataFormat.bind(this);
@@ -186,7 +186,7 @@ export function overrideColDataFormat(colConf, fieldSchema, formData) {
     (fieldSchema.format === "date-time" || fieldSchema.format === "date")
   ) {
     const { dataField, dataFormat, defaultCurrentDate = false } = colConf;
-    colConf.dataFormat = function(cell, row) {
+    colConf.dataFormat = function (cell, row) {
       if (!row[dataField] && !defaultCurrentDate) {
         return undefined;
       }
@@ -219,7 +219,7 @@ export function overrideColDataFormat(colConf, fieldSchema, formData) {
           asyncTypeahead: { arrayItemIndicator = "glyphicon glyphicon-record" }
         }
       } = colConf;
-      colConf.dataFormat = function(cell, row) {
+      colConf.dataFormat = function (cell, row) {
         let displayData = "";
         if (dataField) {
           if (cell !== undefined && Object.keys(cell).length > 0) {
@@ -269,96 +269,7 @@ const overrideColEditable = (colConf, fieldSchema, fields) => {
     };
   }
 };
-const cellCustomEditor = (onUpdate, props) => (
-  <CustomCellEditor onUpdate={onUpdate} {...props} />
-);
-class CustomCellEditor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.updateData = this.updateData.bind(this);
-    this.updateField = this.updateField.bind(this);
-    this.state = {
-      value: props.defaultValue
-    };
-  }
-  focus() {
-    this.refs.inputRef.focus();
-  }
-  updateData(e) {
-    this.props.onUpdate(e.currentTarget.value);
-  }
-  updateField(newValue, props) {
-    const {
-      cellCustomEditorProps: { maxlength = 10 },
-      type = "number"
-    } = props;
-    if (type === "number") {
-      const {
-        cellCustomEditorProps: {
-          allowDigitAfterDecimal = 3,
-          roundDecimal = false
-        }
-      } = props;
-      let parseNumber = newValue.toString().split(".");
-      if (allowDigitAfterDecimal !== undefined) {
-        if (
-          roundDecimal &&
-          (parseNumber[1] !== undefined &&
-            parseNumber[1].length > allowDigitAfterDecimal)
-        ) {
-          // to round as decimal
-          newValue = parseFloat(newValue).toFixed(allowDigitAfterDecimal);
-        } else {
-          if (
-            parseNumber[1] !== undefined &&
-            parseNumber[1].length > allowDigitAfterDecimal
-          ) {
-            parseNumber[1] = parseNumber[1]
-              .toString()
-              .substring(0, allowDigitAfterDecimal); // truncating the sting if reached the max
-            newValue = parseNumber.join(".");
-          }
-          newValue = newValue
-            ? newValue.toString().match(/^-?\d+(?:\.\d{0,3})?/)
-              ? newValue.toString().match(/^-?\d+(?:\.\d{0,3})?/)[0]
-              : newValue
-            : newValue;
-        }
-      }
-    } else {
-      let newValue = newValue;
-    }
-    if (maxlength !== undefined) {
-      if (newValue.toString().length > maxlength) {
-        newValue = newValue.toString().substring(0, maxlength);
-      }
-    }
-    this.setState({ value: newValue });
-  }
 
-  render() {
-    const {
-      fieldConf: {
-        cellCustomEditor = {},
-        cellCustomEditor: { editorFieldProps = {} }
-      },
-      type = "number"
-    } = this.props;
-    return (
-      <div>
-        <input
-          ref="inputRef"
-          type={type}
-          value={this.state.value}
-          {...editorFieldProps}
-          onChange={event =>
-            this.updateField(event.currentTarget.value, cellCustomEditor)}
-          onBlur={this.updateData}
-        />
-      </div>
-    );
-  }
-}
 const overrideColumns = (
   columns,
   { items: { properties } },
