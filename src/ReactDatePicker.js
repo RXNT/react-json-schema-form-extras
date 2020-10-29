@@ -43,10 +43,10 @@ function YearMonthForm({ date, localeUtils, onChange }) {
       onChange(new Date(year.value, month.value));
     } else {
       if (e.target.name === "month") {
-        onChange(new Date(e.target.value, date.getFullYear()));
+        onChange(new Date(date.getFullYear(), e.target.value));
       } else {
         //Year
-        onChange(new Date(date.getMonth(), e.target.value));
+        onChange(new Date(e.target.value, date.getMonth()));
       }
     }
   };
