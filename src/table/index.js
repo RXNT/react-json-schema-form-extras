@@ -258,12 +258,12 @@ class TableField extends Component {
 
     let tableList = tableCols.map(function(item) {
       const { includeInExpandedRow = false, dataField = "" } = item;
-      let { title = "" } = properties[dataField];
+      let { title = "", ...dynamicItems } = properties[dataField];
       if (includeInExpandedRow) {
         const order = item["ui:order"] !== undefined ? item["ui:order"] : [];
-        const fieldData = currentTableData[dataField];
+        const fieldData = currentTableData[dataField] || {};
+        let isComponentDataAvailable = false;
         if (order.length > 0) {
-          let isComponentDataAvailable = false;
           let tableListData = order.map(function(fieldName) {
             let { title = "", type = "", format = "" } = properties[
               dataField
@@ -271,12 +271,12 @@ class TableField extends Component {
             const { dataFormat, includeInExpandedRow = false } = item[
               fieldName
             ];
-            isComponentDataAvailable = true;
             if (
               fieldData[fieldName] !== undefined &&
               fieldData[fieldName] !== "" &&
               includeInExpandedRow
             ) {
+              isComponentDataAvailable = true;
               switch (type) {
                 case "string":
                   return (
@@ -313,8 +313,8 @@ class TableField extends Component {
             )
           );
         } else {
-          let isComponentDataAvailable = false;
-          let tableList = Object.keys(fieldData);
+          const { properties = {} } = dynamicItems;
+          let tableList = Object.keys(properties);
           let tableListData = tableList.map(function(fieldName, i) {
             if (
               fieldData[fieldName] !== undefined &&
