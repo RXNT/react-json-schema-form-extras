@@ -33,6 +33,30 @@ function convertFields(cellValue, { type, format, default: def }) {
   }
   return cellValue;
 }
+function getFieldValue(cellValue, type, format, dataFormat) {
+  if (type === "boolean") {
+    return cellValue === "true";
+  } else if (type === "number") {
+    return cellValue !== undefined && cellValue != ""
+      ? parseFloat(cellValue)
+      : "";
+  } else if (type === "string" && format === "date-time") {
+    if (cellValue === "") {
+      return "";
+    } else {
+      let date = new Date(cellValue);
+      return date.toISOString();
+    }
+  } else if (type === "string" && format === "date") {
+    if (cellValue === "") {
+      return "";
+    } else {
+      let date = moment(cellValue).format(dataFormat);
+      return date;
+    }
+  }
+  return cellValue;
+}
 function isEquivalentObject(a, b) {
   // Create arrays of property names
   var aProps = Object.getOwnPropertyNames(a);
@@ -72,12 +96,8 @@ class TableField extends Component {
     this.myRowExpand = this.myRowExpand.bind(this);
   }
   handleDeletedRow(row, rowIdx, c) {
-    let {
-      items: { defaultFilterKey = undefined }
-    } = this.props.schema;
-    let {
-      table: { rightActions }
-    } = this.props.uiSchema;
+    let { items: { defaultFilterKey = undefined } } = this.props.schema;
+    let { table: { rightActions } } = this.props.uiSchema;
 
     let highlightRow = "";
     if (rightActions) {
@@ -107,8 +127,8 @@ class TableField extends Component {
     }
 
     const targetKey = updRow[keyField];
-    let updTable = data.map(row =>
-      row[keyField] === targetKey ? updRow : row
+    let updTable = data.map(
+      row => (row[keyField] === targetKey ? updRow : row)
     );
 
     /* Number field Validation => if Number is Undefined Or Empty, it should removed from the FormData */
@@ -140,9 +160,7 @@ class TableField extends Component {
   handleRowSelect(row, isSelected, e) {
     const {
       data,
-      selectRow: {
-        onSelectRow: { fieldToUpdate = "picked" }
-      }
+      selectRow: { onSelectRow: { fieldToUpdate = "picked" } }
     } = this.tableConf;
     let filteredRows = (data || []).map(item => {
       if (!isSelected && item[fieldToUpdate] !== undefined) {
@@ -159,9 +177,7 @@ class TableField extends Component {
   handleAllRowSelect(isSelected, rows, e) {
     const {
       // data,
-      selectRow: {
-        onSelectAllRow: { fieldToUpdate = "picked" }
-      }
+      selectRow: { onSelectAllRow: { fieldToUpdate = "picked" } }
     } = this.tableConf;
 
     let filteredRows = (rows || []).map(item => {
@@ -175,9 +191,7 @@ class TableField extends Component {
     this.props.onChange(filteredRows);
   }
   componentWillReceiveProps(nextProps) {
-    let {
-      uiSchema: { table: { focusOnAdd } = {} }
-    } = nextProps;
+    let { uiSchema: { table: { focusOnAdd } = {} } } = nextProps;
 
     this.adding =
       focusOnAdd !== undefined &&
@@ -189,11 +203,7 @@ class TableField extends Component {
 
   componentDidUpdate() {
     if (this.adding) {
-      let {
-        uiSchema: {
-          table: { focusOnAdd, focusRowIndex }
-        }
-      } = this.props;
+      let { uiSchema: { table: { focusOnAdd, focusRowIndex } } } = this.props;
 
       let body = this.refs.table.refs.body
         ? this.refs.table.refs.body
@@ -234,37 +244,103 @@ class TableField extends Component {
   };
   isRowExpandable(isTableExpandable) {
     return (
-      this.props.uiSchema.table && (this.props.uiSchema.table.isTableExpandable || this.props.uiSchema.table.isTableExpandable !== undefined)
-      );
+      this.props.uiSchema.table &&
+      (this.props.uiSchema.table.isTableExpandable ||
+        this.props.uiSchema.table.isTableExpandable !== undefined)
+    );
   }
 
   myRowExpand(currentTableData) {
-    let currentTableObj = Object.keys(currentTableData);
-    let tableList = currentTableObj.map(function(item, i) {
-      if (typeof currentTableData[item] === "object") {
-        let isComponentDataAvailable = false;
-        let currenTable = currentTableData[item];
-        let tableList = Object.keys(currentTableData[item]);
-        let tableListData = tableList.map(function(item, i) {
-          if (currenTable[item] !== undefined && Object.keys(currenTable[item]).length > 0) {
+    let {
+      schema: { items: { properties = [] } },
+      uiSchema: { table: { tableCols = [] } }
+    } = this.props;
+
+    let tableList = tableCols.map(function(item) {
+      const { includeInExpandedRow = false, dataField = "" } = item;
+      let { title = "" } = properties[dataField];
+      if (includeInExpandedRow) {
+        const order = item["ui:order"] !== undefined ? item["ui:order"] : [];
+        const fieldData = currentTableData[dataField];
+        if (order.length > 0) {
+          let isComponentDataAvailable = false;
+          let tableListData = order.map(function(fieldName) {
+            let { title = "", type = "", format = "" } = properties[
+              dataField
+            ].properties[fieldName];
+            const { dataFormat, includeInExpandedRow = false } = item[
+              fieldName
+            ];
             isComponentDataAvailable = true;
-            return (
-              <li>
-                {currenTable[item].code + " - " + currenTable[item].description}
-              </li>
-            );
-          }
-          return;
-        });
-        return (
-          isComponentDataAvailable && (
-            <div className="expandedItems">
-              <span className="itemHeading">{item} :</span>
-              <br />
-              <ul>{tableListData}</ul>
-            </div>
-          )
-        );
+            if (
+              fieldData[fieldName] !== undefined &&
+              fieldData[fieldName] !== "" &&
+              includeInExpandedRow
+            ) {
+              switch (type) {
+                case "string":
+                  return (
+                    <li>
+                      {title +
+                        " - " +
+                        getFieldValue(
+                          fieldData[fieldName],
+                          type,
+                          format,
+                          dataFormat
+                        )}
+                    </li>
+                  );
+                case "object":
+                  if (Object.keys(fieldData[fieldName]).length > 0) {
+                    return (
+                      <li>
+                        {title + " - " + fieldData[fieldName].description}
+                      </li>
+                    );
+                  }
+              }
+            }
+            return;
+          });
+          return (
+            isComponentDataAvailable && (
+              <div className="expandedItems">
+                <span className="itemHeading">{title} :</span>
+                <br />
+                <ul>{tableListData}</ul>
+              </div>
+            )
+          );
+        } else {
+          let isComponentDataAvailable = false;
+          let tableList = Object.keys(fieldData);
+          let tableListData = tableList.map(function(fieldName, i) {
+            if (
+              fieldData[fieldName] !== undefined &&
+              Object.keys(fieldData[fieldName]).length > 0
+            ) {
+              isComponentDataAvailable = true;
+              return (
+                <li>
+                  {fieldData[fieldName].code +
+                    " - " +
+                    fieldData[fieldName].description}
+                </li>
+              );
+            }
+            return;
+          });
+          return (
+            isComponentDataAvailable && (
+              <div className="expandedItems">
+                <span className="itemHeading">{title} :</span>
+                <br />
+                <ul>{tableListData}</ul>
+              </div>
+            )
+          );
+        }
       }
     });
     return <div className="expandedContent">{tableList}</div>;
@@ -279,7 +355,7 @@ class TableField extends Component {
     } else {
       expandClassName = " ";
     }
-    return <span className={`fa fa-plus glyphicon ${expandClassName}`}></span>;
+    return <span className={`fa fa-plus glyphicon ${expandClassName}`} />;
   }
   render() {
     let {

@@ -4,7 +4,7 @@
       "classNames": "col-md-12 individualComponent",
       "ui:field": "collapsible",
       "table": {
-        "isTableExpandable":true,
+        "isTableExpandable": true,
         "tableCols": [
           {
             "dataField": "code",
@@ -14,15 +14,17 @@
             "uiSchema": {
               "focusOnMount": true,
               "asyncTypeahead": {
-                "url":
-                  "https://jsonplaceholder.typicode.com/users",
+                "url": "https://jsonplaceholder.typicode.com/users",
                 "bodyContainer": true,
                 "mapping": {
                   "code": "username",
                   "description": "name"
                 },
                 "labelKey": {
-                  "fields": ["name", "username"],
+                  "fields": [
+                    "name",
+                    "username"
+                  ],
                   "separator": " - "
                 },
                 "minLength": 2,
@@ -35,6 +37,255 @@
             "columnWidth": "75%",
             "width": "50%",
             "editable": true
+          },
+          {
+            "hidden": true,
+            "includeInExpandedRow": true,
+            "dataField": "diagnosis",
+            "columnWidth": "100%",
+            "className": "col-md-12 ",
+            "dynamicTypeaheadField": {
+              "dynamicTypeaheadOptionData": "dxData.diagnosis",
+              "dynamicTypeaheadTitle": "Add Diagnosis to this code",
+              "typeahead": {
+                "className": "rectangle diagnosisTypeahead",
+                "placeholder": "Choose diagnosis",
+                "labelKey": "description",
+                "mapping": {
+                  "icd10": "icd10",
+                  "description": "description"
+                },
+                "minLength": 1
+              }
+            },
+            "editable": false
+          },
+          {
+            "hidden": true,
+            "includeInExpandedRow": true,
+            "dataField": "modifiers",
+            "columnWidth": "25%",
+            "editable": false,
+            "field": "asyncTypeahead",
+            "dynamicAsyncTypeaheadField": {
+              "asyncTypeahead": {
+                "placeholder": "Choose modifier",
+                "url": "https://jsonplaceholder.typicode.com/todos",
+                "mapping": {
+                  "code": "userId",
+                  "description": "title"
+                },
+                "minLength": 1,
+                "labelKey": {
+                  "fields": [
+                    "userId",
+                    "title"
+                  ],
+                  "separator": " - "
+                },
+                "className": "rectangle modifiers-asyncTypeahead "
+              }
+            }
+          },
+          {
+            "dataField": "unit",
+            "columnWidth": "75%",
+            "width": "15%",
+            "editable": false,
+            "className": "col-md-12 rectangle"
+          },
+          {
+            "dataField": "advancedInformation",
+            "editable": false,
+            "includeInExpandedRow": true,
+            "customFieldFieldTitle": "",
+            "ui:order": [
+              "toDate",
+              "serviceDate",
+              "placeOfService",
+              "renderingProvider",
+              "supervisingPhysician",
+              "orderingProvider",
+              "referringProvider",
+              "purchaseServiceProvider"
+            ],
+            "hidden": true,
+            "toDate": {
+              "includeInExpandedRow": true,
+              "classNames": "col-md-4 col-xs-4  date-rectangle procedurecode-field-title",
+              "headerAlign": "center",
+              "field": "rdp",
+              "dataFormat": "MM/DD/YYYY",
+              "uiSchema": {
+                "rdp": {
+                  "placeholder": "MM/DD/YYYY",
+                  "inputProps": {
+                    "className": "form-control toDate",
+                    "type": "text"
+                  }
+                }
+              }
+            },
+            "serviceDate": {
+              "includeInExpandedRow": true,
+              "classNames": "col-md-4 col-xs-4  date-rectangle procedurecode-field-title",
+              "headerAlign": "center",
+              "field": "rdp",
+              "dataFormat": "MM/DD/YYYY",
+              "uiSchema": {
+                "rdp": {
+                  "placeholder": "MM/DD/YYYY",
+                  "inputProps": {
+                    "className": "form-control serviceDate",
+                    "type": "text"
+                  }
+                }
+              }
+            },
+            "placeOfService": {
+              "includeInExpandedRow": true,
+              "classNames": "rectangle diagnosisTypeahead placeOfService",
+              "field": "asyncTypeahead",
+              "uiSchema": {
+                "asyncTypeahead": {
+                  "placeholder": "Choose modifier",
+                  "url": "https://jsonplaceholder.typicode.com/todos",
+                  "mapping": {
+                    "code": "userId",
+                    "description": "title"
+                  },
+                  "minLength": 1,
+                  "labelKey": {
+                    "fields": [
+                      "userId",
+                      "title"
+                    ],
+                    "separator": " - "
+                  },
+                  "className": "rectangle modifiers-asyncTypeahead "
+                }
+              }
+            },
+            "renderingProvider": {
+              "includeInExpandedRow": true,
+              "classNames": "rectangle diagnosisTypeahead renderingProvider",
+              "field": "asyncTypeahead",
+              "uiSchema": {
+                "asyncTypeahead": {
+                  "placeholder": "Choose modifier",
+                  "url": "https://jsonplaceholder.typicode.com/todos",
+                  "mapping": {
+                    "code": "userId",
+                    "description": "title"
+                  },
+                  "minLength": 1,
+                  "labelKey": {
+                    "fields": [
+                      "userId",
+                      "title"
+                    ],
+                    "separator": " - "
+                  },
+                  "className": "rectangle modifiers-asyncTypeahead "
+                }
+              }
+            },
+            "supervisingPhysician": {
+              "includeInExpandedRow": true,
+              "classNames": "rectangle diagnosisTypeahead supervisingPhysician",
+              "field": "asyncTypeahead",
+              "uiSchema": {
+                "asyncTypeahead": {
+                  "placeholder": "Choose modifier",
+                  "url": "https://jsonplaceholder.typicode.com/todos",
+                  "mapping": {
+                    "code": "userId",
+                    "description": "title"
+                  },
+                  "minLength": 1,
+                  "labelKey": {
+                    "fields": [
+                      "userId",
+                      "title"
+                    ],
+                    "separator": " - "
+                  },
+                  "className": "rectangle modifiers-asyncTypeahead "
+                }
+              }
+            },
+            "orderingProvider": {
+              "includeInExpandedRow": true,
+              "classNames": "rectangle diagnosisTypeahead orderingProvider",
+              "field": "asyncTypeahead",
+              "uiSchema": {
+                "asyncTypeahead": {
+                  "placeholder": "Choose modifier",
+                  "url": "https://jsonplaceholder.typicode.com/todos",
+                  "mapping": {
+                    "code": "userId",
+                    "description": "title"
+                  },
+                  "minLength": 1,
+                  "labelKey": {
+                    "fields": [
+                      "userId",
+                      "title"
+                    ],
+                    "separator": " - "
+                  },
+                  "className": "rectangle modifiers-asyncTypeahead "
+                }
+              }
+            },
+            "referringProvider": {
+              "includeInExpandedRow": true,
+              "classNames": "rectangle diagnosisTypeahead referringProvider",
+              "field": "asyncTypeahead",
+              "uiSchema": {
+                "asyncTypeahead": {
+                  "placeholder": "Choose modifier",
+                  "url": "https://jsonplaceholder.typicode.com/todos",
+                  "mapping": {
+                    "code": "userId",
+                    "description": "title"
+                  },
+                  "minLength": 1,
+                  "labelKey": {
+                    "fields": [
+                      "userId",
+                      "title"
+                    ],
+                    "separator": " - "
+                  },
+                  "className": "rectangle modifiers-asyncTypeahead "
+                }
+              }
+            },
+            "purchaseServiceProvider": {
+              "includeInExpandedRow": true,
+              "classNames": "rectangle diagnosisTypeahead purchaseServiceProvider",
+              "field": "asyncTypeahead",
+              "uiSchema": {
+                "asyncTypeahead": {
+                  "placeholder": "Choose modifier",
+                  "url": "https://jsonplaceholder.typicode.com/todos",
+                  "mapping": {
+                    "code": "userId",
+                    "description": "title"
+                  },
+                  "minLength": 1,
+                  "labelKey": {
+                    "fields": [
+                      "userId",
+                      "title"
+                    ],
+                    "separator": " - "
+                  },
+                  "className": "rectangle modifiers-asyncTypeahead "
+                }
+              }
+            }
           }
         ],
         "insertRow": true,
