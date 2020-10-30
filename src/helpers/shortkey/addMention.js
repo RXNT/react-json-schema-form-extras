@@ -1,6 +1,6 @@
 import { EditorState, Modifier } from "draft-js";
 import { getSelectedBlock } from "draftjs-utils";
-import htmlToDraft from 'html-to-draftjs';
+import htmlToDraft from "html-to-draftjs";
 import { List } from "immutable";
 
 export default function addMention(
@@ -13,9 +13,7 @@ export default function addMention(
   endingCharacter,
   placeholderKeyPairs = []
 ) {
-  let {
-    text
-  } = suggestion;
+  let { text } = suggestion;
   // Before we start our manipulation to insert this into the editor, lets process our placeholder replacements first.
   let availableReplacements = true;
   let searchStartingIndex = 0;
@@ -43,7 +41,7 @@ export default function addMention(
     let fullText = text.slice(startIndex, endIndex + 1);
     //Now that we have the text in our match, lets see if there is a pair for it.
     let matchedReplacement = null;
-    placeholderKeyPairs.some((pair) => {
+    placeholderKeyPairs.some(pair => {
       if (pair.match === textToMatch) {
         // match found, return this pair.
         matchedReplacement = pair;
@@ -52,13 +50,16 @@ export default function addMention(
     });
 
     // Let's replace it, and then repeat until we don't find any more matches to replace.
-    if (matchedReplacement && matchedReplacement !== undefined && matchedReplacement !== null) {
+    if (
+      matchedReplacement &&
+      matchedReplacement !== undefined &&
+      matchedReplacement !== null
+    ) {
       text = text.replace(fullText, matchedReplacement.replacement);
     } else {
       availableReplacements = false;
     }
   }
-    
 
   const selectedBlock = getSelectedBlock(editorState);
   const selectedBlockText = selectedBlock.getText();
@@ -74,7 +75,7 @@ export default function addMention(
   }
   let updatedSelection = editorState.getSelection().merge({
     anchorOffset: mentionIndex + separator.length,
-    focusOffset: focusOffset + separator.length,
+    focusOffset: focusOffset + separator.length
   });
 
   let newEditorState = EditorState.acceptSelection(
@@ -94,7 +95,6 @@ export default function addMention(
       new List(contentBlock.contentBlocks)
     );
   } else {
-
     contentState = Modifier.replaceText(
       newEditorState.getCurrentContent(),
       updatedSelection,
@@ -114,13 +114,19 @@ export default function addMention(
     // insert a blank space after mention
     if (suggestion.advanced) {
       updatedSelection = newEditorState.getSelection().merge({
-        anchorOffset: mentionIndex + contentBlock.contentBlocks[0].text.length + separator.length,
-        focusOffset: mentionIndex + contentBlock.contentBlocks[0].text.length + separator.length,
+        anchorOffset:
+          mentionIndex +
+          contentBlock.contentBlocks[0].text.length +
+          separator.length,
+        focusOffset:
+          mentionIndex +
+          contentBlock.contentBlocks[0].text.length +
+          separator.length
       });
     } else {
       updatedSelection = newEditorState.getSelection().merge({
         anchorOffset: mentionIndex + text.length + separator.length,
-        focusOffset: mentionIndex + text.length + separator.length,
+        focusOffset: mentionIndex + text.length + separator.length
       });
     }
     newEditorState = EditorState.acceptSelection(
@@ -136,4 +142,4 @@ export default function addMention(
     );
   }
   onChange(EditorState.push(newEditorState, contentState, "insert-characters"));
-  }
+}

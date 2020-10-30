@@ -9,7 +9,7 @@ const toColumnClassNames = (fieldProp, fieldUIProp, customRowConfiguration) => {
   ) {
     let classNameAdd = false;
     let fieldToValidate = false;
-    Object.keys(customRowConfiguration.action).map(function (action) {
+    Object.keys(customRowConfiguration.action).map(function(action) {
       if (action === "updateClassNames") {
         let { classToAdd, validate } = customRowConfiguration.action[action];
         //adding class into the row
@@ -176,7 +176,7 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
 export function overrideColDataFormat(colConf, fieldSchema, formData) {
   if (typeof colConf.dataFormat === "string" && fieldSchema.type === "object") {
     const { dataField, dataFormat: field } = colConf;
-    colConf.dataFormat = function (cell, row) {
+    colConf.dataFormat = function(cell, row) {
       return row[dataField] ? row[dataField][field] : undefined;
     };
     colConf.dataFormat.bind(this);
@@ -186,7 +186,7 @@ export function overrideColDataFormat(colConf, fieldSchema, formData) {
     (fieldSchema.format === "date-time" || fieldSchema.format === "date")
   ) {
     const { dataField, dataFormat, defaultCurrentDate = false } = colConf;
-    colConf.dataFormat = function (cell, row) {
+    colConf.dataFormat = function(cell, row) {
       if (!row[dataField] && !defaultCurrentDate) {
         return undefined;
       }
@@ -219,7 +219,7 @@ export function overrideColDataFormat(colConf, fieldSchema, formData) {
           asyncTypeahead: { arrayItemIndicator = "glyphicon glyphicon-record" }
         }
       } = colConf;
-      colConf.dataFormat = function (cell, row) {
+      colConf.dataFormat = function(cell, row) {
         let displayData = "";
         if (dataField) {
           if (cell !== undefined && Object.keys(cell).length > 0) {
@@ -260,12 +260,6 @@ const overrideColEditable = (colConf, fieldSchema, fields) => {
           onChange={onUpdate}
         />
       )
-    };
-  } else if (colConf.cellCustomEditor) {
-    // Block to customeditorCell , html input(not json form)
-    colConf.customEditor = {
-      getElement: cellCustomEditor,
-      customEditorParameters: { fieldSchema: fieldSchema, fieldConf: colConf }
     };
   }
 };
