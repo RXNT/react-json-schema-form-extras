@@ -24,21 +24,21 @@ export default Object.assign({}, schema, uiSchema, {
           }
         },
         modifiers: {
-          diagnosis_A: {
+          modifier_1: {
             code: 1,
-            description: "Pain Back"
+            description: "modifier_1 Pain Back"
           },
-          diagnosis_B: {
+          modifier_2: {
             code: 1,
-            description: "Stoelinga-de Koomen-Davis syndrome"
+            description: "modifier_2-de Koomen-Davis syndrome"
           },
-          diagnosis_C: {
+          modifier_3: {
             code: 1,
-            description: "Stoelinga-de Koomen-Davis "
+            description: "modifier_3-de Koomen-Davis "
           },
-          diagnosis_D: {
+          modifier_4: {
             code: 1,
-            description: "Stoelinga-de "
+            description: "modifier_4-de "
           }
         },
         advancedInformation: {
