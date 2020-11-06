@@ -10,7 +10,7 @@ function actionFactory(action, actionConfiguration, schema) {
             let actionToApply = 0; // 0 - update(soft delete), 1 - delete(hard delete)
             let {
               mandatoryField = undefined,
-              fieldToUpdate = undefined,
+              fieldToUpdate = undefined
             } = actionConfiguration;
 
             if (mandatoryField !== undefined) {
@@ -69,6 +69,11 @@ function actionFactory(action, actionConfiguration, schema) {
         onChange(newFormData);
       }
     };
+  } else if (action === "inheritedAction") {
+    return (cell, row, enumObject, rowIndex, formData, onChange) => {
+      let newFormData = formData.slice(0);
+      onChange(newFormData);
+    };
   } else if (typeof action === "function") {
     return action;
   } else {
@@ -77,7 +82,7 @@ function actionFactory(action, actionConfiguration, schema) {
 }
 
 function actionColumnFrom(
-  { action, icon, text, actionConfiguration = false },
+  { action, icon, text, inheritedAction, actionConfiguration = false },
   schema
 ) {
   let { filterField = false, actionCompletedIcon = "" } = actionConfiguration;
@@ -85,13 +90,24 @@ function actionColumnFrom(
   if (!handleClick) {
     return {};
   }
-
+  console.log(global.popupVisible);
   return {
     dataField: icon,
     dataFormat: (cell, row, enumObject, rowIndex, formData, onChange) => (
       <span
         onClick={() =>
-          handleClick(cell, row, enumObject, rowIndex, formData, onChange)}>
+          action !== "inheritedAction"
+            ? handleClick(cell, row, enumObject, rowIndex, formData, onChange)
+            : handleInheritClick(
+                cell,
+                row,
+                enumObject,
+                rowIndex,
+                formData,
+                onChange,
+                inheritedAction
+              )}
+      >
         <i
           className={
             row[filterField] || row[filterField] === undefined
@@ -100,10 +116,75 @@ function actionColumnFrom(
           }
         />
         {text}
+        {global.inheritedAction &&
+        action === "inheritedAction" &&
+        rowIndex === global.inheritIndex &&
+        (global.popupVisible === undefined || global.popupVisible) ? (
+          <InheritedActionList />
+        ) : (
+          ""
+        )}
       </span>
     ),
-    editable: false,
+    editable: false
   };
+}
+
+const handleInheritClick = (
+  cell,
+  row,
+  enumObject,
+  rowIndex,
+  formData,
+  onChange,
+  inheritedAction
+) => {
+  global.inheritIndex = rowIndex;
+  global.inheritedAction = (
+    <InheritedActionList
+      inheritedAction={inheritedAction}
+      rowIndex={rowIndex}
+    />
+  );
+};
+
+export function InheritedActionList() {
+  const handleOutsideClick = e => {
+    console.log("Clickk", e.target);
+    if (event.target.tagName.toLowerCase() === "i") {
+      console.log("Test");
+      global.popupVisible === true;
+    } else {
+      global.popupVisible === false;
+    }
+  };
+
+  console.log(global.popupVisible);
+  document.addEventListener("click", handleOutsideClick, false);
+  //let handleClick = actionFactory(action, actionConfiguration, schema);
+  let inheritedActionList = global.inheritedAction.props.inheritedAction.map(
+    actionList => {
+      return (
+        <li
+          key={
+            actionList.action
+          } /*onClick={() =>
+        handleClick(cell, row, enumObject, rowIndex, formData, onChange)}*/
+        >
+          <i className={actionList.icon} />
+          <span>{actionList.displayName}</span>
+        </li>
+      );
+    }
+  );
+
+  return (
+    <div>
+      <div className="inherit-dropdown">
+        <ul className="inherit-dropdown-list">{inheritedActionList}</ul>
+      </div>
+    </div>
+  );
 }
 
 const actionToCol = (formData, onChange, schema) => actionConf => {
@@ -113,7 +194,7 @@ const actionToCol = (formData, onChange, schema) => actionConf => {
     : genericConf.dataFormat;
   return Object.assign({}, actionConf, genericConf, {
     dataFormat: (cell, row, enumObject, rowIndex) =>
-      realDataFormat(cell, row, enumObject, rowIndex, formData, onChange),
+      realDataFormat(cell, row, enumObject, rowIndex, formData, onChange)
   });
 };
 
@@ -132,5 +213,6 @@ export default function actionHeadersFrom(
   let leftColumns = leftActions.map(
     actionToCol(formData, onChange, properties)
   );
+  console.log("Re render");
   return { rightColumns, leftColumns };
 }
