@@ -1401,3 +1401,25 @@
 .rdw-suggestion-option span {
   color: #d4d4d4
 }
+
+
+.tableStyle{
+  font-family: Muli;
+  font-size: 12px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.5px;
+  color: #003b5c;
+}
+
+.rowStyle{
+  font-weight: normal;
+  background-color: #ffffff;
+  border: solid 1px #dadada;
+}
+.headerStyle{
+  font-weight: bold;
+  background-color: #f5f7f7;
+  border: solid 1px #bdc1c5;
+}
