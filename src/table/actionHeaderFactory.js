@@ -70,9 +70,15 @@ function actionFactory(action, actionConfiguration, schema) {
       }
     };
   } else if (action === "inheritedAction") {
-    return (cell, row, enumObject, rowIndex, formData, onChange) => {
-      let newFormData = formData.slice(0);
-      onChange(newFormData);
+    return (rowIndex, formData, inheritedActionName, onChange) => {
+      if (inheritedActionName === "delete") {
+        let newFormData = formData.slice(0);
+        newFormData.splice(rowIndex, 1);
+        onChange(newFormData);
+      } else {
+        //Edit
+        window.handleCptEditPopUp(rowIndex);
+      }
     };
   } else if (typeof action === "function") {
     return action;
@@ -90,7 +96,36 @@ function actionColumnFrom(
   if (!handleClick) {
     return {};
   }
-  console.log(global.popupVisible);
+
+  let inheritActionAmmo = false;
+  let selectedRow = false;
+
+  const handleInheritClick = (
+    rowIndex,
+    formData,
+    onChange,
+    inheritedAction
+  ) => {
+    const handleOutsideClick = e => {
+      inheritActionAmmo = false;
+      selectedRow = false;
+    };
+    document.addEventListener("click", handleOutsideClick, false);
+    selectedRow = rowIndex;
+    const handleInheritAction = actionFactory(
+      action,
+      actionConfiguration,
+      schema
+    );
+    inheritActionAmmo = inheritedActionClick(
+      rowIndex,
+      formData,
+      handleInheritAction,
+      inheritedAction,
+      onChange
+    );
+  };
+
   return {
     dataField: icon,
     dataFormat: (cell, row, enumObject, rowIndex, formData, onChange) => (
@@ -98,85 +133,57 @@ function actionColumnFrom(
         onClick={() =>
           action !== "inheritedAction"
             ? handleClick(cell, row, enumObject, rowIndex, formData, onChange)
-            : handleInheritClick(
-                cell,
-                row,
-                enumObject,
-                rowIndex,
-                formData,
-                onChange,
-                inheritedAction
-              )}
+            : handleInheritClick(rowIndex, formData, onChange, inheritedAction)}
       >
-        <i
-          className={
-            row[filterField] || row[filterField] === undefined
-              ? icon
-              : actionCompletedIcon
-          }
-        />
-        {text}
-        {global.inheritedAction &&
-        action === "inheritedAction" &&
-        rowIndex === global.inheritIndex &&
-        (global.popupVisible === undefined || global.popupVisible) ? (
-          <InheritedActionList />
+        {action !== "inheritedAction" ? (
+          <i
+            className={
+              row[filterField] || row[filterField] === undefined
+                ? icon
+                : actionCompletedIcon
+            }
+          />
         ) : (
-          ""
+          <img src="/ehrv8/EncounterV2Template/images/3-dots.png" />
         )}
+        {text}
+        {rowIndex === selectedRow && inheritActionAmmo}
       </span>
     ),
     editable: false
   };
 }
 
-const handleInheritClick = (
-  cell,
-  row,
-  enumObject,
+const inheritedActionClick = (
   rowIndex,
   formData,
-  onChange,
-  inheritedAction
+  handleActionClick,
+  actionList = [],
+  onChange
 ) => {
-  global.inheritIndex = rowIndex;
-  global.inheritedAction = (
-    <InheritedActionList
-      inheritedAction={inheritedAction}
-      rowIndex={rowIndex}
-    />
-  );
-};
-
-export function InheritedActionList() {
-  const handleOutsideClick = e => {
-    console.log("Clickk", e.target);
-    if (event.target.tagName.toLowerCase() === "i") {
-      console.log("Test");
-      global.popupVisible === true;
-    } else {
-      global.popupVisible === false;
-    }
-  };
-
-  console.log(global.popupVisible);
-  document.addEventListener("click", handleOutsideClick, false);
-  //let handleClick = actionFactory(action, actionConfiguration, schema);
-  let inheritedActionList = global.inheritedAction.props.inheritedAction.map(
-    actionList => {
-      return (
-        <li
-          key={
-            actionList.action
-          } /*onClick={() =>
-        handleClick(cell, row, enumObject, rowIndex, formData, onChange)}*/
-        >
-          <i className={actionList.icon} />
-          <span>{actionList.displayName}</span>
-        </li>
-      );
-    }
-  );
+  let inheritedActionList = actionList.map(action => {
+    return (
+      <li
+        key={action.action}
+        onClick={() =>
+          handleActionClick(
+            rowIndex,
+            formData,
+            action.displayName.toLowerCase(),
+            onChange
+          )}
+      >
+        <img
+          src={
+            action.action === "edit"
+              ? "/ehrv8/EncounterV2Template/images/edit.png"
+              : "/ehrv8/EncounterV2Template/images/delete_blue.png"
+          }
+        />
+        <span>{action.displayName}</span>
+      </li>
+    );
+  });
 
   return (
     <div>
@@ -185,7 +192,7 @@ export function InheritedActionList() {
       </div>
     </div>
   );
-}
+};
 
 const actionToCol = (formData, onChange, schema) => actionConf => {
   let genericConf = actionColumnFrom(actionConf, schema);
