@@ -220,6 +220,5 @@ export default function actionHeadersFrom(
   let leftColumns = leftActions.map(
     actionToCol(formData, onChange, properties)
   );
-  console.log("Re render");
   return { rightColumns, leftColumns };
 }
