@@ -120,7 +120,7 @@ function actionColumnFrom(
       actionConfiguration,
       schema
     );
-    hideDropDownAction = dropDownActionClick(
+    hideDropDownAction = dropDownActionComponent(
       rowIndex,
       formData,
       handleDropDownAction,
@@ -162,7 +162,7 @@ function actionColumnFrom(
   };
 }
 
-const dropDownActionClick = (
+const dropDownActionComponent = (
   rowIndex,
   formData,
   handleActionClick,
