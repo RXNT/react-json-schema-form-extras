@@ -1405,17 +1405,30 @@
 /* Inherit Actions Styles */
 .inherit-dropdown {
   position: absolute;
-  right: 120px;
+  right: 30px;
   border-radius: 0;
   background-color: white;
   border: none;
   box-shadow: 0 6px 17px 0 rgba(0, 7, 32, 0.07);
   width: 130px;
-  height: 50px;
+  height: 55px;
 }
 
 .inherit-dropdown-list {
   list-style: none;
+  padding: 5px;
+}
+
+.inherit-dropdown-list li {
+  cursor: pointer;
+}
+
+.inherit-dropdown-list li span {
+  font-family: 'Muli', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.54px;
+  color: #003b5c;
+  margin: 5px;
 }
 
 
