@@ -69,9 +69,9 @@ function actionFactory(action, actionConfiguration, schema) {
         onChange(newFormData);
       }
     };
-  } else if (action === "inheritedAction") {
-    return (rowIndex, formData, inheritedActionName, onChange) => {
-      if (inheritedActionName === "delete") {
+  } else if (action === "dropDownAction") {
+    return (rowIndex, formData, dropDownActionName, onChange) => {
+      if (dropDownActionName === "delete") {
         let newFormData = formData.slice(0);
         newFormData.splice(rowIndex, 1);
         onChange(newFormData);
@@ -90,7 +90,7 @@ function actionFactory(action, actionConfiguration, schema) {
 }
 
 function actionColumnFrom(
-  { action, icon, text, inheritedAction, actionConfiguration = false },
+  { action, icon, text, dropDownAction, actionConfiguration = false },
   schema
 ) {
   let { filterField = false, actionCompletedIcon = "" } = actionConfiguration;
@@ -99,31 +99,32 @@ function actionColumnFrom(
     return {};
   }
 
-  let inheritActionAmmo = false;
+  let hideDropDownAction = true;
   let selectedRow = false;
 
-  const handleInheritClick = (
+  const handleDropDownActionClick = (
     rowIndex,
     formData,
     onChange,
-    inheritedAction
+    dropDownAction
   ) => {
     const handleOutsideClick = e => {
-      inheritActionAmmo = false;
+      document.removeEventListener("click", handleOutsideClick, false);
+      hideDropDownAction = false;
       selectedRow = false;
     };
     document.addEventListener("click", handleOutsideClick, false);
     selectedRow = rowIndex;
-    const handleInheritAction = actionFactory(
+    const handleDropDownAction = actionFactory(
       action,
       actionConfiguration,
       schema
     );
-    inheritActionAmmo = inheritedActionClick(
+    hideDropDownAction = dropDownActionClick(
       rowIndex,
       formData,
-      handleInheritAction,
-      inheritedAction,
+      handleDropDownAction,
+      dropDownAction,
       onChange
     );
   };
@@ -133,11 +134,16 @@ function actionColumnFrom(
     dataFormat: (cell, row, enumObject, rowIndex, formData, onChange) => (
       <span
         onClick={() =>
-          action !== "inheritedAction"
+          action !== "dropDownAction"
             ? handleClick(cell, row, enumObject, rowIndex, formData, onChange)
-            : handleInheritClick(rowIndex, formData, onChange, inheritedAction)}
+            : handleDropDownActionClick(
+                rowIndex,
+                formData,
+                onChange,
+                dropDownAction
+              )}
       >
-        {action !== "inheritedAction" ? (
+        {action !== "dropDownAction" ? (
           <i
             className={
               row[filterField] || row[filterField] === undefined
@@ -149,21 +155,21 @@ function actionColumnFrom(
           <img src="/ehrv8/EncounterV2Template/images/3-dots.png" />
         )}
         {text}
-        {rowIndex === selectedRow && inheritActionAmmo}
+        {rowIndex === selectedRow && hideDropDownAction}
       </span>
     ),
     editable: false
   };
 }
 
-const inheritedActionClick = (
+const dropDownActionClick = (
   rowIndex,
   formData,
   handleActionClick,
   actionList = [],
   onChange
 ) => {
-  let inheritedActionList = actionList.map(action => {
+  let dropDownActionList = actionList.map(action => {
     return (
       <li
         key={action.action}
@@ -190,7 +196,7 @@ const inheritedActionClick = (
   return (
     <div>
       <div className="inherit-dropdown">
-        <ul className="inherit-dropdown-list">{inheritedActionList}</ul>
+        <ul className="inherit-dropdown-list">{dropDownActionList}</ul>
       </div>
     </div>
   );

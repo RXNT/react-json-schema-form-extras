@@ -51,12 +51,12 @@ const uiSchema = {
       ],
       rightActions: [
         {
-          action: "inheritedAction",
+          action: "dropDownAction",
           className: "col-md-1",
           columnClassName: "col-md-1",
           editColumnClassName: "col-md-1",
           icon: "glyphicon glyphicon-option-vertical",
-          inheritedAction: [
+          dropDownAction: [
             {
               action: "edit",
               className: "col-md-1",
