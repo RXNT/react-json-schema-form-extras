@@ -14,12 +14,6 @@
           ],
           "type": "object",
           "properties": {
-            "code": {
-              "templatable": true,
-              "type": "string",
-              "title": "CPT / Procedure",
-              "rxnt": "CPT.Code"
-            },
             "description": {
               "templatable": true,
               "type": "string",
