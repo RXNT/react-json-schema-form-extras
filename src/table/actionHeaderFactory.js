@@ -76,8 +76,10 @@ function actionFactory(action, actionConfiguration, schema) {
         newFormData.splice(rowIndex, 1);
         onChange(newFormData);
       } else {
-        //Edit
-        window.handleCptEditPopUp(rowIndex);
+        // Edit
+        if (window && window.handleCptEditPopUp) {
+          window.handleCptEditPopUp(rowIndex);
+        }
       }
     };
   } else if (typeof action === "function") {
