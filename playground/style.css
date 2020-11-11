@@ -1401,3 +1401,41 @@
 .rdw-suggestion-option span {
   color: #d4d4d4
 }
+
+/* Inherit Actions Styles */
+.inherit-dropdown {
+  position: absolute;
+  right: 120px;
+  border-radius: 0;
+  background-color: white;
+  border: none;
+  box-shadow: 0 6px 17px 0 rgba(0, 7, 32, 0.07);
+  width: 130px;
+  height: 50px;
+}
+
+.inherit-dropdown-list {
+  list-style: none;
+}
+
+
+.rxntTableStyle{
+  font-family: Muli, sans-serif;
+  font-size: 12px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.5px;
+  color: #003b5c;
+}
+
+.rxntRowStyle{
+  font-weight: normal;
+  background-color: #ffffff;
+  border: solid 1px #dadada;
+}
+.rxntHeaderStyle{
+  font-weight: bold;
+  background-color: #f5f7f7;
+  border: solid 1px #bdc1c5;
+}
