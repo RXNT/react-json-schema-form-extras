@@ -63,7 +63,7 @@ export default function tableConfFrom(
   ) {
     tableConf.selectRow.onSelectAll = handleAllRowSelect;
   }
-  let { isTableExpandable = false, allowOneRowExpanding = true} = table;
+  let { isTableExpandable = false, allowOneRowExpanding = true } = table;
   if (isTableExpandable) {
     tableConf.options.onlyOneExpanding = allowOneRowExpanding;
     tableConf.expandComponent = myRowExpand;
