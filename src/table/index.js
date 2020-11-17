@@ -346,16 +346,16 @@ class TableField extends Component {
     return <div className="expandedContent">{tableList}</div>;
   }
   expandColumnComponent({ isExpandableRow, isExpanded }) {
-    let expandClassName = "";
+    let icon = <span className={`fa fa-plus glyphicon`} />;
 
     if (isExpandableRow) {
-      expandClassName = isExpanded
-        ? "glyphicon-chevron-down"
-        : "glyphicon-chevron-up";
-    } else {
-      expandClassName = " ";
+      let expandImgSrc = isExpanded ? "upChevron" : "downChevron";
+      icon = (
+        <img src={`/ehrv8/EncounterV2Template/images/${expandImgSrc}.png`} />
+      );
     }
-    return <span className={`fa fa-plus glyphicon ${expandClassName}`} />;
+
+    return icon;
   }
   render() {
     let {
