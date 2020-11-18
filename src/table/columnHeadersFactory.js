@@ -2,6 +2,7 @@ import React from "react";
 import actionHeaderFrom from "./actionHeaderFactory";
 import moment from "moment";
 
+const TABLE_COLUMN_DEFAULT_PROPERTIES = { expandable: false };
 const toColumnClassNames = (fieldProp, fieldUIProp, customRowConfiguration) => {
   if (
     fieldProp.type === "string" &&
@@ -381,10 +382,20 @@ const overrideColumns = (
     let updCol = Object.assign({}, col, colConf);
     overrideColDataFormat(updCol, properties[col.dataField], formData);
     overrideColEditable(updCol, properties[col.dataField], fields);
+    updateTableDefaultColumnProperties(updCol);
     return updCol;
   });
 
   return columnsWithOverrides;
+};
+
+const updateTableDefaultColumnProperties = colConf => {
+  const defaultKeys = Object.keys(TABLE_COLUMN_DEFAULT_PROPERTIES);
+  defaultKeys.map(defaultKey => {
+    if (!colConf[defaultKey]) {
+      colConf[defaultKey] = TABLE_COLUMN_DEFAULT_PROPERTIES[defaultKey];
+    }
+  });
 };
 
 const orderColumns = (columns, uiSchema) => {

@@ -357,6 +357,18 @@ class TableField extends Component {
 
     return icon;
   }
+  getExpandableTableOptions() {
+    if (
+      this.props.uiSchema.table &&
+      (this.props.uiSchema.table.isTableExpandable ||
+        this.props.uiSchema.table.isTableExpandable !== undefined)
+    ) {
+      const { expandBy = "column", ...otherTableOptions } =
+        this.props.uiSchema.table.expandableTableOptions || {}; // expandableTableOptions is option from the uischema
+      return { expandBy, ...otherTableOptions };
+    }
+  }
+
   render() {
     let {
       uiSchema,
@@ -379,7 +391,13 @@ class TableField extends Component {
       this.isRowExpandable,
       this.expandColumnComponent
     );
+    const expandableTableOptions = this.getExpandableTableOptions();
     this.tableConf.options.insertModal = this.createCustomModal;
+    const boostrapTableOptions = {
+      insertModal: this.createCustomModal,
+      ...expandableTableOptions
+    };
+    this.tableConf.options = boostrapTableOptions;
 
     this.tableConf.cellEdit.beforeSaveCell = this.beforeSaveCell;
     let columns = columnHeadersFrom(
