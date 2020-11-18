@@ -102,18 +102,22 @@ function actionColumnFrom(
   let hideDropDownAction = true;
   let selectedRow = false;
 
+  window.onbeforeunload = function(e) {
+    document.removeEventListener("click", handleOutsideClick, false);
+  };
+  const handleOutsideClick = e => {
+    hideDropDownAction = false;
+    selectedRow = false;
+  };
+
+  document.addEventListener("click", handleOutsideClick, false);
+
   const handleDropDownActionClick = (
     rowIndex,
     formData,
     onChange,
     dropDownAction
   ) => {
-    const handleOutsideClick = e => {
-      document.removeEventListener("click", handleOutsideClick, false);
-      hideDropDownAction = false;
-      selectedRow = false;
-    };
-    document.addEventListener("click", handleOutsideClick, false);
     selectedRow = rowIndex;
     const handleDropDownAction = actionFactory(
       action,
