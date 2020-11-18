@@ -7,29 +7,29 @@ export default {
         {
           dataField: 'icd10',
           editable: false,
-          className: 'col-md-2 rxntTableStyle rxntHeaderStyle',
-          columnClassName: 'col-md-2 rxntTableStyle rxntRowStyle',
+          className: 'col-md-2 rxntTableStyle rxntHeaderStyle rxntBorderStyle',
+          columnClassName: 'col-md-2 rxntTableStyle rxntRowStyle rxntBorderStyle',
         },
         {
           dataField: 'description',
           editable: false,
-          className: 'col-md-7 rxntTableStyle rxntHeaderStyle',
-          columnClassName: 'col-md-7 rxntTableStyle rxntRowStyle',
+          className: 'col-md-7 rxntTableStyle rxntHeaderStyle rxntBorderStyle',
+          columnClassName: 'col-md-7 rxntTableStyle rxntRowStyle rxntBorderStyle',
         },
 
         {
           dataField: 'snomed',
           editable: false,
-          className: 'col-md-2 rxntTableStyle rxntHeaderStyle',
-          columnClassName: 'col-md-2 rxntTableStyle rxntRowStyle',
+          className: 'col-md-2 rxntTableStyle rxntHeaderStyle rxntBorderStyle',
+          columnClassName: 'col-md-2 rxntTableStyle rxntRowStyle rxntBorderStyle',
         }
       ],
       rightActions: [
         {
           action: "inheritedAction",
-          className: "col-md-1",
-          columnClassName: "col-md-1",
-          editColumnClassName: "col-md-1",
+          className: 'table-action rxntTableStyle rxntHeaderStyle',
+          columnClassName: 'table-action rxntTableStyle rxntRowStyle',
+          editColumnClassName: 'table-action',
           icon: "glyphicon glyphicon-option-vertical",
           inheritedAction: [
             {
