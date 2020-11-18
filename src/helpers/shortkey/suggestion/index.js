@@ -18,9 +18,6 @@ class Suggestion {
       dropdownClassName,
       optionClassName = "",
       modalHandler,
-      startingCharacter,
-      endingCharacter,
-      placeholderKeyPairs
     } = config;
     this.config = {
       separator,
@@ -33,9 +30,6 @@ class Suggestion {
       dropdownClassName,
       optionClassName,
       modalHandler,
-      startingCharacter,
-      endingCharacter,
-      placeholderKeyPairs
     };
   }
 
@@ -45,7 +39,7 @@ class Suggestion {
         separator,
         getTriggers,
         getSuggestions,
-        getEditorState
+        getEditorState,
       } = this.config;
       const selection = getEditorState().getSelection();
       if (
@@ -110,7 +104,7 @@ class Suggestion {
 
   getSuggestionDecorator = () => ({
     strategy: this.findSuggestionEntities,
-    component: this.getSuggestionComponent()
+    component: this.getSuggestionComponent(),
   });
 }
 
@@ -118,13 +112,13 @@ function getSuggestionComponent() {
   const { config } = this;
   return class SuggestionComponent extends Component {
     static propTypes = {
-      children: PropTypes.array
+      children: PropTypes.array,
     };
 
     state: Object = {
       style: { left: 15 },
       activeOption: 0,
-      showSuggestions: true
+      showSuggestions: true,
     };
 
     componentDidMount() {
@@ -149,7 +143,7 @@ function getSuggestionComponent() {
       // }
       this.setState({
         // eslint-disable-line react/no-did-mount-set-state
-        style: { left, right, bottom }
+        style: { left, right, bottom },
       });
       KeyDownHandler.registerCallBack(this.onEditorKeyDown);
       SuggestionHandler.open();
@@ -161,7 +155,7 @@ function getSuggestionComponent() {
       if (this.props.children !== props.children) {
         this.filterSuggestions(props);
         this.setState({
-          showSuggestions: true
+          showSuggestions: true,
         });
       }
     }
@@ -206,13 +200,13 @@ function getSuggestionComponent() {
     onOptionMouseEnter = event => {
       const index = event.target.getAttribute("data-index");
       this.setState({
-        activeOption: index
+        activeOption: index,
       });
     };
 
     onOptionMouseLeave = () => {
       this.setState({
-        activeOption: 0
+        activeOption: 0,
       });
     };
 
@@ -226,7 +220,7 @@ function getSuggestionComponent() {
 
     closeSuggestionDropdown: Function = (): void => {
       this.setState({
-        showSuggestions: false
+        showSuggestions: false,
       });
     };
 
@@ -297,12 +291,8 @@ function getSuggestionComponent() {
           ref={this.setSuggestionReference}
           onClick={config.modalHandler.onSuggestionClick}
           aria-haspopup="true"
-          aria-label="rdw-suggestion-popup"
-          data-offset-key={
-            children[0] && children[0].key ? children[0].key : ""
-          }
-        >
-          {children}
+          aria-label="rdw-suggestion-popup">
+          <span>{children}</span>
           {showSuggestions && (
             <span
               className={classNames(
@@ -312,11 +302,7 @@ function getSuggestionComponent() {
               contentEditable="false"
               suppressContentEditableWarning
               style={this.state.style}
-              ref={this.setDropdownReference}
-              data-offset-key={
-                children[0] && children[0].key ? children[0].key : ""
-              }
-            >
+              ref={this.setDropdownReference}>
               {this.filteredSuggestions.map((suggestion, index) => (
                 <span
                   key={index}
@@ -329,8 +315,7 @@ function getSuggestionComponent() {
                     "rdw-suggestion-option",
                     optionClassName,
                     { "rdw-suggestion-option-active": index == activeOption }
-                  )}
-                >
+                  )}>
                   {suggestion.phrase}
                   <br />
                   <div

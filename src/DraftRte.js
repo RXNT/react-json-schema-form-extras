@@ -121,9 +121,6 @@ export default class DraftRTE extends Component {
       editorState,
       suggestions: [],
       triggers: [],
-      startingCharacter: props.startingCharacter,
-      endingCharacter: props.endingCharacter,
-      placeholderKeyPairs: props.placeholderKeyPairs,
     };
   }
   /**
