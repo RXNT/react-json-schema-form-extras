@@ -10,7 +10,7 @@ function actionFactory(action, actionConfiguration, schema) {
             let actionToApply = 0; // 0 - update(soft delete), 1 - delete(hard delete)
             let {
               mandatoryField = undefined,
-              fieldToUpdate = undefined,
+              fieldToUpdate = undefined
             } = actionConfiguration;
 
             if (mandatoryField !== undefined) {
@@ -69,6 +69,19 @@ function actionFactory(action, actionConfiguration, schema) {
         onChange(newFormData);
       }
     };
+  } else if (action === "dropDownAction") {
+    return (rowIndex, formData, dropDownActionName, onChange) => {
+      if (dropDownActionName === "delete") {
+        let newFormData = formData.slice(0);
+        newFormData.splice(rowIndex, 1);
+        onChange(newFormData);
+      } else {
+        // Edit
+        if (window && window.handleCptEditPopUp) {
+          window.handleCptEditPopUp(rowIndex);
+        }
+      }
+    };
   } else if (typeof action === "function") {
     return action;
   } else {
@@ -77,7 +90,7 @@ function actionFactory(action, actionConfiguration, schema) {
 }
 
 function actionColumnFrom(
-  { action, icon, text, actionConfiguration = false },
+  { action, icon, text, dropDownAction, actionConfiguration = false },
   schema
 ) {
   let { filterField = false, actionCompletedIcon = "" } = actionConfiguration;
@@ -86,25 +99,112 @@ function actionColumnFrom(
     return {};
   }
 
+  let hideDropDownAction = true;
+  let selectedRow = false;
+
+  window.onbeforeunload = function(e) {
+    document.removeEventListener("click", handleOutsideClick, false);
+  };
+  const handleOutsideClick = e => {
+    hideDropDownAction = false;
+    selectedRow = false;
+  };
+
+  document.addEventListener("click", handleOutsideClick, false);
+
+  const handleDropDownActionClick = (
+    rowIndex,
+    formData,
+    onChange,
+    dropDownAction
+  ) => {
+    selectedRow = rowIndex;
+    const handleDropDownAction = actionFactory(
+      action,
+      actionConfiguration,
+      schema
+    );
+    hideDropDownAction = dropDownActionComponent(
+      rowIndex,
+      formData,
+      handleDropDownAction,
+      dropDownAction,
+      onChange
+    );
+  };
+
   return {
     dataField: icon,
     dataFormat: (cell, row, enumObject, rowIndex, formData, onChange) => (
       <span
         onClick={() =>
-          handleClick(cell, row, enumObject, rowIndex, formData, onChange)}>
-        <i
-          className={
-            row[filterField] || row[filterField] === undefined
-              ? icon
-              : actionCompletedIcon
-          }
-        />
+          action !== "dropDownAction"
+            ? handleClick(cell, row, enumObject, rowIndex, formData, onChange)
+            : handleDropDownActionClick(
+                rowIndex,
+                formData,
+                onChange,
+                dropDownAction
+              )}
+      >
+        {action !== "dropDownAction" ? (
+          <i
+            className={
+              row[filterField] || row[filterField] === undefined
+                ? icon
+                : actionCompletedIcon
+            }
+          />
+        ) : (
+          <img src="/ehrv8/EncounterV2Template/images/3-dots.png" />
+        )}
         {text}
+        {rowIndex === selectedRow && hideDropDownAction}
       </span>
     ),
-    editable: false,
+    editable: false
   };
 }
+
+const dropDownActionComponent = (
+  rowIndex,
+  formData,
+  handleActionClick,
+  actionList = [],
+  onChange
+) => {
+  let dropDownActionList = actionList.map(action => {
+    return (
+      <li
+        key={action.action}
+        onClick={() =>
+          handleActionClick(
+            rowIndex,
+            formData,
+            action.displayName.toLowerCase(),
+            onChange
+          )}
+      >
+        <img
+          src={
+            action.action === "edit"
+              ? "/ehrv8/EncounterV2Template/images/edit.png"
+              : "/ehrv8/EncounterV2Template/images/delete_blue.png"
+          }
+        />
+        <span>{action.displayName}</span>
+      </li>
+    );
+  });
+
+  return (
+    <div>
+      <div className="inherit-dropdown">
+        <ul className="inherit-dropdown-list">{dropDownActionList}</ul>
+      </div>
+    </div>
+  );
+};
 
 const actionToCol = (formData, onChange, schema) => actionConf => {
   let genericConf = actionColumnFrom(actionConf, schema);
@@ -113,7 +213,7 @@ const actionToCol = (formData, onChange, schema) => actionConf => {
     : genericConf.dataFormat;
   return Object.assign({}, actionConf, genericConf, {
     dataFormat: (cell, row, enumObject, rowIndex) =>
-      realDataFormat(cell, row, enumObject, rowIndex, formData, onChange),
+      realDataFormat(cell, row, enumObject, rowIndex, formData, onChange)
   });
 };
 

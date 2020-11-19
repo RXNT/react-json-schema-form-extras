@@ -7,36 +7,13 @@
         "isTableExpandable": true,
         "tableCols": [
           {
-            "dataField": "code",
-            "columnWidth": "25%",
-            "width": "45%",
-            "field": "asyncTypeahead",
-            "uiSchema": {
-              "focusOnMount": true,
-              "asyncTypeahead": {
-                "url": "https://jsonplaceholder.typicode.com/users",
-                "bodyContainer": true,
-                "mapping": {
-                  "code": "username",
-                  "description": "name"
-                },
-                "labelKey": {
-                  "fields": [
-                    "name",
-                    "username"
-                  ],
-                  "separator": " - "
-                },
-                "minLength": 2,
-                "multiple": false
-              }
-            }
-          },
-          {
             "dataField": "description",
             "columnWidth": "75%",
-            "width": "50%",
-            "editable": true
+            "width": "70%",
+            "editable": true,
+            "className": "col-md-2 rxntTableStyle rxntHeaderStyle",
+            "columnClassName": "col-md-2 rxntTableStyle rxntRowStyle",
+            "columnCustomFormat": "description"
           },
           {
             "hidden": true,
@@ -92,7 +69,8 @@
             "columnWidth": "75%",
             "width": "15%",
             "editable": false,
-            "className": "col-md-12 rectangle"
+            "className": "col-md-12 rectangle rxntTableStyle rxntHeaderStyle",
+            "columnClassName": "col-md-2 rxntTableStyle rxntRowStyle"
           },
           {
             "dataField": "advancedInformation",
