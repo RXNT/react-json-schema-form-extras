@@ -79,8 +79,8 @@ const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey) => {
     fieldUIProp !== undefined &&
     fieldUIProp.columnCustomFormat !== undefined
   ) {
-    if (fieldUIProp.columnCustomFormat === "description") {
-      return (_, row) => `${row.code}-${row.description}`;
+    if (fieldUIProp.columnCustomFormat === "combineCodeAndDesc") {
+      return (_, row) => `${row.code} - ${row.description}`;
     }
     let columnCustomFormat = JSON.parse(fieldUIProp.columnCustomFormat);
     let funcBody = JSON.parse(
