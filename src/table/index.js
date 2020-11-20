@@ -305,8 +305,8 @@ class TableField extends Component {
           });
           return (
             isComponentDataAvailable && (
-              <div className="expandedItems">
-                <span className="itemHeading">{title} :</span>
+              <div className="customTable-expandedItems">
+                <span className="customTable-itemHeading">{title} :</span>
                 <br />
                 <ul>{tableListData}</ul>
               </div>
@@ -333,8 +333,8 @@ class TableField extends Component {
           });
           return (
             isComponentDataAvailable && (
-              <div className="expandedItems">
-                <span className="itemHeading">{title} :</span>
+              <div className="customTable-expandedItems">
+                <span className="customTable-itemHeading">{title} :</span>
                 <br />
                 <ul>{tableListData}</ul>
               </div>
@@ -343,7 +343,7 @@ class TableField extends Component {
         }
       }
     });
-    return <div className="expandedContent">{tableList}</div>;
+    return <div className="customTable-expandedContent">{tableList}</div>;
   }
   expandColumnComponent({ isExpandableRow, isExpanded }) {
     let icon = <span className={`fa fa-plus glyphicon`} />;
