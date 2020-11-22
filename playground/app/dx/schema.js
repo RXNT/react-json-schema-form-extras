@@ -8,20 +8,20 @@ export default {
       items: {
         type: "object",
         properties: {
-          description: {
+          icd10Description: {
             type: "string",
-            title: "Description",
+            title: "Description"
           },
           icd10: {
             type: "string",
-            title: "ICD10-CM",
+            title: "ICD10-CM"
           },
           snomed: {
             type: "string",
-            title: "Severity",
-          },
-        },
-      },
-    },
-  },
+            title: "Severity"
+          }
+        }
+      }
+    }
+  }
 };

@@ -12,7 +12,7 @@ export default {
             "col-md-1 rxntTableStyle rxntRowStyle rxntBorderStyle"
         },
         {
-          dataField: "description",
+          dataField: "icd10Description",
           editable: false,
           className: "col-md-9 rxntTableStyle rxntHeaderStyle rxntBorderStyle",
           columnClassName:
