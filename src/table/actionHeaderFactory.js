@@ -92,7 +92,7 @@ function actionFactory(action, actionConfiguration, schema) {
 function actionColumnFrom(
   { action, icon, text, dropDownAction, actionConfiguration = false },
   schema,
-  renderCloseDropDownAction
+  forceReRenderTable
 ) {
   let { filterField = false, actionCompletedIcon = "" } = actionConfiguration;
   let handleClick = actionFactory(action, actionConfiguration, schema);
@@ -110,7 +110,8 @@ function actionColumnFrom(
     dropDownAction
   ) => {
     const handleOutsideClick = e => {
-      renderCloseDropDownAction();
+      /* Forcing the table to render again using forceUpdate for closing actions when clicking outside */
+      forceReRenderTable();
       setTimeout(function() {
         document.removeEventListener("click", handleOutsideClick, false);
       }, 500);
@@ -209,13 +210,9 @@ const actionToCol = (
   formData,
   onChange,
   schema,
-  renderCloseDropDownAction
+  forceReRenderTable
 ) => actionConf => {
-  let genericConf = actionColumnFrom(
-    actionConf,
-    schema,
-    renderCloseDropDownAction
-  );
+  let genericConf = actionColumnFrom(actionConf, schema, forceReRenderTable);
   let realDataFormat = actionConf.dataFormat
     ? actionConf.dataFormat
     : genericConf.dataFormat;
@@ -230,16 +227,16 @@ export default function actionHeadersFrom(
   uiSchema,
   formData,
   onChange,
-  renderCloseDropDownAction
+  forceReRenderTable
 ) {
   let { table: { rightActions = [], leftActions = [] } = {} } = uiSchema;
   let { items: { properties = [] } } = schema;
 
   let rightColumns = rightActions.map(
-    actionToCol(formData, onChange, properties, renderCloseDropDownAction)
+    actionToCol(formData, onChange, properties, forceReRenderTable)
   );
   let leftColumns = leftActions.map(
-    actionToCol(formData, onChange, properties, renderCloseDropDownAction)
+    actionToCol(formData, onChange, properties, forceReRenderTable)
   );
   return { rightColumns, leftColumns };
 }
