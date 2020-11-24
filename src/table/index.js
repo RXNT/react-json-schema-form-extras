@@ -280,23 +280,27 @@ class TableField extends Component {
               switch (type) {
                 case "string":
                   return (
-                    <li>
-                      {title +
-                        " - " +
-                        getFieldValue(
-                          fieldData[fieldName],
-                          type,
-                          format,
-                          dataFormat
-                        )}
-                    </li>
+                    <div className="customTable-item">
+                      <span className="customTable-item-subheader">
+                        {title}
+                      </span>
+                      {` ${getFieldValue(
+                        fieldData[fieldName],
+                        type,
+                        format,
+                        dataFormat
+                      )}`}
+                    </div>
                   );
                 case "object":
                   if (Object.keys(fieldData[fieldName]).length > 0) {
                     return (
-                      <li>
-                        {title + " - " + fieldData[fieldName].description}
-                      </li>
+                      <div className="customTable-item">
+                        <span className="customTable-item-subheader">
+                          {title}
+                        </span>
+                        {` ${fieldData[fieldName].description}`}
+                      </div>
                     );
                   }
               }
@@ -306,9 +310,8 @@ class TableField extends Component {
           return (
             isComponentDataAvailable && (
               <div className="customTable-expandedItems">
-                <span className="customTable-itemHeading">{title} :</span>
-                <br />
-                <ul>{tableListData}</ul>
+                <div className="customTable-itemHeading">{title}:</div>
+                <div>{tableListData}</div>
               </div>
             )
           );
@@ -322,7 +325,7 @@ class TableField extends Component {
             ) {
               isComponentDataAvailable = true;
               return (
-                <li>
+                <li className="customTable-item">
                   {fieldData[fieldName].code +
                     " - " +
                     fieldData[fieldName].description}
@@ -334,9 +337,8 @@ class TableField extends Component {
           return (
             isComponentDataAvailable && (
               <div className="customTable-expandedItems">
-                <span className="customTable-itemHeading">{title} :</span>
-                <br />
-                <ul>{tableListData}</ul>
+                <div className="customTable-itemHeading">{title}:</div>
+                <ol>{tableListData}</ol>
               </div>
             )
           );
