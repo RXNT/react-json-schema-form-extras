@@ -370,6 +370,7 @@ class TableField extends Component {
       return { expandBy, ...otherTableOptions };
     }
   }
+  renderCloseDropDownAction = () => this.forceUpdate();
 
   render() {
     let {
@@ -380,6 +381,8 @@ class TableField extends Component {
       idSchema: { $id } = {},
       onChange
     } = this.props;
+
+    let renderCloseDropDownAction = this.renderCloseDropDownAction;
 
     this.tableConf = tableConfFrom(
       uiSchema,
@@ -407,7 +410,8 @@ class TableField extends Component {
       uiSchema,
       fields,
       formData,
-      onChange
+      onChange,
+      renderCloseDropDownAction
     );
 
     return (

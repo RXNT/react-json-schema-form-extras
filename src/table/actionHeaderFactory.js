@@ -91,7 +91,8 @@ function actionFactory(action, actionConfiguration, schema) {
 
 function actionColumnFrom(
   { action, icon, text, dropDownAction, actionConfiguration = false },
-  schema
+  schema,
+  renderCloseDropDownAction
 ) {
   let { filterField = false, actionCompletedIcon = "" } = actionConfiguration;
   let handleClick = actionFactory(action, actionConfiguration, schema);
@@ -102,22 +103,20 @@ function actionColumnFrom(
   let hideDropDownAction = true;
   let selectedRow = false;
 
-  window.onbeforeunload = function(e) {
-    document.removeEventListener("click", handleOutsideClick, false);
-  };
-  const handleOutsideClick = e => {
-    hideDropDownAction = false;
-    selectedRow = false;
-  };
-
-  document.addEventListener("click", handleOutsideClick, false);
-
   const handleDropDownActionClick = (
     rowIndex,
     formData,
     onChange,
     dropDownAction
   ) => {
+    const handleOutsideClick = e => {
+      renderCloseDropDownAction();
+      setTimeout(function() {
+        document.removeEventListener("click", handleOutsideClick, false);
+      }, 500);
+    };
+    document.addEventListener("click", handleOutsideClick, false);
+
     selectedRow = rowIndex;
     const handleDropDownAction = actionFactory(
       action,
@@ -206,8 +205,17 @@ const dropDownActionComponent = (
   );
 };
 
-const actionToCol = (formData, onChange, schema) => actionConf => {
-  let genericConf = actionColumnFrom(actionConf, schema);
+const actionToCol = (
+  formData,
+  onChange,
+  schema,
+  renderCloseDropDownAction
+) => actionConf => {
+  let genericConf = actionColumnFrom(
+    actionConf,
+    schema,
+    renderCloseDropDownAction
+  );
   let realDataFormat = actionConf.dataFormat
     ? actionConf.dataFormat
     : genericConf.dataFormat;
@@ -221,16 +229,17 @@ export default function actionHeadersFrom(
   schema,
   uiSchema,
   formData,
-  onChange
+  onChange,
+  renderCloseDropDownAction
 ) {
   let { table: { rightActions = [], leftActions = [] } = {} } = uiSchema;
   let { items: { properties = [] } } = schema;
 
   let rightColumns = rightActions.map(
-    actionToCol(formData, onChange, properties)
+    actionToCol(formData, onChange, properties, renderCloseDropDownAction)
   );
   let leftColumns = leftActions.map(
-    actionToCol(formData, onChange, properties)
+    actionToCol(formData, onChange, properties, renderCloseDropDownAction)
   );
   return { rightColumns, leftColumns };
 }

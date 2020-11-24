@@ -451,7 +451,8 @@ const columnHeadersFactory = (
   uiSchema,
   fields = {},
   formData,
-  onChange
+  onChange,
+  renderCloseDropDownAction
 ) => {
   let allColumns = columnHeadersFromSchema(schema, uiSchema);
   let orderedColumns = orderColumns(allColumns, uiSchema);
@@ -467,7 +468,8 @@ const columnHeadersFactory = (
     schema,
     uiSchema,
     formData,
-    onChange
+    onChange,
+    renderCloseDropDownAction
   );
 
   leftColumns.forEach(col => columnsWithCSS.unshift(col));
