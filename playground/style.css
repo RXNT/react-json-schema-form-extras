@@ -1431,9 +1431,63 @@
   margin: 5px;
 }
 
-
 .rxntTableStyle{
-  font-family: Muli, sans-serif;
+  font-family: Muli !important;
+  font-size: 12px;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: 0.5px;
+  color: #003b5c;
+  text-align:left !important;
+}
+
+
+.rxntRowStyle{
+  font-weight: normal;
+  background-color: #ffffff;
+  border: solid 1px #dadada !important;
+  padding:14px 0px 14px 14px !important;
+  border-right-style:hidden !important
+}
+
+.rxntBorderStyle{
+  position:relative !important
+}
+
+.rxntBorderStyle::after{
+  content: '';
+  height: 32px;
+  width: 2px;
+  position: absolute;
+  margin-top:4px !important;
+  right: 0;
+  top: 0; 
+  background-color: #d9dddf; 
+}
+.rxntHeaderStyle{
+  padding:16px 0px 16px 16px !important;
+  font-weight: bold;
+  background-color: #f5f7f7;
+  border: solid 1px #bdc1c5 !important;
+  border-right-style:hidden !important;
+  border-bottom-width: 0px !important;
+}
+
+.rxntRowStyle img{
+  width:16px;
+  height:16px;
+  margin: 0px 0 0px 26px;
+  object-fit: contain;
+}
+
+.customTable-expandedContent {
+  margin: 12px;
+  background-color: #ffffff;
+}
+
+.customTable-expandedItems {
+  font-family: Muli , sans-serif;
   font-size: 12px;
   font-stretch: normal;
   font-style: normal;
@@ -1442,13 +1496,42 @@
   color: #003b5c;
 }
 
-.rxntRowStyle{
-  font-weight: normal;
-  background-color: #ffffff;
-  border: solid 1px #dadada;
-}
-.rxntHeaderStyle{
+.customTable-itemHeading {
   font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.customTable-item {
+  padding: 2px 0px;
+}
+
+.customTable-item-subheader {
+  color: #818181;
+}
+
+#root_procedureCodes .react-bs-table .table-bordered>thead>tr:first-child>td, .react-bs-table .table-bordered>thead>tr:first-child>th {
   background-color: #f5f7f7;
-  border: solid 1px #bdc1c5;
+  border: solid 1px #dadada !important;
+  border-right-style: hidden !important;
+  border-bottom-width: 0px !important;
+}
+
+#root_procedureCodes .react-bs-table .table-bordered>tbody>tr >td:first-child {
+  background-color: #ffffff;
+  border: solid 1px #dadada !important;
+  border-right-style: hidden !important;
+}
+
+#root_procedureCodes ol > li:before {
+  content: counter(list) ") ";
+  counter-increment: list;
+}
+
+#root_procedureCodes ol {
+  counter-reset: list;
+  padding: 0px 0px;
+}
+
+#root_procedureCodes ol > li {
+  list-style: none;
 }
