@@ -102,6 +102,27 @@ function actionColumnFrom(
 
   let hideDropDownAction = true;
   let selectedRow = false;
+  let prevSelectedRow = "";
+
+  const handleOutsideClick = e => {
+    /* Forcing the table to render again using forceUpdate for closing actions when clicking outside */
+    if (e.target.parentElement.id !== "dropDownAction") {
+      forceReRenderTable();
+      setTimeout(function() {
+        document.removeEventListener("click", handleOutsideClick, false);
+      }, 500);
+    } else if (
+      e.target.parentElement.id === "dropDownAction" &&
+      prevSelectedRow === selectedRow
+    ) {
+      forceReRenderTable();
+      setTimeout(function() {
+        document.removeEventListener("click", handleOutsideClick, false);
+      }, 500);
+    }
+
+    prevSelectedRow = selectedRow;
+  };
 
   const handleDropDownActionClick = (
     rowIndex,
@@ -109,16 +130,9 @@ function actionColumnFrom(
     onChange,
     dropDownAction
   ) => {
-    const handleOutsideClick = e => {
-      /* Forcing the table to render again using forceUpdate for closing actions when clicking outside */
-      forceReRenderTable();
-      setTimeout(function() {
-        document.removeEventListener("click", handleOutsideClick, false);
-      }, 500);
-    };
-    document.addEventListener("click", handleOutsideClick, false);
-
     selectedRow = rowIndex;
+    prevSelectedRow = prevSelectedRow === "" ? rowIndex : prevSelectedRow;
+    document.addEventListener("click", handleOutsideClick, false);
     const handleDropDownAction = actionFactory(
       action,
       actionConfiguration,
@@ -137,6 +151,7 @@ function actionColumnFrom(
     dataField: icon,
     dataFormat: (cell, row, enumObject, rowIndex, formData, onChange) => (
       <span
+        id="dropDownAction"
         onClick={() =>
           action !== "dropDownAction"
             ? handleClick(cell, row, enumObject, rowIndex, formData, onChange)
