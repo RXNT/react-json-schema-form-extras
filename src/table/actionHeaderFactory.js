@@ -75,12 +75,12 @@ function actionFactory(action, actionConfiguration, schema) {
         let newFormData = formData.slice(0);
         newFormData.splice(rowIndex, 1);
         onChange(newFormData);
-        if (window && window.handleCptDeletePopUp) {
+        if (window && window.handleCptUpdatePopUp) {
           window.handleCptUpdatePopUp(rowIndex, "delete");
         } // to delete the code from diagnosis
       } else {
         // Edit
-        if (window && window.handleCptEditPopUp) {
+        if (window && window.handleCptUpdatePopUp) {
           window.handleCptUpdatePopUp(rowIndex, "edit");
         }
       }
