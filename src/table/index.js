@@ -372,6 +372,20 @@ class TableField extends Component {
   }
   forceReRenderTable = () => this.forceUpdate();
 
+  handleRowColorChange = (row, rowIndx) => {
+    let tableName = this.props.name;
+    if (tableName === "diagnosis") {
+      if (row.procedureCode && row.procedureCode.length > 0) {
+        return "rxntBlueBackground";
+      } else {
+        return "rxntWhiteBackground";
+      }
+    }
+    if (tableName === "procedureCodes") {
+      return "rxntWhiteBackground";
+    }
+  };
+
   render() {
     let {
       uiSchema,
@@ -416,7 +430,7 @@ class TableField extends Component {
 
     return (
       <div id={$id}>
-        <BootstrapTable {...this.tableConf} ref="table">
+        <BootstrapTable {...this.tableConf}  trClassName={this.handleRowColorChange} ref="table">
           {columns.map((column, i) => {
             return (
               <TableHeaderColumn key={i} {...column}>
