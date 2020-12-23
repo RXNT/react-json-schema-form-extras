@@ -1442,6 +1442,14 @@
   text-align:left !important;
 }
 
+.rxntBlueBackground{
+  background-color: #f4fafa;
+}
+
+.rxntWhiteBackground{
+  background-color: #ffffff;
+}
+
 
 .rxntRowStyle{
   font-weight: normal;
