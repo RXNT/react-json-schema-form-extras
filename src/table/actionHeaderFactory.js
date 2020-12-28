@@ -75,7 +75,7 @@ function actionFactory(action, actionConfiguration, schema) {
         let newFormData = formData.slice(0);
         newFormData.splice(rowIndex, 1);
         onChange(newFormData);
-        if (window && window.handleCptUpdatePopUp) {
+        if (window && window.handleCptUpdatePopUp && schema && schema.code) {
           window.handleCptUpdatePopUp(rowIndex, "delete");
         } // to delete the code from diagnosis
       } else {
