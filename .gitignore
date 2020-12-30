@@ -2,8 +2,6 @@ coverage
 npm-debug.log
 node_modules
 build
-dist
-lib
 yarn.lock
 
 package-lock.json
