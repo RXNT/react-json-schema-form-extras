@@ -185,11 +185,11 @@ export function toSelected(formData, schema, mapping, options) {
       })
       .filter(x => x !== undefined);
   } else {
-	//MG manage data type label error
+	  //MG manage data type label error
     return normFormData.map(dataItem => {
 		return String(dataItem)
     });
-	//return normFormData
+	  //return normFormData
   }
 }
 
