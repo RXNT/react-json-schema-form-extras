@@ -185,7 +185,11 @@ export function toSelected(formData, schema, mapping, options) {
       })
       .filter(x => x !== undefined);
   } else {
-    return normFormData;
+	  //MG manage data type label error
+    return normFormData.map(dataItem => {
+		return String(dataItem)
+    });
+	  //return normFormData
   }
 }
 
@@ -262,6 +266,10 @@ function isValidFormData(data) {
   return data && !isEmpty(data);
 }
 
+function isValidOptions(options) {
+  return !!options && options.constructor === Array;
+}
+
 export class TypeaheadField extends BaseTypeaheadField {
   constructor(props) {
     super(props);
@@ -324,13 +332,96 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
     let { schema, uiSchema: { asyncTypeahead }, formData } = this.props;
 
     this.state = {
-      options: [],
+      options: isValidOptions(asyncTypeahead.options) ? asyncTypeahead.options : [],
       isLoading: false,
       selected: isValidFormData(formData)
-        ? toSelected(formData, schema, asyncTypeahead.mapping)
+        ? toSelected(formData, schema, asyncTypeahead.mapping, asyncTypeahead.options)
         : [],
     };
   }
+
+  componentDidMount() {
+    let { uiSchema: { focusOnMount = false, asyncTypeahead } } = this.props;
+    if (focusOnMount) {
+      this.refs.typeahead.getInstance().focus();
+    }
+	let options = isValidOptions(asyncTypeahead.options) ? asyncTypeahead.options : []
+	if(!!options && !!this.props.formData) {
+		//set selected on didmount
+		//this.handleSearch('')
+		let {
+		  schema,
+		  uiSchema: {
+			asyncTypeahead: {
+			  url,
+			  optionsPath,
+			  search = (url, query) =>
+				fetch(`${url}?query=${query}`).then(res => res.json()),
+			},
+		  },
+		  formData
+		} = this.props;
+
+		this.setState({ isLoading: true });
+
+		search(url, '')
+		  .then(json => (optionsPath ? selectn(optionsPath, json) : json))
+		  .then(options => this.setState({
+			  options: isValidOptions(options) ? options : [],
+			  isLoading: false,
+			  selected: isValidFormData(formData)
+				? toSelected(formData, schema, asyncTypeahead.mapping, options)
+				: []
+		  }));
+	}
+  }
+
+	componentDidUpdate(prevProps, prevState) {
+		//if ((this.props.uiSchema !== prevProps.uiSchema) || (this.state.options !== prevState.options)) {
+		if (this.state.isLoading == false && !!this.props.formData && this.state.options.length == 0) {
+			//set selected if having form data after didmount 
+			//this.handleSearch('')
+			let {
+			  schema,
+			  uiSchema: {
+				asyncTypeahead: {
+				  url,
+				  optionsPath,
+				  mapping,
+				  search = (url, query) =>
+					fetch(`${url}?query=${query}`).then(res => res.json()),
+				},
+			  },
+			  formData
+			} = this.props;
+
+			this.setState({ isLoading: true });
+
+			search(url, '')
+			  .then(json => (optionsPath ? selectn(optionsPath, json) : json))
+			  .then(options => this.setState({
+				  options: isValidOptions(options) ? options : [],
+				  isLoading: false,
+				  selected: isValidFormData(formData)
+					? toSelected(formData, schema, mapping, options)
+					: []
+			  }));
+		}
+		/*
+		if (!!this.props.formData && this.state.options.length > 0 && this.state.selected.length == 0) {
+			//manage different time having formData and options
+			let { schema, uiSchema: { asyncTypeahead }, formData} = this.props;
+
+			this.setState({
+			  //options: isValidOptions(this.state.options) ? this.state.options : [],
+			  //isLoading: false,
+			  selected: isValidFormData(formData)
+				? toSelected(formData, schema, asyncTypeahead.mapping, this.state.options)
+				: [],
+			});
+		}
+		*/
+	}
 
   handleSearch = query => {
     if (!query) {

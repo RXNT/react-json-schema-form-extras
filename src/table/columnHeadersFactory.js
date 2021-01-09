@@ -59,7 +59,7 @@ const toDataHelpText = (fieldProp, fieldUIProp) => {
   }
   return undefined;
 };
-const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey) => {
+const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey, fields) => {
   if (fieldProp.enum && fieldProp.enumNames) {
     return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
   } else if (fieldProp.type === "boolean") {
@@ -75,6 +75,27 @@ const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey) => {
         <label>{cell ? "Yes" : "No"}</label>
       </div>
     );
+	} else if (!!fieldUIProp && fieldUIProp.field === "asyncTypeahead") {
+	  //MG correct render asynctypeahead value
+		let FieldEditor = fields[fieldUIProp.field];
+		let fieldSchemaWithoutTitle = Object.assign(
+		  { ...fieldProp },
+		  { title: "" }
+		);
+		let fieldUISchemaAsyncTypeahead = Object.assign(
+		  { ...fieldUIProp.uiSchema.asyncTypeahead },
+		  { disabled: true }
+		);
+		let fieldUISchema = Object.assign(
+		  { "asyncTypeahead": fieldUISchemaAsyncTypeahead }
+		);
+		return (cell, row) => (
+			<FieldEditor
+			  formData={cell}
+			  schema={fieldSchemaWithoutTitle}
+			  uiSchema={fieldUISchema}
+			/>
+		);
   } else if (
     fieldUIProp !== undefined &&
     fieldUIProp.columnCustomFormat !== undefined
@@ -136,7 +157,7 @@ const toEditable = fieldProp => {
   return true;
 };
 
-const columnHeadersFromSchema = (schema, uiSchema) => {
+const columnHeadersFromSchema = (schema, uiSchema, fields) => {
   let { items: { properties, defaultFilterKey = false } } = schema;
 
   let { table: { tableCols, tableConfig = {} } } = uiSchema;
@@ -150,7 +171,8 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
     let dataFormat = toDataFormat(
       properties[dataField],
       uiProperties,
-      defaultFilterKey
+      defaultFilterKey,
+	  fields
     );
     let dataAlign = toDataAlignment(properties[dataField]);
     let columnClassName = toColumnClassNames(
@@ -215,8 +237,8 @@ export function overrideColDataFormat(colConf, fieldSchema, formData) {
     colConf.field !== undefined &&
     colConf.field === "asyncTypeahead"
   ) {
-    //Only handle Type head with Array
-    if (fieldSchema.type === "array") {
+    //Only handle Type head with Array -- MG STOPPED
+    if (1 == 2 && fieldSchema.type === "array") {
       const {
         dataField = false,
         uiSchema: {
@@ -454,7 +476,7 @@ const columnHeadersFactory = (
   onChange,
   forceReRenderTable
 ) => {
-  let allColumns = columnHeadersFromSchema(schema, uiSchema);
+  let allColumns = columnHeadersFromSchema(schema, uiSchema, fields);
   let orderedColumns = orderColumns(allColumns, uiSchema);
   let withOverrides = overrideColumns(
     orderedColumns,
