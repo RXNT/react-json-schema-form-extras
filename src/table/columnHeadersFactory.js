@@ -2,6 +2,7 @@ import React from "react";
 import actionHeaderFrom from "./actionHeaderFactory";
 import moment from "moment";
 
+const TABLE_COLUMN_DEFAULT_PROPERTIES = { expandable: false };
 const toColumnClassNames = (fieldProp, fieldUIProp, customRowConfiguration) => {
   if (
     fieldProp.type === "string" &&
@@ -58,7 +59,7 @@ const toDataHelpText = (fieldProp, fieldUIProp) => {
   }
   return undefined;
 };
-const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey) => {
+const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey, fields) => {
   if (fieldProp.enum && fieldProp.enumNames) {
     return cell => fieldProp.enumNames[fieldProp.enum.indexOf(cell)];
   } else if (fieldProp.type === "boolean") {
@@ -69,14 +70,39 @@ const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey) => {
             ? !row[defaultFilterKey] ? "deleted-row-boolean-column" : ""
             : ""
         }
-        style={{ textAlign: "right" }}>
+        style={{ textAlign: "right" }}
+      >
         <label>{cell ? "Yes" : "No"}</label>
       </div>
     );
+	} else if (!!fieldUIProp && fieldUIProp.field === "asyncTypeahead") {
+	//mg correct render asynctypeahead value
+		let FieldEditor = fields[fieldUIProp.field];
+		let fieldSchemaWithoutTitle = Object.assign(
+		  { ...fieldProp },
+		  { title: "" }
+		);
+		let fieldUISchemaAsyncTypeahead = Object.assign(
+		  { ...fieldUIProp.uiSchema.asyncTypeahead },
+		  { disabled: true }
+		);
+		let fieldUISchema = Object.assign(
+		  { "asyncTypeahead": fieldUISchemaAsyncTypeahead }
+		);
+		return (cell, row) => (
+			<FieldEditor
+			  formData={cell}
+			  schema={fieldSchemaWithoutTitle}
+			  uiSchema={fieldUISchema}
+			/>
+		);
   } else if (
     fieldUIProp !== undefined &&
     fieldUIProp.columnCustomFormat !== undefined
   ) {
+    if (fieldUIProp.columnCustomFormat === "combineCodeAndDesc") {
+      return (_, row) => `${row.code} - ${row.description}`;
+    }
     let columnCustomFormat = JSON.parse(fieldUIProp.columnCustomFormat);
     let funcBody = JSON.parse(
       JSON.stringify(columnCustomFormat.function.body).replace(/&nbsp;/g, " ")
@@ -99,39 +125,39 @@ const toEditable = fieldProp => {
       });
       return {
         type: "select",
-        options: { values },
+        options: { values }
       };
     } else {
       return {
         type: "select",
-        options: { values: fieldProp.enum },
+        options: { values: fieldProp.enum }
       };
     }
   } else if (fieldProp.type === "boolean") {
     return {
-      type: "checkbox",
+      type: "checkbox"
     };
   } else if (fieldProp.format === "date-time") {
     return {
-      type: "datetime-local",
+      type: "datetime-local"
     };
   } else if (fieldProp.format === "date") {
     return {
-      type: "date",
+      type: "date"
     };
   } else if (fieldProp.format === "time") {
     return {
-      type: "time",
+      type: "time"
     };
   } else if (fieldProp.type === "number") {
     return {
-      type: "number",
+      type: "number"
     };
   }
   return true;
 };
 
-const columnHeadersFromSchema = (schema, uiSchema) => {
+const columnHeadersFromSchema = (schema, uiSchema, fields) => {
   let { items: { properties, defaultFilterKey = false } } = schema;
 
   let { table: { tableCols, tableConfig = {} } } = uiSchema;
@@ -145,7 +171,8 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
     let dataFormat = toDataFormat(
       properties[dataField],
       uiProperties,
-      defaultFilterKey
+      defaultFilterKey,
+	  fields
     );
     let dataAlign = toDataAlignment(properties[dataField]);
     let columnClassName = toColumnClassNames(
@@ -166,7 +193,7 @@ const columnHeadersFromSchema = (schema, uiSchema) => {
       dataFormat,
       dataAlign,
       columnTitle,
-      columnClassName,
+      columnClassName
     };
   });
   return schemaCols;
@@ -210,13 +237,13 @@ export function overrideColDataFormat(colConf, fieldSchema, formData) {
     colConf.field !== undefined &&
     colConf.field === "asyncTypeahead"
   ) {
-    //Only handle Type head with Array
-    if (fieldSchema.type === "array") {
+    //Only handle Type head with Array -- MG STOPPED
+    if (1 == 2 && fieldSchema.type === "array") {
       const {
         dataField = false,
         uiSchema: {
-          asyncTypeahead: { arrayItemIndicator = "glyphicon glyphicon-record" },
-        },
+          asyncTypeahead: { arrayItemIndicator = "glyphicon glyphicon-record" }
+        }
       } = colConf;
       colConf.dataFormat = function(cell, row) {
         let displayData = "";
@@ -258,71 +285,103 @@ const overrideColEditable = (colConf, fieldSchema, fields) => {
           uiSchema={fieldUISchema}
           onChange={onUpdate}
         />
-      ),
+      )
     };
-  }else if (colConf.cellCustomEditor){ // Block to customeditorCell , html input(not json form)
-    colConf.customEditor = 
-     { getElement: cellCustomEditor,
-       customEditorParameters: { fieldSchema: fieldSchema, fieldConf : colConf }
-     }        
-}
+  } else if (colConf.cellCustomEditor) {
+    // Block to customeditorCell , html input(not json form)
+    colConf.customEditor = {
+      getElement: cellCustomEditor,
+      customEditorParameters: { fieldSchema: fieldSchema, fieldConf: colConf }
+    };
+  }
 };
-const cellCustomEditor = (onUpdate, props) => (<CustomCellEditor onUpdate={ onUpdate } {...props}/>);
-  class CustomCellEditor extends React.Component {
+const cellCustomEditor = (onUpdate, props) => (
+  <CustomCellEditor onUpdate={onUpdate} {...props} />
+);
+class CustomCellEditor extends React.Component {
   constructor(props) {
     super(props);
     this.updateData = this.updateData.bind(this);
     this.updateField = this.updateField.bind(this);
     this.state = {
-      value: props.defaultValue,      
+      value: props.defaultValue
     };
   }
   focus() {
     this.refs.inputRef.focus();
   }
   updateData(e) {
-    this.props.onUpdate(e.currentTarget.value );
+    this.props.onUpdate(e.currentTarget.value);
   }
   updateField(newValue, props) {
-    const  { cellCustomEditorProps :{ maxlength = 10}, editorFieldProps={}, type='number'} = props;
-     if(type === 'number'){
-      const  {cellCustomEditorProps:{ allowDigitAfterDecimal = 3 ,roundDecimal =false}} = props;
-      let parseNumber = (newValue.toString().split('.')); 
-      if(allowDigitAfterDecimal!== undefined){
-        if(roundDecimal && (parseNumber[1] !== undefined && parseNumber[1].length > allowDigitAfterDecimal)) { // to round as decimal
-        newValue = parseFloat(newValue).toFixed(allowDigitAfterDecimal);         
-        }else{
-          if(parseNumber[1] !== undefined && parseNumber[1].length > allowDigitAfterDecimal){
-            parseNumber[1]  =  parseNumber[1].toString().substring(0, allowDigitAfterDecimal);// truncating the sting if reached the max
-            newValue = parseNumber.join('.')
+    const {
+      cellCustomEditorProps: { maxlength = 10 },
+      type = "number"
+    } = props;
+    if (type === "number") {
+      const {
+        cellCustomEditorProps: {
+          allowDigitAfterDecimal = 3,
+          roundDecimal = false
+        }
+      } = props;
+      let parseNumber = newValue.toString().split(".");
+      if (allowDigitAfterDecimal !== undefined) {
+        if (
+          roundDecimal &&
+          (parseNumber[1] !== undefined &&
+            parseNumber[1].length > allowDigitAfterDecimal)
+        ) {
+          // to round as decimal
+          newValue = parseFloat(newValue).toFixed(allowDigitAfterDecimal);
+        } else {
+          if (
+            parseNumber[1] !== undefined &&
+            parseNumber[1].length > allowDigitAfterDecimal
+          ) {
+            parseNumber[1] = parseNumber[1]
+              .toString()
+              .substring(0, allowDigitAfterDecimal); // truncating the sting if reached the max
+            newValue = parseNumber.join(".");
           }
-          newValue = newValue ? ( newValue.toString().match(/^-?\d+(?:\.\d{0,3})?/) ? newValue.toString().match(/^-?\d+(?:\.\d{0,3})?/)[0] : newValue)   : newValue;          
-        }        
-      }             
-     } else {
-      newValue = newValue;
-     } 
-     if(maxlength !== undefined){    
-      if( newValue.toString().length > maxlength){
-        newValue =  newValue.toString().substring(0, maxlength)
+          newValue = newValue
+            ? newValue.toString().match(/^-?\d+(?:\.\d{0,3})?/)
+              ? newValue.toString().match(/^-?\d+(?:\.\d{0,3})?/)[0]
+              : newValue
+            : newValue;
+        }
       }
-    }   
-     this.setState({ value: newValue });   
+    } else {
+      let newValue = newValue;
     }
+    if (maxlength !== undefined) {
+      if (newValue.toString().length > maxlength) {
+        newValue = newValue.toString().substring(0, maxlength);
+      }
+    }
+    this.setState({ value: newValue });
+  }
 
   render() {
-    const {fieldConf : { cellCustomEditor = {}, cellCustomEditor:  {editorFieldProps={}}},  type = 'number'} = this.props;
+    const {
+      fieldConf: {
+        cellCustomEditor = {},
+        cellCustomEditor: { editorFieldProps = {} }
+      },
+      type = "number"
+    } = this.props;
     return (
-            <div >
-             <input
-                ref='inputRef'
-                type={type}
-                value={ this.state.value }
-                 {...editorFieldProps}
-                onChange= {event => this.updateField(event.currentTarget.value, cellCustomEditor)}
-                onBlur = {this.updateData}
-                />
-            </div>           
+      <div>
+        <input
+          ref="inputRef"
+          type={type}
+          value={this.state.value}
+          {...editorFieldProps}
+          onChange={event =>
+            this.updateField(event.currentTarget.value, cellCustomEditor)}
+          onBlur={this.updateData}
+        />
+      </div>
     );
   }
 }
@@ -345,10 +404,20 @@ const overrideColumns = (
     let updCol = Object.assign({}, col, colConf);
     overrideColDataFormat(updCol, properties[col.dataField], formData);
     overrideColEditable(updCol, properties[col.dataField], fields);
+    updateTableDefaultColumnProperties(updCol);
     return updCol;
   });
 
   return columnsWithOverrides;
+};
+
+const updateTableDefaultColumnProperties = colConf => {
+  const defaultKeys = Object.keys(TABLE_COLUMN_DEFAULT_PROPERTIES);
+  defaultKeys.map(defaultKey => {
+    if (!colConf[defaultKey]) {
+      colConf[defaultKey] = TABLE_COLUMN_DEFAULT_PROPERTIES[defaultKey];
+    }
+  });
 };
 
 const orderColumns = (columns, uiSchema) => {
@@ -377,7 +446,7 @@ const setColumnCSSIfMissing = (col, css) => {
   let {
     className = css,
     columnClassName = css,
-    editColumnClassName = css,
+    editColumnClassName = css
   } = col;
   Object.assign(col, { className, columnClassName, editColumnClassName });
 };
@@ -404,9 +473,10 @@ const columnHeadersFactory = (
   uiSchema,
   fields = {},
   formData,
-  onChange
+  onChange,
+  forceReRenderTable
 ) => {
-  let allColumns = columnHeadersFromSchema(schema, uiSchema);
+  let allColumns = columnHeadersFromSchema(schema, uiSchema, fields);
   let orderedColumns = orderColumns(allColumns, uiSchema);
   let withOverrides = overrideColumns(
     orderedColumns,
@@ -420,7 +490,8 @@ const columnHeadersFactory = (
     schema,
     uiSchema,
     formData,
-    onChange
+    onChange,
+    forceReRenderTable
   );
 
   leftColumns.forEach(col => columnsWithCSS.unshift(col));
