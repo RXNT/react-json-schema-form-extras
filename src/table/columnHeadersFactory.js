@@ -76,7 +76,7 @@ const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey, fields) => {
       </div>
     );
 	} else if (!!fieldUIProp && fieldUIProp.field === "asyncTypeahead") {
-	  //MG correct render asynctypeahead value
+	//mg correct render asynctypeahead value
 		let FieldEditor = fields[fieldUIProp.field];
 		let fieldSchemaWithoutTitle = Object.assign(
 		  { ...fieldProp },

@@ -2,8 +2,8 @@ const formData = {
   orders: [
     { order: "sdw" },
     { order: "Metabolic Panel" },
-    { order: "CAT, Head with contrast" },
-  ],
+    { order: "CAT, Head with contrast" }
+  ]
 };
 
 const schema = {
@@ -17,12 +17,12 @@ const schema = {
         properties: {
           order: {
             type: "string",
-            title: "Order",
-          },
-        },
-      },
-    },
-  },
+            title: "Order"
+          }
+        }
+      }
+    }
+  }
 };
 
 const uiSchema = {
@@ -34,9 +34,9 @@ const uiSchema = {
       field: "table",
       collapsed: false,
       icon: {
-        add: "glyphicon glyphicon-plus-sign glyPhiconGreen",
+        add: "glyphicon glyphicon-plus-sign glyPhiconGreen"
       },
-      addTo: "self",
+      addTo: "self"
     },
     table: {
       leftActions: [
@@ -46,20 +46,38 @@ const uiSchema = {
           columnClassName: "col-md-1",
           editColumnClassName: "col-md-1",
           icon: "glyphicon glyphicon-minus",
-          displayName: "Hello",
-        },
+          displayName: "Hello"
+        }
       ],
       rightActions: [
         {
-          action: "delete",
+          action: "dropDownAction",
           className: "col-md-1",
           columnClassName: "col-md-1",
           editColumnClassName: "col-md-1",
-          icon: "glyphicon glyphicon-minus",
-        },
-      ],
-    },
-  },
+          icon: "glyphicon glyphicon-option-vertical",
+          dropDownAction: [
+            {
+              action: "edit",
+              className: "col-md-1",
+              columnClassName: "col-md-1",
+              editColumnClassName: "col-md-1",
+              icon: "glyphicon glyphicon-pencil",
+              displayName: "Edit"
+            },
+            {
+              action: "delete",
+              className: "col-md-1",
+              columnClassName: "col-md-1",
+              editColumnClassName: "col-md-1",
+              icon: "glyphicon glyphicon-trash",
+              displayName: "Delete"
+            }
+          ]
+        }
+      ]
+    }
+  }
 };
 
 export default { schema, uiSchema, formData };

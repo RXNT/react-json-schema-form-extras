@@ -8,10 +8,7 @@ const DEFAULT_TABLE_CONF = {
     blurToSave: true,
   },
   options: {},
-  keyBoardNav: {
-    enterToEdit: true,
-  },
-  handleConfirmDeleteRow: next => next(),
+  handleConfirmDeleteRow: (next) => next(),
 };
 
 export function addPosition(data) {
@@ -20,7 +17,7 @@ export function addPosition(data) {
 
 export function removePosition(data) {
   if (Array.isArray(data)) {
-    return data.map(el => removePosition(el));
+    return data.map((el) => removePosition(el));
   } else {
     let dataCopy = Object.assign({}, data);
     delete dataCopy[POSITION_KEY];
@@ -35,7 +32,10 @@ export default function tableConfFrom(
   afterDeleteRow,
   highlightAfterDelete,
   handleRowSelect,
-  handleAllRowSelect
+  handleAllRowSelect,
+  myRowExpand,
+  isRowExpandable,
+  expandColumnComponent
 ) {
   let { keyField = POSITION_KEY } = table;
   if (keyField === POSITION_KEY) {
@@ -48,7 +48,6 @@ export default function tableConfFrom(
     table,
     { keyField }
   );
-
   tableConf.cellEdit.afterSaveCell = afterSaveCell;
   tableConf.options.afterDeleteRow = afterDeleteRow;
   tableConf.trClassName = highlightAfterDelete;
@@ -63,6 +62,16 @@ export default function tableConfFrom(
     tableConf.selectRow.onSelectAllRow !== undefined
   ) {
     tableConf.selectRow.onSelectAll = handleAllRowSelect;
+  }
+  let { isTableExpandable = false, allowOneRowExpanding = true } = table;
+  if (isTableExpandable) {
+    tableConf.options.onlyOneExpanding = allowOneRowExpanding;
+    tableConf.expandComponent = myRowExpand;
+    tableConf.expandableRow = isRowExpandable;
+    tableConf.expandColumnOptions = {
+      expandColumnVisible: isTableExpandable,
+      expandColumnComponent: expandColumnComponent,
+    };
   }
 
   return tableConf;

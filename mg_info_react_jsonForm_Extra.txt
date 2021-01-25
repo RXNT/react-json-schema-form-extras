@@ -1,3 +1,0 @@
-files modificati da me:
-src/TypeaheadField.js
-src/table/columnHeadersFactory.js

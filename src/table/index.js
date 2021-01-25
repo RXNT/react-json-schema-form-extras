@@ -33,6 +33,30 @@ function convertFields(cellValue, { type, format, default: def }) {
   }
   return cellValue;
 }
+function getFieldValue(cellValue, type, format, dataFormat) {
+  if (type === "boolean") {
+    return cellValue === "true";
+  } else if (type === "number") {
+    return cellValue !== undefined && cellValue != ""
+      ? parseFloat(cellValue)
+      : "";
+  } else if (type === "string" && format === "date-time") {
+    if (cellValue === "") {
+      return "";
+    } else {
+      let date = new Date(cellValue);
+      return date.toISOString();
+    }
+  } else if (type === "string" && format === "date") {
+    if (cellValue === "") {
+      return "";
+    } else {
+      let date = moment(cellValue).format(dataFormat);
+      return date;
+    }
+  }
+  return cellValue;
+}
 function isEquivalentObject(a, b) {
   // Create arrays of property names
   var aProps = Object.getOwnPropertyNames(a);
@@ -68,6 +92,8 @@ class TableField extends Component {
     this.handleDeletedRow = this.handleDeletedRow.bind(this);
     this.handleRowSelect = this.handleRowSelect.bind(this);
     this.handleAllRowSelect = this.handleAllRowSelect.bind(this);
+    this.isRowExpandable = this.isRowExpandable.bind(this);
+    this.myRowExpand = this.myRowExpand.bind(this);
   }
   handleDeletedRow(row, rowIdx, c) {
     let { items: { defaultFilterKey = undefined } } = this.props.schema;
@@ -78,7 +104,7 @@ class TableField extends Component {
       let classAfterAction = rightActions.map(rightAction => {
         if (rightAction.action === "update") {
           let {
-            actionConfiguration: { actionCompletedClassName = false },
+            actionConfiguration: { actionCompletedClassName = false }
           } = rightAction;
           return actionCompletedClassName;
         }
@@ -134,7 +160,7 @@ class TableField extends Component {
   handleRowSelect(row, isSelected, e) {
     const {
       data,
-      selectRow: { onSelectRow: { fieldToUpdate = "picked" } },
+      selectRow: { onSelectRow: { fieldToUpdate = "picked" } }
     } = this.tableConf;
     let filteredRows = (data || []).map(item => {
       if (!isSelected && item[fieldToUpdate] !== undefined) {
@@ -151,7 +177,7 @@ class TableField extends Component {
   handleAllRowSelect(isSelected, rows, e) {
     const {
       // data,
-      selectRow: { onSelectAllRow: { fieldToUpdate = "picked" } },
+      selectRow: { onSelectAllRow: { fieldToUpdate = "picked" } }
     } = this.tableConf;
 
     let filteredRows = (rows || []).map(item => {
@@ -212,9 +238,152 @@ class TableField extends Component {
       schema,
       uiSchema,
       registry,
-      version: "1",
+      version: "1"
     };
     return <InsertModal {...attr} />;
+  };
+  isRowExpandable(isTableExpandable) {
+    return (
+      this.props.uiSchema.table &&
+      (this.props.uiSchema.table.isTableExpandable ||
+        this.props.uiSchema.table.isTableExpandable !== undefined)
+    );
+  }
+
+  myRowExpand(currentTableData) {
+    let {
+      schema: { items: { properties = [] } },
+      uiSchema: { table: { tableCols = [] } }
+    } = this.props;
+
+    let tableList = tableCols.map(function(item) {
+      const { includeInExpandedRow = false, dataField = "" } = item;
+      let { title = "", ...dynamicItems } = properties[dataField];
+      if (includeInExpandedRow) {
+        const order = item["ui:order"] !== undefined ? item["ui:order"] : [];
+        const fieldData = currentTableData[dataField] || {};
+        let isComponentDataAvailable = false;
+        if (order.length > 0) {
+          let tableListData = order.map(function(fieldName) {
+            let { title = "", type = "", format = "" } = properties[
+              dataField
+            ].properties[fieldName];
+            const { dataFormat, includeInExpandedRow = false } = item[
+              fieldName
+            ];
+            if (
+              fieldData[fieldName] !== undefined &&
+              fieldData[fieldName] !== "" &&
+              includeInExpandedRow
+            ) {
+              isComponentDataAvailable = true;
+              switch (type) {
+                case "string":
+                  return (
+                    <div className="customTable-item">
+                      <span className="customTable-item-subheader">
+                        {title}
+                      </span>
+                      {` ${getFieldValue(
+                        fieldData[fieldName],
+                        type,
+                        format,
+                        dataFormat
+                      )}`}
+                    </div>
+                  );
+                case "object":
+                  if (Object.keys(fieldData[fieldName]).length > 0) {
+                    return (
+                      <div className="customTable-item">
+                        <span className="customTable-item-subheader">
+                          {title}
+                        </span>
+                        {` ${fieldData[fieldName].description}`}
+                      </div>
+                    );
+                  }
+              }
+            }
+            return;
+          });
+          return (
+            isComponentDataAvailable && (
+              <div className="customTable-expandedItems">
+                <div className="customTable-itemHeading">{title}:</div>
+                <div>{tableListData}</div>
+              </div>
+            )
+          );
+        } else {
+          const { properties = {} } = dynamicItems;
+          let tableList = Object.keys(properties);
+          let tableListData = tableList.map(function(fieldName, i) {
+            if (
+              fieldData[fieldName] !== undefined &&
+              Object.keys(fieldData[fieldName]).length > 0
+            ) {
+              isComponentDataAvailable = true;
+              return (
+                <li className="customTable-item">
+                  {fieldData[fieldName].code +
+                    " - " +
+                    fieldData[fieldName].description}
+                </li>
+              );
+            }
+            return;
+          });
+          return (
+            isComponentDataAvailable && (
+              <div className="customTable-expandedItems">
+                <div className="customTable-itemHeading">{title}:</div>
+                <ol>{tableListData}</ol>
+              </div>
+            )
+          );
+        }
+      }
+    });
+    return <div className="customTable-expandedContent">{tableList}</div>;
+  }
+  expandColumnComponent({ isExpandableRow, isExpanded }) {
+    let icon = <span className={`fa fa-plus glyphicon`} />;
+
+    if (isExpandableRow) {
+      let expandImgSrc = isExpanded ? "upChevron" : "downChevron";
+      icon = (
+        <img src={`/ehrv8/EncounterV2Template/images/${expandImgSrc}.png`} />
+      );
+    }
+
+    return icon;
+  }
+  getExpandableTableOptions() {
+    if (
+      this.props.uiSchema.table &&
+      (this.props.uiSchema.table.isTableExpandable ||
+        this.props.uiSchema.table.isTableExpandable !== undefined)
+    ) {
+      const { expandBy = "column", ...otherTableOptions } =
+        this.props.uiSchema.table.expandableTableOptions || {}; // expandableTableOptions is option from the uischema
+      return { expandBy, ...otherTableOptions };
+    }
+  }
+  forceReRenderTable = () => this.forceUpdate();
+
+  handleRowColorChange = (row, rowIndx) => {
+    let tableName = this.props.name;
+    if (tableName === "diagnosis") {
+      if (row.procedureCode && row.procedureCode.length > 0) {
+        return "rxntBlueBackground";
+      } else {
+        return "rxntWhiteBackground";
+      }
+    }
+    if (tableName === "procedureCodes") {
+      return "rxntWhiteBackground";
+    }
   };
 
   render() {
@@ -224,8 +393,10 @@ class TableField extends Component {
       formData,
       registry: { fields },
       idSchema: { $id } = {},
-      onChange,
+      onChange
     } = this.props;
+
+    let forceReRenderTable = this.forceReRenderTable;
 
     this.tableConf = tableConfFrom(
       uiSchema,
@@ -234,9 +405,19 @@ class TableField extends Component {
       this.handleRowsDelete,
       this.handleDeletedRow,
       this.handleRowSelect,
-      this.handleAllRowSelect
+      this.handleAllRowSelect,
+      this.myRowExpand,
+      this.isRowExpandable,
+      this.expandColumnComponent
     );
-    this.tableConf.options.insertModal = this.createCustomModal;
+    const expandableTableOptions = this.getExpandableTableOptions();
+    //this.tableConf.options.insertModal = this.createCustomModal;
+    const boostrapTableOptions = {
+	  ...this.tableConf.options,
+      insertModal: this.createCustomModal,
+      ...expandableTableOptions
+    };
+    this.tableConf.options = boostrapTableOptions;
 
     this.tableConf.cellEdit.beforeSaveCell = this.beforeSaveCell;
     let columns = columnHeadersFrom(
@@ -244,12 +425,13 @@ class TableField extends Component {
       uiSchema,
       fields,
       formData,
-      onChange
+      onChange,
+      forceReRenderTable
     );
 
     return (
       <div id={$id}>
-        <BootstrapTable {...this.tableConf} ref="table">
+        <BootstrapTable {...this.tableConf}  trClassName={this.handleRowColorChange} ref="table">
           {columns.map((column, i) => {
             return (
               <TableHeaderColumn key={i} {...column}>
