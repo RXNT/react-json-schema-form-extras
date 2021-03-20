@@ -83,8 +83,7 @@ const toDataFormat = (fieldProp, fieldUIProp, defaultFilterKey, fields) => {
 		  { title: "" }
 		);
 		let fieldUISchemaAsyncTypeahead = Object.assign(
-		  { ...fieldUIProp.uiSchema.asyncTypeahead },
-		  { disabled: true }
+		  { ...fieldUIProp.uiSchema.asyncTypeahead }
 		);
 		let fieldUISchema = Object.assign(
 		  { "asyncTypeahead": fieldUISchemaAsyncTypeahead }
