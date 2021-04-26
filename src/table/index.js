@@ -89,18 +89,21 @@ class TableField extends Component {
     super(props);
     this.handleCellSave = this.handleCellSave.bind(this);
     this.handleRowsDelete = this.handleRowsDelete.bind(this);
-    this.handleDeletedRow = this.handleDeletedRow.bind(this);
+    this.handleTrClassName = this.handleTrClassName.bind(this);
+    this.handleTrStyle = this.handleTrStyle.bind(this);
     this.handleRowSelect = this.handleRowSelect.bind(this);
     this.handleAllRowSelect = this.handleAllRowSelect.bind(this);
     this.isRowExpandable = this.isRowExpandable.bind(this);
     this.myRowExpand = this.myRowExpand.bind(this);
+    this.handlefooterData = this.handlefooterData.bind(this);
   }
-  handleDeletedRow(row, rowIdx, c) {
+  handleTrClassName(row, rowIdx, c) {
     let { items: { defaultFilterKey = undefined } } = this.props.schema;
     let { table: { rightActions } } = this.props.uiSchema;
+    let {trClassName = ""} = row //tr class from row details
 
-    let highlightRow = "";
     if (rightActions) {
+      //handle Row Class Name on actions
       let classAfterAction = rightActions.map(rightAction => {
         if (rightAction.action === "update") {
           let {
@@ -111,10 +114,17 @@ class TableField extends Component {
         return undefined;
       });
       if (!row[defaultFilterKey] && row[defaultFilterKey] !== undefined) {
-        highlightRow = classAfterAction;
+        trClassName = classAfterAction;
       }
     }
-    return highlightRow;
+    return trClassName;
+  }
+  handleTrStyle(row, rowIdx, c) {
+    let trStyle = ""
+    if(row != undefined){
+      trStyle = (!!row.trStyle) ? row.trStyle : ""   //tr style from row details
+    }
+    return trStyle;
   }
   handleCellSave(updRow, cellName, cellValue) {
     let { keyField, data } = this.tableConf;
@@ -242,6 +252,15 @@ class TableField extends Component {
     };
     return <InsertModal {...attr} />;
   };
+
+  handlefooterData() {
+    return (
+      this.props.uiSchema.table &&
+      (this.props.uiSchema.table.footerData ||
+        this.props.uiSchema.table.footerData !== undefined)
+    );
+  }
+
   isRowExpandable(isTableExpandable) {
     return (
       this.props.uiSchema.table &&
@@ -386,6 +405,10 @@ class TableField extends Component {
     }
   };
 
+  handleFooter = () => {
+    return 'footer'
+  }
+
   render() {
     let {
       uiSchema,
@@ -403,12 +426,14 @@ class TableField extends Component {
       formData,
       this.handleCellSave,
       this.handleRowsDelete,
-      this.handleDeletedRow,
+      this.handleTrClassName,
+      this.handleTrStyle,
       this.handleRowSelect,
       this.handleAllRowSelect,
       this.myRowExpand,
       this.isRowExpandable,
-      this.expandColumnComponent
+      this.expandColumnComponent,
+      this.handlefooterData
     );
     const expandableTableOptions = this.getExpandableTableOptions();
     //this.tableConf.options.insertModal = this.createCustomModal;
@@ -431,7 +456,7 @@ class TableField extends Component {
 
     return (
       <div id={$id}>
-        <BootstrapTable {...this.tableConf}  trClassName={this.handleRowColorChange} ref="table">
+        <BootstrapTable {...this.tableConf} ref="table">
           {columns.map((column, i) => {
             return (
               <TableHeaderColumn key={i} {...column}>
