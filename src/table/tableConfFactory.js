@@ -30,12 +30,14 @@ export default function tableConfFrom(
   formData = [],
   afterSaveCell,
   afterDeleteRow,
-  highlightAfterDelete,
+  handleTrClassName,
+  handleTrStyle,
   handleRowSelect,
   handleAllRowSelect,
   myRowExpand,
   isRowExpandable,
-  expandColumnComponent
+  expandColumnComponent,
+  handlefooterData
 ) {
   let { keyField = POSITION_KEY } = table;
   if (keyField === POSITION_KEY) {
@@ -48,9 +50,10 @@ export default function tableConfFrom(
     table,
     { keyField }
   );
-  tableConf.cellEdit.afterSaveCell = afterSaveCell;
-  tableConf.options.afterDeleteRow = afterDeleteRow;
-  tableConf.trClassName = highlightAfterDelete;
+  tableConf.cellEdit.afterSaveCell = afterSaveCell
+  tableConf.options.afterDeleteRow = afterDeleteRow
+  tableConf.trClassName = handleTrClassName
+  tableConf.trStyle = handleTrStyle
   if (
     tableConf.selectRow !== undefined &&
     tableConf.selectRow.onSelectRow !== undefined
@@ -73,6 +76,10 @@ export default function tableConfFrom(
       expandColumnComponent: expandColumnComponent,
     };
   }
-
+  let { footerData = false } = table;
+  if (footerData) {
+    tableConf.footer = true
+    tableConf.footerData = handlefooterData()
+  }
   return tableConf;
 }
