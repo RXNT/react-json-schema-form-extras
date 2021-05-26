@@ -1,20 +1,25 @@
 import React from "react";
 
-function actionFactory(action, actionConfiguration, schema) {
+function actionFactory(
+  action,
+  actionConfiguration,
+  schema,
+  dropDownAction = null
+) {
   if (action === "update") {
     return (cell, row, enumObject, rowIndex, formData, onChange) => {
       let newFormData = formData.slice(0);
       if (rowIndex != undefined) {
-        newFormData.map(function (value, index) {
+        newFormData.map(function(value, index) {
           if (rowIndex === index) {
             let actionToApply = 0; // 0 - update(soft delete), 1 - delete(hard delete)
             let {
               mandatoryField = undefined,
-              fieldToUpdate = undefined,
+              fieldToUpdate = undefined
             } = actionConfiguration;
 
             if (mandatoryField !== undefined) {
-              mandatoryField.map((mandatory) => {
+              mandatoryField.map(mandatory => {
                 if (value[mandatory] === undefined || value[mandatory] === "") {
                   actionToApply = 1;
                 }
@@ -24,7 +29,7 @@ function actionFactory(action, actionConfiguration, schema) {
               // just updating the Column
               if (fieldToUpdate !== undefined) {
                 let update = [];
-                fieldToUpdate.map((fieldToUpdate) => {
+                fieldToUpdate.map(fieldToUpdate => {
                   if (schema[fieldToUpdate] !== undefined) {
                     if (schema[fieldToUpdate]["type"] === "boolean") {
                       update[fieldToUpdate] = !value[fieldToUpdate];
@@ -75,9 +80,24 @@ function actionFactory(action, actionConfiguration, schema) {
         let newFormData = formData.slice(0);
         newFormData.splice(rowIndex, 1);
         onChange(newFormData);
-        if (window && window.handleCptUpdatePopUp && schema && schema.code) {
-          window.handleCptUpdatePopUp(rowIndex, "delete");
-        } // to delete the code from diagnosis
+
+        //Windows Object Global Call
+        let selectedAction = null;
+        if (dropDownAction !== null) {
+          selectedAction = dropDownAction.find(
+            availableAction => availableAction.action === dropDownActionName
+          );
+        }
+        if (selectedAction) {
+          const { windowDeleteAction = null } = selectedAction;
+          if (windowDeleteAction && window[windowDeleteAction]) {
+            window[windowDeleteAction](rowIndex, "delete");
+          }
+        } else {
+          if (window && window.handleCptUpdatePopUp && schema && schema.code) {
+            window.handleCptUpdatePopUp(rowIndex, "delete");
+          } // to delete the code from diagnosis
+        }
       } else {
         // Edit
         if (window && window.handleCptUpdatePopUp) {
@@ -98,20 +118,24 @@ function actionColumnFrom(
   forceReRenderTable
 ) {
   let { filterField = false, actionCompletedIcon = "" } = actionConfiguration;
-  let handleClick = actionFactory(action, actionConfiguration, schema);
+  let handleClick = actionFactory(
+    action,
+    actionConfiguration,
+    schema,
+    dropDownAction
+  );
   if (!handleClick) {
     return {};
   }
-
   let hideDropDownAction = true;
   let selectedRow = false;
   let prevSelectedRow = "";
 
-  const handleOutsideClick = (e) => {
+  const handleOutsideClick = e => {
     /* Forcing the table to render again using forceUpdate for closing actions when clicking outside */
     if (e.target.parentElement.id !== "dropDownAction") {
       forceReRenderTable();
-      setTimeout(function () {
+      setTimeout(function() {
         document.removeEventListener("click", handleOutsideClick, false);
       }, 500);
     } else if (
@@ -119,7 +143,7 @@ function actionColumnFrom(
       prevSelectedRow === selectedRow
     ) {
       forceReRenderTable();
-      setTimeout(function () {
+      setTimeout(function() {
         document.removeEventListener("click", handleOutsideClick, false);
       }, 500);
     }
@@ -136,10 +160,12 @@ function actionColumnFrom(
     selectedRow = rowIndex;
     prevSelectedRow = prevSelectedRow === "" ? rowIndex : prevSelectedRow;
     document.addEventListener("click", handleOutsideClick, false);
+
     const handleDropDownAction = actionFactory(
       action,
       actionConfiguration,
-      schema
+      schema,
+      dropDownAction
     );
     hideDropDownAction = dropDownActionComponent(
       rowIndex,
@@ -163,8 +189,7 @@ function actionColumnFrom(
                 formData,
                 onChange,
                 dropDownAction
-              )
-        }
+              )}
       >
         {action !== "dropDownAction" ? (
           <i
@@ -181,7 +206,7 @@ function actionColumnFrom(
         {rowIndex === selectedRow && hideDropDownAction}
       </span>
     ),
-    editable: false,
+    editable: false
   };
 }
 
@@ -192,7 +217,7 @@ const dropDownActionComponent = (
   actionList = [],
   onChange
 ) => {
-  let dropDownActionList = actionList.map((action) => {
+  let dropDownActionList = actionList.map(action => {
     return (
       <li
         key={action.action}
@@ -202,8 +227,7 @@ const dropDownActionComponent = (
             formData,
             action.displayName.toLowerCase(),
             onChange
-          )
-        }
+          )}
       >
         <img
           src={
@@ -226,16 +250,19 @@ const dropDownActionComponent = (
   );
 };
 
-const actionToCol = (formData, onChange, schema, forceReRenderTable) => (
-  actionConf
-) => {
+const actionToCol = (
+  formData,
+  onChange,
+  schema,
+  forceReRenderTable
+) => actionConf => {
   let genericConf = actionColumnFrom(actionConf, schema, forceReRenderTable);
   let realDataFormat = actionConf.dataFormat
     ? actionConf.dataFormat
     : genericConf.dataFormat;
   return Object.assign({}, actionConf, genericConf, {
     dataFormat: (cell, row, enumObject, rowIndex) =>
-      realDataFormat(cell, row, enumObject, rowIndex, formData, onChange),
+      realDataFormat(cell, row, enumObject, rowIndex, formData, onChange)
   });
 };
 
@@ -247,9 +274,7 @@ export default function actionHeadersFrom(
   forceReRenderTable
 ) {
   let { table: { rightActions = [], leftActions = [] } = {} } = uiSchema;
-  let {
-    items: { properties = [] },
-  } = schema;
+  let { items: { properties = [] } } = schema;
 
   let rightColumns = rightActions.map(
     actionToCol(formData, onChange, properties, forceReRenderTable)

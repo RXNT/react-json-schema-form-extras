@@ -48,7 +48,8 @@ export default {
               columnClassName: "table-action",
               editColumnClassName: "table-action",
               icon: "glyphicon glyphicon-trash",
-              displayName: "Delete"
+              displayName: "Delete",
+              windowDeleteAction: "handleCptUpdatePopUp"
             }
           ]
         }
