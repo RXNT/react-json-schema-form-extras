@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import {
   deepEquals,
-  getDefaultFormState,
+  getDefaultFormState
 } from "react-jsonschema-form/lib/utils";
 import PropTypes from "prop-types";
 
@@ -37,7 +37,7 @@ function CollapseMenu(props) {
         icon: {
           enabled = "glyphicon glyphicon-chevron-down",
           disabled = "glyphicon glyphicon-chevron-right",
-          add = "glyphicon glyphicon-plus-sign",
+          add = "glyphicon glyphicon-plus-sign"
         } = {},
         separate = true,
         addTo,
@@ -55,16 +55,16 @@ function CollapseMenu(props) {
           marginBottom = "5px",
           zIndex = -1,
           divCursor = "pointer",
-          addCursor = "copy",
-        } = {},
-      },
+          addCursor = "copy"
+        } = {}
+      }
     },
     formContext = {},
     onChange,
     onAdd,
     title,
     name,
-    collapsed,
+    collapsed
   } = props;
 
   const handleAdd = event => {
@@ -84,13 +84,15 @@ function CollapseMenu(props) {
           marginBottom,
           zIndex,
           cursor: divCursor,
-          background,
-        }}>
+          background
+        }}
+      >
         <span style={{ color: textColor }}>{title || name}</span>&nbsp;
         {addTo && (
           <a
             onClick={handleAdd}
-            style={{ color: addGlyphColor, cursor: addCursor }}>
+            style={{ color: addGlyphColor, cursor: addCursor }}
+          >
             <i style={{ cursor: addCursor }} className={add} />
           </a>
         )}
@@ -117,7 +119,7 @@ class CollapseLegend extends Component {
   render() {
     let {
       uiSchema: { collapse: { legend } },
-      formContext: { legends = {} } = {},
+      formContext: { legends = {} } = {}
     } = this.props;
     if (!legend) {
       return null;
@@ -176,7 +178,13 @@ class CollapsibleField extends Component {
   handleAdd = () => {
     this.setState({ collapsed: false });
     this.forceUpdate(() => {
-      let { schema, uiSchema, formData, registry: { fields } } = this.props;
+      let {
+        schema,
+        uiSchema,
+        formData,
+        registry: { fields },
+        formContext
+      } = this.props;
       let { collapse: { addTo, addElement } } = uiSchema;
 
       let fieldSchema =
@@ -211,6 +219,8 @@ class CollapsibleField extends Component {
               onChange={formData => {
                 onBlur(formData);
               }}
+              formContext={{ ...formContext }}
+              formData={{ ...formData }}
             />
           );
           this.setState({ AddElement });
@@ -235,7 +245,7 @@ class CollapsibleField extends Component {
       registry: { fields },
       idSchema: { $id } = {},
       name,
-      formContext,
+      formContext
     } = this.props;
     let { collapsed, AddElement } = this.state;
     let { collapse: { field } } = uiSchema;
@@ -272,7 +282,7 @@ CollapsibleField.propTypes = {
       icon: PropTypes.shape({
         enabled: PropTypes.string,
         disabled: PropTypes.string,
-        add: PropTypes.string,
+        add: PropTypes.string
       }),
       separate: PropTypes.boolean,
       addTo: PropTypes.string,
@@ -281,21 +291,21 @@ CollapsibleField.propTypes = {
         PropTypes.string,
         PropTypes.shape({
           component: PropTypes.string.isRequired,
-          props: PropTypes.object,
-        }),
+          props: PropTypes.object
+        })
       ]),
       actions: PropTypes.arrayOf(
         PropTypes.shape({
           component: PropTypes.string.isRequired,
-          props: PropTypes.object,
+          props: PropTypes.object
         })
       ),
-      wrapClassName: PropTypes.string,
-    }).isRequired,
+      wrapClassName: PropTypes.string
+    }).isRequired
   }).isRequired,
   registry: PropTypes.shape({
-    fields: PropTypes.object.isRequired,
-  }).isRequired,
+    fields: PropTypes.object.isRequired
+  }).isRequired
 };
 
 export default CollapsibleField;
