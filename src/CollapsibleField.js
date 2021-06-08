@@ -197,6 +197,7 @@ class CollapsibleField extends Component {
         return false;
       }
       let fieldUiSchema = addTo === "self" ? uiSchema : uiSchema[addTo];
+      let fieldFormData = addTo === "self" ? formData : formData[addTo];
 
       if (addElement) {
         if (typeof addElement === "function") {
@@ -219,8 +220,8 @@ class CollapsibleField extends Component {
               onChange={formData => {
                 onBlur(formData);
               }}
-              formContext={{ ...formContext }}
-              formData={{ ...formData }}
+              formContext={formContext}
+              formData={fieldFormData}
             />
           );
           this.setState({ AddElement });
