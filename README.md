@@ -198,7 +198,7 @@ You can customize presentation of collapsible field, with "collapse" object in u
     - `object` that allows to render any kind of `legend` you need, which will be sourced from `formContext` `legends` configuration
         - `component` `string` name of the component, that will be sourced from `formContext.legends` object
         - `props` `object` additional properties for rendered component
-
+- `additionalTitleField` `string` the name of an inner field whose value will be appended to the title separated by ':'
 
 Additional feature of the Collapsible field is to allow adding empty value to hidden `array`, it's enabled with `addTo` feature, which can
 be either `self` which assumes that Collapsible field is the target array, or it can be a property field.

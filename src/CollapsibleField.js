@@ -34,6 +34,7 @@ function CollapseMenu(props) {
   let {
     uiSchema: {
       collapse: {
+        additionalTitleField, // use the value of an inner field to append it to the title
         icon: {
           enabled = "glyphicon glyphicon-chevron-down",
           disabled = "glyphicon glyphicon-chevron-right",
@@ -60,6 +61,7 @@ function CollapseMenu(props) {
       }
     },
     formContext = {},
+    formData = {},
     onChange,
     onAdd,
     title,
@@ -71,6 +73,12 @@ function CollapseMenu(props) {
     event.stopPropagation();
     onAdd(event);
   };
+
+  // read the value of the additional title from an inner field
+  let additionalTitle = formData[additionalTitleField];
+  if (additionalTitle !== undefined) {
+    additionalTitle = ": " + additionalTitle;
+  }
 
   return (
     <div className={`${wrapClassName}`}>
@@ -87,7 +95,10 @@ function CollapseMenu(props) {
           background
         }}
       >
-        <span style={{ color: textColor }}>{title || name}</span>&nbsp;
+        <span style={{ color: textColor }}>
+          {title || name}
+          {additionalTitle}
+        </span>&nbsp;
         {addTo && (
           <a
             onClick={handleAdd}
@@ -246,7 +257,8 @@ class CollapsibleField extends Component {
       registry: { fields },
       idSchema: { $id } = {},
       name,
-      formContext
+      formContext,
+      formData
     } = this.props;
     let { collapsed, AddElement } = this.state;
     let { collapse: { field } } = uiSchema;
@@ -263,6 +275,7 @@ class CollapsibleField extends Component {
           uiSchema={uiSchema}
           collapsed={collapsed}
           formContext={formContext}
+          formData={formData}
           onAdd={this.handleAdd}
           onChange={this.handleCollapsed}
         />
