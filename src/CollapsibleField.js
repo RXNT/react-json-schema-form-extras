@@ -37,7 +37,7 @@ function CollapseMenu(props) {
     hiddenProperties = {},
     uiSchema: {
       collapse: {
-        hiddenProperties: headerItemsUiSchema = {
+        hiddenProperties: hiddenPropertiesUiSchema = {
           className: "header-elements-wrapper",
           items: {}
         },
@@ -83,7 +83,7 @@ function CollapseMenu(props) {
   };
 
   let headerElements = [];
-  const headerItemsWrapperClass = headerItemsUiSchema.className;
+  const headerItemsWrapperClass = hiddenPropertiesUiSchema.className;
 
   Object.keys(hiddenProperties).map(key => {
     const fieldSchema = hiddenProperties[key];
@@ -92,7 +92,7 @@ function CollapseMenu(props) {
     if (fieldName) {
       let FieldElement = fields[fieldName];
       const fieldId = `${key}`;
-      const fieldUiSchema = headerItemsUiSchema.items[key];
+      const fieldUiSchema = hiddenPropertiesUiSchema.items[key];
       const fieldFormData = formData[key];
 
       const onChange = (value, options) => {
@@ -103,7 +103,6 @@ function CollapseMenu(props) {
 
       headerElements.push(
         <FieldElement
-          className={"temptemp"}
           formContext={formContext}
           formData={fieldFormData}
           idSchema={{ $id: fieldId }}
