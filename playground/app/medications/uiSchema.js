@@ -25,6 +25,13 @@ export default {
       },
       classNames: "col-md-12",
       table: {
+        selectRow: {
+          mode: "checkbox",
+          clickToSelect: true,
+          bgColor: "grey",
+          onSelectRow: { fieldToUpdate: "picked" },
+          onSelectAllRow: { fieldToUpdate: "picked" }
+        },
         focusOnAdd: 1,
         insertRow: true,
         tableCols: [

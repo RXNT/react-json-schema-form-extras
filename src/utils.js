@@ -43,6 +43,19 @@ export function getDefaultValueForSchema(schema) {
   return "";
 }
 
+export function getFieldName(name) {
+  const DEFAULT_COMPONENT_TYPES = {
+    array: "ArrayField",
+    boolean: "BooleanField",
+    integer: "NumberField",
+    number: "NumberField",
+    object: "ObjectField",
+    string: "StringField"
+  };
+
+  return DEFAULT_COMPONENT_TYPES[`${name}`] || name;
+}
+
 export function deepCopy(obj) {
   return JSON.parse(JSON.stringify(obj));
 }

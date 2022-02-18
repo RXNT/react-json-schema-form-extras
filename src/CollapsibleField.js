@@ -5,6 +5,8 @@ import {
 } from "react-jsonschema-form/lib/utils";
 import PropTypes from "prop-types";
 
+import { getFieldName } from "./utils";
+
 class CollapseMenuAction extends Component {
   render() {
     let { action, allActions = {} } = this.props;
@@ -32,8 +34,13 @@ class CollapseMenuAction extends Component {
 
 function CollapseMenu(props) {
   let {
+    hiddenProperties = {},
     uiSchema: {
       collapse: {
+        hiddenProperties: headerItemsUiSchema = {
+          className: "header-elements-wrapper",
+          items: {}
+        },
         icon: {
           enabled = "glyphicon glyphicon-chevron-down",
           disabled = "glyphicon glyphicon-chevron-right",
@@ -60,17 +67,54 @@ function CollapseMenu(props) {
       }
     },
     formContext = {},
+    formData = {},
     onChange,
     onAdd,
     title,
     name,
-    collapsed
+    collapsed,
+    fields,
+    propsOnChange
   } = props;
 
   const handleAdd = event => {
     event.stopPropagation();
     onAdd(event);
   };
+
+  let headerElements = [];
+  const headerItemsWrapperClass = headerItemsUiSchema.className;
+
+  Object.keys(hiddenProperties).map(key => {
+    const fieldSchema = hiddenProperties[key];
+    const fieldName = getFieldName(fieldSchema.type);
+
+    if (fieldName) {
+      let FieldElement = fields[fieldName];
+      const fieldId = `${key}`;
+      const fieldUiSchema = headerItemsUiSchema.items[key];
+      const fieldFormData = formData[key];
+
+      const onChange = (value, options) => {
+        const newFormData = { ...formData };
+        newFormData[key] = value;
+        propsOnChange(newFormData, options);
+      };
+
+      headerElements.push(
+        <FieldElement
+          className={"temptemp"}
+          formContext={formContext}
+          formData={fieldFormData}
+          idSchema={{ $id: fieldId }}
+          key={key}
+          onChange={onChange}
+          schema={fieldSchema}
+          uiSchema={fieldUiSchema}
+        />
+      );
+    }
+  });
 
   return (
     <div className={`${wrapClassName}`}>
@@ -102,6 +146,7 @@ function CollapseMenu(props) {
             className={collapsed ? disabled : enabled}
           />
         </a>
+        <div className={headerItemsWrapperClass}>{headerElements}</div>
         {actions.map((action, i) => (
           <CollapseMenuAction
             key={i}
@@ -241,12 +286,14 @@ class CollapsibleField extends Component {
 
   render() {
     let {
-      schema: { title },
+      schema: { title, hiddenProperties },
       uiSchema,
       registry: { fields },
       idSchema: { $id } = {},
       name,
-      formContext
+      formContext,
+      formData,
+      onChange: propsOnChange
     } = this.props;
     let { collapsed, AddElement } = this.state;
     let { collapse: { field } } = uiSchema;
@@ -256,15 +303,21 @@ class CollapsibleField extends Component {
 
     title = uiSchema["ui:title"] ? uiSchema["ui:title"] : title ? title : name;
     let customizedId = collapsed ? $id : undefined;
+
     return (
       <div id={customizedId}>
         <CollapseMenu
+          collapsibleFieldId={$id}
+          hiddenProperties={hiddenProperties}
           title={title}
           uiSchema={uiSchema}
           collapsed={collapsed}
           formContext={formContext}
+          formData={formData}
+          fields={fields}
           onAdd={this.handleAdd}
           onChange={this.handleCollapsed}
+          propsOnChange={propsOnChange}
         />
         <div className="form-group">
           {AddElement && <AddElement />}

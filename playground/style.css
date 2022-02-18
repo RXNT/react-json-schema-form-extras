@@ -1543,3 +1543,12 @@
 #root_procedureCodes ol > li {
   list-style: none;
 }
+
+/*Collapsible header items*/
+.header-elements-wrapper {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 20px;
+}
