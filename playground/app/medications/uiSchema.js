@@ -6,6 +6,14 @@ export default {
     },
     label: false,
     collapse: {
+      collapsibleHeaderElements: {
+        className: "header-elements-wrapper",
+        items: {
+          medications_no_active: {
+            "ui:widget": "checkbox"
+          }
+        }
+      },
       field: "ObjectField",
       collapsed: false,
       legend: {

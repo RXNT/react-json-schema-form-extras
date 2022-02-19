@@ -5,13 +5,13 @@
       "nav": "coding",
       "ui:field": "collapsible",
       "collapse": {
-        "hiddenProperties": {
+        "collapsibleHeaderElements": {
           "className": "header-elements-wrapper",
           "items": {
             "diagnosis_no_problems": {
               "ui:widget": "checkbox"
             }
-          }          
+          }  
         },
         "field": "ObjectField",
         "collapsed": false,

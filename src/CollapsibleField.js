@@ -34,13 +34,10 @@ class CollapseMenuAction extends Component {
 
 function CollapseMenu(props) {
   let {
-    hiddenProperties = {},
+    headerElementsSchemas,
     uiSchema: {
       collapse: {
-        hiddenProperties: hiddenPropertiesUiSchema = {
-          className: "header-elements-wrapper",
-          items: {}
-        },
+        collapsibleHeaderElements = {},
         icon: {
           enabled = "glyphicon glyphicon-chevron-down",
           disabled = "glyphicon glyphicon-chevron-right",
@@ -83,16 +80,16 @@ function CollapseMenu(props) {
   };
 
   let headerElements = [];
-  const headerItemsWrapperClass = hiddenPropertiesUiSchema.className;
+  const headerItemsWrapperClass = collapsibleHeaderElements.className;
 
-  Object.keys(hiddenProperties).map(key => {
-    const fieldSchema = hiddenProperties[key];
+  Object.keys(headerElementsSchemas).map(key => {
+    const fieldSchema = headerElementsSchemas[key];
     const fieldName = getFieldName(fieldSchema.type);
 
     if (fieldName) {
       let FieldElement = fields[fieldName];
       const fieldId = `${key}`;
-      const fieldUiSchema = hiddenPropertiesUiSchema.items[key];
+      const fieldUiSchema = collapsibleHeaderElements.items[key];
       const fieldFormData = formData[key];
 
       const onChange = (value, options) => {
@@ -285,7 +282,7 @@ class CollapsibleField extends Component {
 
   render() {
     let {
-      schema: { title, hiddenProperties },
+      schema: { title, properties = {} },
       uiSchema,
       registry: { fields },
       idSchema: { $id } = {},
@@ -295,7 +292,9 @@ class CollapsibleField extends Component {
       onChange: propsOnChange
     } = this.props;
     let { collapsed, AddElement } = this.state;
-    let { collapse: { field } } = uiSchema;
+    let {
+      collapse: { collapsibleHeaderElements = { items: {} }, field }
+    } = uiSchema;
     let CollapseElement = fields[field];
     // uischema retains the value form the state
     uiSchema.collapse.collapsed = this.state.collapsed;
@@ -303,11 +302,26 @@ class CollapsibleField extends Component {
     title = uiSchema["ui:title"] ? uiSchema["ui:title"] : title ? title : name;
     let customizedId = collapsed ? $id : undefined;
 
+    //remove header elements from the schema
+    let headerElementsSchemas = {};
+    let propertiesNoHeader = { ...properties };
+    Object.keys(collapsibleHeaderElements.items).map(key => {
+      if (propertiesNoHeader[key]) {
+        headerElementsSchemas[key] = propertiesNoHeader[key];
+        delete propertiesNoHeader[key];
+      }
+    });
+
+    const collapseElementProps = {
+      ...this.props,
+      schema: { ...this.props.schema, properties: propertiesNoHeader }
+    };
+
     return (
       <div id={customizedId}>
         <CollapseMenu
+          headerElementsSchemas={headerElementsSchemas}
           collapsibleFieldId={$id}
-          hiddenProperties={hiddenProperties}
           title={title}
           uiSchema={uiSchema}
           collapsed={collapsed}
@@ -321,7 +335,7 @@ class CollapsibleField extends Component {
         <div className="form-group">
           {AddElement && <AddElement />}
           {!collapsed && <CollapseLegend {...this.props} />}
-          {!collapsed && <CollapseElement {...this.props} />}
+          {!collapsed && <CollapseElement {...collapseElementProps} />}
         </div>
       </div>
     );
