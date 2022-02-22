@@ -54,7 +54,6 @@ export default function App() {
     <div>
       {ALL_CONFS.map((conf, i) => {
         let { schema, uiSchema, formData, rules = [] } = conf;
-        console.log(conf);
         let FormToDisplay = applyRules(schema, uiSchema, rules, Engine)(Form);
 
         return (

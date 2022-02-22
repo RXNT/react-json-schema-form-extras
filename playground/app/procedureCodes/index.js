@@ -1,7 +1,8 @@
 import schema from "./schema.json";
 import uiSchema from "./uiSchema.json";
+import rules from "./rules.json";
 
-export default Object.assign({}, schema, uiSchema, {
+export default Object.assign({}, schema, uiSchema, rules, {
   formData: {
     procedureCodes: [
       {

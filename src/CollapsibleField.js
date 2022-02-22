@@ -35,34 +35,7 @@ class CollapseMenuAction extends Component {
 function CollapseMenu(props) {
   let {
     headerElementsSchemas,
-    uiSchema: {
-      collapse: {
-        collapsibleHeaderElements = {},
-        icon: {
-          enabled = "glyphicon glyphicon-chevron-down",
-          disabled = "glyphicon glyphicon-chevron-right",
-          add = "glyphicon glyphicon-plus-sign"
-        } = {},
-        separate = true,
-        addTo,
-        wrapClassName = "lead",
-        actions = [],
-        classNames = "collapsibleHeading",
-        collapseDivStyles: {
-          textColor = "white",
-          background = "linear-gradient(to right, #0472B6, white)",
-          collapseGlyphColor = "white",
-          addGlyphColor = "white",
-          padding = "14px",
-          margin = "",
-          marginLeft = "-5px",
-          marginBottom = "5px",
-          zIndex = -1,
-          divCursor = "pointer",
-          addCursor = "copy"
-        } = {}
-      }
-    },
+    uiSchema,
     formContext = {},
     formData = {},
     onChange,
@@ -74,13 +47,44 @@ function CollapseMenu(props) {
     propsOnChange
   } = props;
 
+  const {
+    collapse: {
+      collapsibleHeaderElements = {},
+      icon: {
+        enabled = "glyphicon glyphicon-chevron-down",
+        disabled = "glyphicon glyphicon-chevron-right",
+        add = "glyphicon glyphicon-plus-sign"
+      } = {},
+      separate = true,
+      addTo,
+      wrapClassName = "lead",
+      actions = [],
+      classNames = "collapsibleHeading",
+      collapseDivStyles: {
+        textColor = "white",
+        background = "linear-gradient(to right, #0472B6, white)",
+        collapseGlyphColor = "white",
+        addGlyphColor = "white",
+        padding = "14px",
+        margin = "",
+        marginLeft = "-5px",
+        marginBottom = "5px",
+        zIndex = -1,
+        divCursor = "pointer",
+        addCursor = "copy"
+      } = {}
+    }
+  } = uiSchema;
+
   const handleAdd = event => {
     event.stopPropagation();
     onAdd(event);
   };
 
   let headerElements = [];
-  const headerItemsWrapperClass = collapsibleHeaderElements.className;
+  let {
+    className: headerElementsWrapperClass = "header-element-wrapper"
+  } = collapsibleHeaderElements;
 
   Object.keys(headerElementsSchemas).map(key => {
     const fieldSchema = headerElementsSchemas[key];
@@ -89,13 +93,12 @@ function CollapseMenu(props) {
     if (fieldName) {
       let FieldElement = fields[fieldName];
       const fieldId = `${key}`;
-      const fieldUiSchema = collapsibleHeaderElements.items[key];
+      const fieldUiSchema = uiSchema[key];
       const fieldFormData = formData[key];
 
-      const onChange = (value, options) => {
-        const newFormData = { ...formData };
-        newFormData[key] = value;
-        propsOnChange(newFormData, options);
+      const elementOnChange = (value, options) => {
+        formData[key] = value;
+        propsOnChange(formData, options);
       };
 
       headerElements.push(
@@ -104,7 +107,7 @@ function CollapseMenu(props) {
           formData={fieldFormData}
           idSchema={{ $id: fieldId }}
           key={key}
-          onChange={onChange}
+          onChange={elementOnChange}
           schema={fieldSchema}
           uiSchema={fieldUiSchema}
         />
@@ -142,7 +145,14 @@ function CollapseMenu(props) {
             className={collapsed ? disabled : enabled}
           />
         </a>
-        <div className={headerItemsWrapperClass}>{headerElements}</div>
+        {!!headerElements.length && (
+          <div
+            className={headerElementsWrapperClass}
+            onClick={event => event.stopPropagation()}
+          >
+            {headerElements}
+          </div>
+        )}
         {actions.map((action, i) => (
           <CollapseMenuAction
             key={i}
@@ -292,10 +302,9 @@ class CollapsibleField extends Component {
       onChange: propsOnChange
     } = this.props;
     let { collapsed, AddElement } = this.state;
-    let {
-      collapse: { collapsibleHeaderElements = { items: {} }, field }
-    } = uiSchema;
+    let { collapse: { collapsibleHeaderElements = {}, field } } = uiSchema;
     let CollapseElement = fields[field];
+    let { elements = [] } = collapsibleHeaderElements;
     // uischema retains the value form the state
     uiSchema.collapse.collapsed = this.state.collapsed;
 
@@ -305,7 +314,7 @@ class CollapsibleField extends Component {
     //remove header elements from the schema
     let headerElementsSchemas = {};
     let propertiesNoHeader = { ...properties };
-    Object.keys(collapsibleHeaderElements.items).map(key => {
+    elements.forEach(key => {
       if (propertiesNoHeader[key]) {
         headerElementsSchemas[key] = propertiesNoHeader[key];
         delete propertiesNoHeader[key];

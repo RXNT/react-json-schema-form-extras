@@ -8,11 +8,7 @@ export default {
     collapse: {
       collapsibleHeaderElements: {
         className: "header-elements-wrapper",
-        items: {
-          medications_no_active: {
-            "ui:widget": "checkbox"
-          }
-        }
+        elements: ["medications_no_active"]
       },
       field: "ObjectField",
       collapsed: false,
@@ -25,6 +21,10 @@ export default {
         }
       ],
       addTo: "medications"
+    },
+    medications_no_active: {
+      "ui:widget": "checkbox",
+      nav: ["medications"]
     },
     medications: {
       "ui:field": "table",
@@ -191,10 +191,6 @@ export default {
           }
         ]
       }
-    },
-    medications_no_active: {
-      classNames: "col-md-6",
-      nav: ["medications"]
     }
   },
   allergyData: {

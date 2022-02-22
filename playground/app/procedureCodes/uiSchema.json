@@ -7,11 +7,7 @@
       "collapse": {
         "collapsibleHeaderElements": {
           "className": "header-elements-wrapper",
-          "items": {
-            "diagnosis_no_problems": {
-              "ui:widget": "checkbox"
-            }
-          }  
+          "elements": ["diagnosis_no_problems"]
         },
         "field": "ObjectField",
         "collapsed": false,
@@ -19,7 +15,10 @@
           "add": "glyphicon glyphicon-plus-sign"
         },
         "addTo": "self"
-      },      
+      }, 
+      "diagnosis_no_problems": {
+        "ui:widget": "checkbox"
+      },    
       "procedureCodes": {
         "classNames": "col-md-12 individualComponent",
         "ui:field": "table",
