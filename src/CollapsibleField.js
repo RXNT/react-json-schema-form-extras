@@ -290,6 +290,11 @@ class CollapsibleField extends Component {
     });
   };
 
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    console.log({ error, errorInfo });
+  }
+
   render() {
     let {
       schema: { title, properties = {} },
@@ -314,6 +319,10 @@ class CollapsibleField extends Component {
     //remove header elements from the schema
     let headerElementsSchemas = {};
     let propertiesNoHeader = { ...properties };
+    let orderNoHeader = uiSchema["ui:order"]
+      ? uiSchema["ui:order"].filter(x => elements.indexOf(x) < 0)
+      : uiSchema["ui:order"];
+
     elements.forEach(key => {
       if (propertiesNoHeader[key]) {
         headerElementsSchemas[key] = propertiesNoHeader[key];
@@ -323,7 +332,8 @@ class CollapsibleField extends Component {
 
     const collapseElementProps = {
       ...this.props,
-      schema: { ...this.props.schema, properties: propertiesNoHeader }
+      schema: { ...this.props.schema, properties: propertiesNoHeader },
+      uiSchema: { ...this.props.uiSchema, "ui:order": orderNoHeader }
     };
 
     return (

@@ -1,6 +1,7 @@
 export default {
   medicationData: {
     "ui:field": "collapsible",
+    "ui:order": ["medications_no_active", "medications"],
     "ui:options": {
       label: false
     },

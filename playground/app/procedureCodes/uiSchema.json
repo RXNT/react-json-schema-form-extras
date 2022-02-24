@@ -4,6 +4,7 @@
       "classNames": "col-md-12 individualComponent",
       "nav": "coding",
       "ui:field": "collapsible",
+      "ui:order": [ "diagnosis_no_problems", "procedureCodes" ],
       "collapse": {
         "collapsibleHeaderElements": {
           "className": "header-elements-wrapper",
