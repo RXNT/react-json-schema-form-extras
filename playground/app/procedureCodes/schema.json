@@ -2,33 +2,168 @@
   "schema": {
     "type": "object",
     "properties": {
-      "procedureCodes": {
-        "type": "array",
-        "title": "Coding",
-        "default": [],
-        "rxnt": "ProcedureInfo.PatientProcedures",
-        "rxntMaster": "/EHRV8PatientEncounterAPIServices/ehrv8/rxntencounter/SyncPatientProcedures",
-        "items": {
-          "required": [
-            "code"
-          ],
-          "type": "object",
-          "properties": {
-                "code": {
-                  "templatable": true,
-                  "type": "string",
-                  "title": "Procedure Code",
-                  "rxnt": "CPT.Code"
-                },
-                "description": {
-                  "templatable": true,
-                  "type": "string",
-                  "title": "Description",
-                  "rxnt": "CPT.Description"
-                  }
+      "dxData": {
+        "type": "object",
+        "title": "Diagnosis",
+        "default": {},
+        "required": [],
+        "properties": {
+          "diagnosis_no_problems": {
+            "type": "boolean",
+            "title": "No Current Problems",
+            "rxnt": "NoCurrentProblems"
+          },
+          "procedureCodes": {
+            "type": "array",
+            "title": "Coding",
+            "default": [],
+            "rxnt": "ProcedureInfo.PatientProcedures",
+            "rxntMaster": "/EHRV8PatientEncounterAPIServices/ehrv8/rxntencounter/SyncPatientProcedures",
+            "items": {
+              "required": [
+              "code"
+              ],
+              "type": "object",
+              "properties": {
+              "code": {
+                "templatable": true,
+                "type": "string",
+                "title": "Procedure Code",
+                "rxnt": "CPT.Code"
+              },
+              "description": {
+                "templatable": true,
+                "type": "string",
+                "title": "Description",
+                "rxnt": "CPT.Description"
+              },
+              "diagnosis": {
+                "type": "object",
+                "title": "Diagnosis",
+                "properties": {
                 }
+              },
+              "modifiers": {
+                "type": "object",
+                "title": "Modifiers",
+                "properties": {
+                "modifier_3": {
+                  "type": "object"
+                },
+                "modifier_4": {
+                  "type": "object"
+                }
+                }
+              },
+              "diagnosis_A": {
+                "templatable": true,
+                "type": "string",
+                "title": "DxA",
+                "rxnt": ""
+              },
+              "diagnosis_B": {
+                "templatable": true,
+                "type": "string",
+                "title": "DxB",
+                "rxnt": ""
+              },
+              "diagnosis_C": {
+                "templatable": true,
+                "type": "string",
+                "title": "DxC",
+                "rxnt": ""
+              },
+              "diagnosis_D": {
+                "templatable": true,
+                "type": "string",
+                "title": "DxD",
+                "rxnt": ""
+              },
+              "modifier_1": {
+                "templatable": true,
+                "type": "string",
+                "title": "M1",
+                "rxnt": ""
+              },
+              "modifier_2": {
+                "templatable": true,
+                "type": "string",
+                "title": "M2",
+                "rxnt": ""
+              },
+              "modifier_3": {
+                "templatable": true,
+                "type": "string",
+                "title": "M3",
+                "rxnt": ""
+              },
+              "modifier_4": {
+                "templatable": true,
+                "type": "string",
+                "title": "M4",
+                "rxnt": ""
+              },
+              "unit": {
+                "templatable": true,
+                "type": "number",
+                "title": "Units",
+                "default": 0,
+                "rxnt": "",
+                "minimum": 0,
+                "maximum": 999.9
+              },
+              "advancedInformation": {
+                "type": "object",
+                "title": "Advanced Information",
+                "properties": {
+                "serviceDate": {
+                  "templatable": true,
+                  "type": "string",
+                  "title": "Service Date",
+                  "format": "date"
+                },
+                "toDate": {
+                  "templatable": true,
+                  "type": "string",
+                  "title": "To Date",
+                  "format": "date"
+                },
+                "placeOfService": {
+                  "templatable": true,
+                  "type": "object",
+                  "title": "Place of Service"
+                },
+                "renderingProvider": {
+                  "templatable": true,
+                  "type": "object",
+                  "title": "Rendering Provider"
+                },
+                "supervisingPhysician": {
+                  "templatable": true,
+                  "type": "object",
+                  "title": "Supervising Physician"
+                },
+                "orderingProvider": {
+                  "templatable": true,
+                  "type": "object",
+                  "title": "Ordering Provider"
+                },
+                "referringProvider": {
+                  "templatable": true,
+                  "type": "object",
+                  "title": "Referring Provider"
+                },
+                "purchaseServiceProvider": {
+                  "templatable": true,
+                  "type": "object",
+                  "title": "Purchase Service Provider"
+                }
+                }
+              }
             }
-          }
-    }
+          }			
+        }
+      }
+	  }
   }
 }

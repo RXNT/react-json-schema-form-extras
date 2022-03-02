@@ -6,7 +6,6 @@ import Form from "react-jsonschema-form";
 // import typeahead from "./order";
 // import medications from "./medications";
 // import typeaheadNonExpandable from "./typeaheadNonExpandable";
-// import rte from "./rte";
 // import datePicker from "./react-date-picker";
 // import rte2 from "./rte2";
 // import dx from "./dx";
@@ -18,6 +17,8 @@ import Form from "react-jsonschema-form";
 // import formContextField from "./formContextField";
 import SignatureCheckbox from "./formContextField/SignatureCheckbox";
 import procedureCodes from "./procedureCodes";
+import applyRules from "react-jsonschema-form-conditionals";
+import Engine from "json-rules-engine-simplified";
 
 const ALL_CONFS = [
   // label,
@@ -27,7 +28,6 @@ const ALL_CONFS = [
   // typeaheadNonExpandable,
   //medications,
   // typeahead,
-  // dx,
   // ros,
   // simpleLabel,
   // aTypeahead,
@@ -51,15 +51,21 @@ export default function App() {
 
   return (
     <div>
-      {ALL_CONFS.map((conf, i) => (
-        <Form
-          key={i}
-          {...conf}
-          fields={fields}
-          onChange={handleChange}
-          formContext={formContext}
-        />
-      ))}
+      {ALL_CONFS.map((conf, i) => {
+        let { schema, uiSchema, formData, rules = [] } = conf;
+        let FormToDisplay = applyRules(schema, uiSchema, rules, Engine)(Form);
+
+        return (
+          <FormToDisplay
+            key={i}
+            {...conf}
+            fields={fields}
+            onChange={handleChange}
+            formData={formData}
+            formContext={formContext}
+          />
+        );
+      })}
     </div>
   );
 }

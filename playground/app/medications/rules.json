@@ -1,0 +1,15 @@
+{
+    "rules": [
+        {
+            "conditions": {
+              "medicationData$medications_no_active": "truthy"
+            },
+            "event": {
+              "type": "remove",
+              "params": {
+                "field": "medicationData.medications"
+              }
+            }
+        }
+    ]
+}
