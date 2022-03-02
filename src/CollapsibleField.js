@@ -5,6 +5,8 @@ import {
 } from "react-jsonschema-form/lib/utils";
 import PropTypes from "prop-types";
 
+import { getFieldName } from "./utils";
+
 class CollapseMenuAction extends Component {
   render() {
     let { action, allActions = {} } = this.props;
@@ -32,45 +34,86 @@ class CollapseMenuAction extends Component {
 
 function CollapseMenu(props) {
   let {
-    uiSchema: {
-      collapse: {
-        icon: {
-          enabled = "glyphicon glyphicon-chevron-down",
-          disabled = "glyphicon glyphicon-chevron-right",
-          add = "glyphicon glyphicon-plus-sign"
-        } = {},
-        separate = true,
-        addTo,
-        wrapClassName = "lead",
-        actions = [],
-        classNames = "collapsibleHeading",
-        collapseDivStyles: {
-          textColor = "white",
-          background = "linear-gradient(to right, #0472B6, white)",
-          collapseGlyphColor = "white",
-          addGlyphColor = "white",
-          padding = "14px",
-          margin = "",
-          marginLeft = "-5px",
-          marginBottom = "5px",
-          zIndex = -1,
-          divCursor = "pointer",
-          addCursor = "copy"
-        } = {}
-      }
-    },
+    headerElementsSchemas,
+    uiSchema,
     formContext = {},
+    formData = {},
     onChange,
     onAdd,
     title,
     name,
-    collapsed
+    collapsed,
+    fields,
+    propsOnChange
   } = props;
+
+  const {
+    collapse: {
+      collapsibleHeaderElements = {},
+      icon: {
+        enabled = "glyphicon glyphicon-chevron-down",
+        disabled = "glyphicon glyphicon-chevron-right",
+        add = "glyphicon glyphicon-plus-sign"
+      } = {},
+      separate = true,
+      addTo,
+      wrapClassName = "lead",
+      actions = [],
+      classNames = "collapsibleHeading",
+      collapseDivStyles: {
+        textColor = "white",
+        background = "linear-gradient(to right, #0472B6, white)",
+        collapseGlyphColor = "white",
+        addGlyphColor = "white",
+        padding = "14px",
+        margin = "",
+        marginLeft = "-5px",
+        marginBottom = "5px",
+        zIndex = -1,
+        divCursor = "pointer",
+        addCursor = "copy"
+      } = {}
+    }
+  } = uiSchema;
 
   const handleAdd = event => {
     event.stopPropagation();
     onAdd(event);
   };
+
+  let headerElements = [];
+  let {
+    className: headerElementsWrapperClass = "header-element-wrapper"
+  } = collapsibleHeaderElements;
+
+  Object.keys(headerElementsSchemas).map(key => {
+    const fieldSchema = headerElementsSchemas[key];
+    const fieldName = getFieldName(fieldSchema.type);
+
+    if (fieldName) {
+      let FieldElement = fields[fieldName];
+      const fieldId = `${key}`;
+      const fieldUiSchema = uiSchema[key];
+      const fieldFormData = formData[key];
+
+      const elementOnChange = (value, options) => {
+        formData[key] = value;
+        propsOnChange(formData, options);
+      };
+
+      headerElements.push(
+        <FieldElement
+          formContext={formContext}
+          formData={fieldFormData}
+          idSchema={{ $id: fieldId }}
+          key={key}
+          onChange={elementOnChange}
+          schema={fieldSchema}
+          uiSchema={fieldUiSchema}
+        />
+      );
+    }
+  });
 
   return (
     <div className={`${wrapClassName}`}>
@@ -102,6 +145,14 @@ function CollapseMenu(props) {
             className={collapsed ? disabled : enabled}
           />
         </a>
+        {!!headerElements.length && (
+          <div
+            className={headerElementsWrapperClass}
+            onClick={event => event.stopPropagation()}
+          >
+            {headerElements}
+          </div>
+        )}
         {actions.map((action, i) => (
           <CollapseMenuAction
             key={i}
@@ -239,37 +290,71 @@ class CollapsibleField extends Component {
     });
   };
 
+  componentDidCatch(error, errorInfo) {
+    // You can also log the error to an error reporting service
+    console.log({ error, errorInfo });
+  }
+
   render() {
     let {
-      schema: { title },
+      schema: { title, properties = {} },
       uiSchema,
       registry: { fields },
       idSchema: { $id } = {},
       name,
-      formContext
+      formContext,
+      formData,
+      onChange: propsOnChange
     } = this.props;
     let { collapsed, AddElement } = this.state;
-    let { collapse: { field } } = uiSchema;
+    let { collapse: { collapsibleHeaderElements = {}, field } } = uiSchema;
     let CollapseElement = fields[field];
+    let { elements = [] } = collapsibleHeaderElements;
     // uischema retains the value form the state
     uiSchema.collapse.collapsed = this.state.collapsed;
 
     title = uiSchema["ui:title"] ? uiSchema["ui:title"] : title ? title : name;
     let customizedId = collapsed ? $id : undefined;
+
+    //remove header elements from the schema
+    let headerElementsSchemas = {};
+    let propertiesNoHeader = { ...properties };
+    let orderNoHeader = uiSchema["ui:order"]
+      ? uiSchema["ui:order"].filter(x => elements.indexOf(x) < 0)
+      : uiSchema["ui:order"];
+
+    elements.forEach(key => {
+      if (propertiesNoHeader[key]) {
+        headerElementsSchemas[key] = propertiesNoHeader[key];
+        delete propertiesNoHeader[key];
+      }
+    });
+
+    const collapseElementProps = {
+      ...this.props,
+      schema: { ...this.props.schema, properties: propertiesNoHeader },
+      uiSchema: { ...this.props.uiSchema, "ui:order": orderNoHeader }
+    };
+
     return (
       <div id={customizedId}>
         <CollapseMenu
+          headerElementsSchemas={headerElementsSchemas}
+          collapsibleFieldId={$id}
           title={title}
           uiSchema={uiSchema}
           collapsed={collapsed}
           formContext={formContext}
+          formData={formData}
+          fields={fields}
           onAdd={this.handleAdd}
           onChange={this.handleCollapsed}
+          propsOnChange={propsOnChange}
         />
         <div className="form-group">
           {AddElement && <AddElement />}
           {!collapsed && <CollapseLegend {...this.props} />}
-          {!collapsed && <CollapseElement {...this.props} />}
+          {!collapsed && <CollapseElement {...collapseElementProps} />}
         </div>
       </div>
     );

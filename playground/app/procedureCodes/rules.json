@@ -1,0 +1,15 @@
+{
+    "rules": [
+        {
+            "conditions": {
+              "dxData$diagnosis_no_problems": "truthy"
+            },
+            "event": {
+              "type": "remove",
+              "params": {
+                "field": "dxData.procedureCodes"
+              }
+            }
+        }
+    ]
+}

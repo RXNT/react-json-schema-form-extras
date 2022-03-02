@@ -1,11 +1,16 @@
 export default {
   medicationData: {
     "ui:field": "collapsible",
+    "ui:order": ["medications_no_active", "medications"],
     "ui:options": {
       label: false
     },
     label: false,
     collapse: {
+      collapsibleHeaderElements: {
+        className: "header-elements-wrapper",
+        elements: ["medications_no_active"]
+      },
       field: "ObjectField",
       collapsed: false,
       legend: {
@@ -18,6 +23,10 @@ export default {
       ],
       addTo: "medications"
     },
+    medications_no_active: {
+      "ui:widget": "checkbox",
+      nav: ["medications"]
+    },
     medications: {
       "ui:field": "table",
       "ui:options": {
@@ -25,6 +34,13 @@ export default {
       },
       classNames: "col-md-12",
       table: {
+        selectRow: {
+          mode: "checkbox",
+          clickToSelect: true,
+          bgColor: "grey",
+          onSelectRow: { fieldToUpdate: "picked" },
+          onSelectAllRow: { fieldToUpdate: "picked" }
+        },
         focusOnAdd: 1,
         insertRow: true,
         tableCols: [
@@ -176,10 +192,6 @@ export default {
           }
         ]
       }
-    },
-    medications_no_active: {
-      classNames: "col-md-6",
-      nav: ["medications"]
     }
   },
   allergyData: {

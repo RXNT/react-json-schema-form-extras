@@ -1,312 +1,377 @@
 {
   "uiSchema": {
-    "procedureCodes": {
+    "dxData": {
       "classNames": "col-md-12 individualComponent",
+      "nav": "coding",
       "ui:field": "collapsible",
-      "table": {
-        "tableCols": [
-          {
-            "dataField": "code",
-            "columnWidth": "50%",
-            "editable": false,
-            "width": "70%",
-            "field": "asyncTypeahead",
-            "uiSchema": {
-              "focusOnMount": true,
-              "asyncTypeahead": {
-                "placeholder": "CPT code or description",
-                "customTitle": "CPT/Procedure",
-                "url": "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchProcedureCodes",
-                "optionsPath": "ProcedureCodes",
-                "mapping": {
-                  "code": "Code",
-                  "description": "Description"
-                },
-                "minLength": 1,
-                "labelKey": {
-                  "fields": [
-                    "Code",
-                    "Description"
-                  ],
-                  "separator": " - "
-                },
-                "clearButton": true,
-                "className": "rectangle"
-              }
-            },
-            "className": "col-md-12 rectangle rxntTableStyle rxntBorderStyle rxntHeaderStyle",
-            "columnClassName": "col-md-2 rxntTableStyle rxntBorderStyle rxntRowStyle",
-            "columnCustomFormat": "combineCodeAndDesc"
-          },
-          {
-            "dataField": "description",
-            "columnWidth": "70%",
-            "width": "50%",
-            "editable": false,
-            "hidden": true
-          },
-          {
-            "dataField": "diagnosis",
-            "editable": false,
-            "hidden": true,
-            "columnClassName":"rxntTableStyle rxntHeaderStyle",
-            "includeInExpandedRow": true,
-            "dynamicTypeaheadField": {
-              "dynamicTypeaheadOptionData": "dxData.diagnosis",
-              "typeahead": {
-                "className": "rectangle diagnosisTypeahead",
-                "placeholder": "Choose diagnosis",
-                "labelKey": "description",
-                "mapping": {
-                  "code": "icd10",
-                  "description": "icd10Description"
-                },
-                "minLength": 1
-              }
-            }
-          },
-          {
-            "dataField": "modifiers",
-            "editable": false,
-            "hidden": true,
-            "includeInExpandedRow": true,
-            "dynamicAsyncTypeaheadField": {
-              "asyncTypeahead": {
-                "placeholder": "Choose modifier",
-                "url": "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchProcedureModifier",
-                "optionsPath": "ProcedureModifierList",
-                "mapping": {
-                  "code": "ModifierCode",
-                  "description": "ModifierName"
-                },
-                "minLength": 2,
-                "labelKey": {
-                  "fields": [
-                    "ModifierCode",
-                    "ModifierName"
-                  ],
-                  "separator": " - "
-                },
-                "className": "rectangle modifiers-asyncTypeahead rxntTableStyle rxntBorderStyle rxntHeaderStyle "
-              }
-            }
-          },
-          {
-            "dataField": "unit",
-            "columnWidth": "15%",
-            "className": "col-md-2 rectangle rxntTableStyle rxntHeaderStyle",
-            "columnClassName": "col-md-2 rxntTableStyle rxntRowStyle",
-            "editColumnClassName": "col-md-10",
-            "editable": false
-          },
-          {
-            "dataField": "advancedInformation",
-            "editable": false,
-            "ui:order": [
-              "serviceDate",
-              "toDate",
-              "placeOfService",
-              "renderingProvider",
-              "supervisingPhysician",
-              "orderingProvider",
-              "referringProvider",
-              "purchaseServiceProvider"
-            ],
-            "hidden": true,
-            "includeInExpandedRow": true,
-            "serviceDate": {
-              "classNames": "col-md-4 col-xs-4  date-rectangle procedurecode-field-title",
-              "includeInExpandedRow": true,
-              "field": "rdp",
-              "dataFormat": "MM/DD/YYYY",
-              "uiSchema": {
-                "rdp": {
-                  "placeholder": "Service Date",
-                  "inputProps": {
-                    "className": "form-control serviceDate",
-                    "type": "text"
-                  }
-                }
-              }
-            },
-            "toDate": {
-              "classNames": "col-md-4 col-xs-4  date-rectangle procedurecode-field-title",
-              "includeInExpandedRow": true,
-              "field": "rdp",
-              "dataFormat": "MM/DD/YYYY",
-              "uiSchema": {
-                "rdp": {
-                  "placeholder": "To Date",
-                  "inputProps": {
-                    "className": "form-control toDate",
-                    "type": "text"
-                  }
-                }
-              }
-            },
-            "placeOfService": {
-              "classNames": "rectangle diagnosisTypeahead placeOfService",
-              "field": "asyncTypeahead",
-              "includeInExpandedRow": true,
-              "uiSchema": {
-                "asyncTypeahead": {
-                  "placeholder": "",
-                  "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchLocation/",
-                  "optionsPath": "LocationList",
-                  "mapping": {
-                    "id": "ServiceFacilityLocId",
-                    "description": "Name"
-                  },
-                  "minLength": 2,
-                  "labelKey": "Name",
-                  "className": "rectangle diagnosisTypeahead placeOfService"
-                }
-              }
-            },
-            "renderingProvider": {
-              "classNames": "rectangle diagnosisTypeahead renderingProvider",
-              "field": "asyncTypeahead",
-              "includeInExpandedRow": true,
-              "uiSchema": {
-                "asyncTypeahead": {
-                  "placeholder": "",
-                  "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchRenderingProvider/",
-                  "optionsPath": "ProviderList",
-                  "mapping": {
-                    "id": "RenderingProviderId",
-                    "description": "ProviderFullName"
-                  },
-                  "minLength": 2,
-                  "labelKey": "ProviderFullName",
-                  "className": "rectangle diagnosisTypeahead renderingProvider"
-                }
-              }
-            },
-            "supervisingPhysician": {
-              "classNames": "rectangle diagnosisTypeahead supervisingPhysician",
-              "field": "asyncTypeahead",
-              "includeInExpandedRow": true,
-              "uiSchema": {
-                "asyncTypeahead": {
-                  "placeholder": "",
-                  "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchSupervisingProvider/",
-                  "optionsPath": "ProviderList",
-                  "mapping": {
-                    "id": "SupervisingProviderId",
-                    "description": "ProviderFullName"
-                  },
-                  "minLength": 2,
-                  "labelKey": "ProviderFullName",
-                  "className": "rectangle diagnosisTypeahead supervisingPhysician"
-                }
-              }
-            },
-            "orderingProvider": {
-              "classNames": "rectangle diagnosisTypeahead orderingProvider",
-              "field": "asyncTypeahead",
-              "includeInExpandedRow": true,
-              "uiSchema": {
-                "asyncTypeahead": {
-                  "placeholder": "",
-                  "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchOrderingProvider/",
-                  "optionsPath": "ProviderList",
-                  "mapping": {
-                    "id": "OrderingProviderId",
-                    "description": "ProviderFullName"
-                  },
-                  "minLength": 2,
-                  "labelKey": "ProviderFullName",
-                  "className": "rectangle diagnosisTypeahead orderingProvider"
-                }
-              }
-            },
-            "referringProvider": {
-              "classNames": "rectangle diagnosisTypeahead referringProvider",
-              "field": "asyncTypeahead",
-              "includeInExpandedRow": true,
-              "uiSchema": {
-                "asyncTypeahead": {
-                  "placeholder": "",
-                  "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchReferringProvider/",
-                  "optionsPath": "ProviderList",
-                  "mapping": {
-                    "id": "ReferringProviderId",
-                    "description": "ProviderFullName"
-                  },
-                  "minLength": 2,
-                  "labelKey": "ProviderFullName",
-                  "className": "rectangle diagnosisTypeahead referringProvider"
-                }
-              }
-            },
-            "purchaseServiceProvider": {
-              "classNames": "rectangle diagnosisTypeahead purchaseServiceProvider",
-              "field": "asyncTypeahead",
-              "includeInExpandedRow": true,
-              "uiSchema": {
-                "asyncTypeahead": {
-                  "placeholder": "",
-                  "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchPurchaseServiceProvider/",
-                  "optionsPath": "ProviderList",
-                  "mapping": {
-                    "id": "PurchaseServiceProviderId",
-                    "description": "ProviderFullName"
-                  },
-                  "minLength": 2,
-                  "labelKey": "ProviderFullName",
-                  "className": "rectangle diagnosisTypeahead purchaseServiceProvider"
-                }
-              }
-            }
-          }
-        ],
-        "focusOnAdd": 0,
-        "rightActions": [
-          {
-            "action": "dropDownAction",
-            "className": "table-action rxntTableStyle rxntHeaderStyle",
-            "columnClassName": "table-action rxntTableStyle rxntRowStyle",
-            "editColumnClassName": "table-action",
-            "icon": "glyphicon glyphicon-option-vertical",
-            "dropDownAction": [
-              {
-                "action": "edit",
-                "className": "table-action",
-                "columnClassName": "table-action",
-                "editColumnClassName": "table-action",
-                "icon": "glyphicon glyphicon-pencil",
-                "displayName": "Edit"
-              },
-              {
-                "action": "delete",
-                "className": "table-action",
-                "columnClassName": "table-action",
-                "editColumnClassName": "table-action",
-                "icon": "glyphicon glyphicon-trash",
-                "displayName": "Delete", 
-              "windowDeleteAction": "handleCptUpdatePopUp"
-              }
-            ]
-          }
-        ],
-        "striped": true,
-        "tableHeaderClass": "tableHeadingCell",
-        "hover": true,
-        "isTableExpandable": true
-      },
-      "nav": "clinical",
-      "ui:options": {
-        "label": false
-      },
+      "ui:order": [ "diagnosis_no_problems", "procedureCodes" ],
       "collapse": {
-        "field": "table",
+        "collapsibleHeaderElements": {
+          "className": "header-elements-wrapper",
+          "elements": ["diagnosis_no_problems"]
+        },
+        "field": "ObjectField",
         "collapsed": false,
         "icon": {
           "add": "glyphicon glyphicon-plus-sign"
         },
         "addTo": "self"
-      },
-      "pdfRender": "table"
+      }, 
+      "diagnosis_no_problems": {
+        "ui:widget": "checkbox"
+      },    
+      "procedureCodes": {
+        "classNames": "col-md-12 individualComponent",
+        "ui:field": "table",
+        "table": {
+          "tableCols": [
+            {
+              "dataField": "code",
+              "columnWidth": "28%",
+              "editable": false,
+              "width": "70%",
+              "field": "asyncTypeahead",
+              "uiSchema": {
+                "focusOnMount": false,
+                "asyncTypeahead": {
+                  "placeholder": "CPT code or description",
+                  "customTitle": "CPT/Procedure",
+                  "url": "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchProcedureCodes",
+                  "optionsPath": "ProcedureCodes",
+                  "mapping": {
+                    "code": "Code",
+                    "description": "Description"
+                  },
+                  "minLength": 1,
+                  "labelKey": {
+                    "fields": [
+                      "Code",
+                      "Description"
+                    ],
+                    "separator": " - "
+                  },
+                  "clearButton": true,
+                  "className": "rectangle"
+                }
+              },
+              "className": "col-md-2 rectangle rxntTableStyle rxntBorderStyle rxntHeaderStyle",
+              "columnClassName": "col-md-2 rxntTableStyle rxntBorderStyle rxntRowStyle",
+              "columnCustomFormat": "combineCodeAndDesc"
+            },
+            {
+              "dataField": "description",
+              "width": "0%",
+              "editable": false,
+              "hidden": true
+            },
+            {
+              "dataField": "diagnosis",
+              "editable": false,
+              "hidden": true,
+              "includeInExpandedRow": true,
+              "dynamicTypeaheadField": {
+                "dynamicTypeaheadOptionData": "dxData.diagnosis",
+                "typeahead": {
+                  "className": "rectangle diagnosisTypeahead",
+                  "placeholder": "Choose diagnosis",
+                  "labelKey": "icd10Description",
+                  "mapping": {
+                    "code": "icd10",
+                    "description": "icd10Description"
+                  },
+                  "minLength": 0
+                }
+              }
+            },
+            {
+              "dataField": "modifiers",
+              "editable": false,
+              "hidden": true,
+              "includeInExpandedRow": true,
+              "dynamicAsyncTypeaheadField": {
+                "asyncTypeahead": {
+                  "placeholder": "Choose modifier",
+                  "url": "/EHRV8PatientEncounterAPIServices/ehrv8/encounter/SearchProcedureModifier",
+                  "optionsPath": "ProcedureModifierList",
+                  "mapping": {
+                    "code": "modifierCode",
+                    "description": "modifierName"
+                  },
+                  "minLength": 2,
+                  "labelKey": {
+                    "fields": [
+                      "modifierCode",
+                      "modifierName"
+                    ],
+                    "separator": " - "
+                  },
+                  "className": "rectangle modifiers-asyncTypeahead "
+                }
+              }
+            },
+            {
+              "dataField": "diagnosis_A",
+              "columnWidth": "8%",
+              "editable": false,
+              "hidden": true
+            },
+            {
+              "dataField": "diagnosis_B",
+              "columnWidth": "8%",
+              "editable": false,
+              "hidden": true
+            },
+            {
+              "dataField": "diagnosis_C",
+              "columnWidth": "8%",
+              "editable": false,
+              "hidden": true
+            },
+            {
+              "dataField": "diagnosis_D",
+              "columnWidth": "8%",
+              "editable": false,
+              "hidden": true
+            },
+            {
+              "dataField": "modifier_1",
+              "columnWidth": "8%",
+              "editable": false,
+              "hidden": true
+            },
+            {
+              "dataField": "modifier_2",
+              "columnWidth": "8%",
+              "editable": false,
+              "hidden": true
+            },
+            {
+              "dataField": "modifier_3",
+              "columnWidth": "8%",
+              "editable": false,
+              "hidden": true
+            },
+            {
+              "dataField": "modifier_4",
+              "columnWidth": "8%",
+              "editable": false,
+              "hidden": true
+            },
+            {
+              "dataField": "unit",
+              "columnWidth": "8%",
+              "className": "col-md-2 rectangle rxntTableStyle rxntHeaderStyle",
+              "columnClassName": "col-md-2 rxntTableStyle rxntRowStyle",
+              "editColumnClassName": "col-md-2",
+              "editable": false
+            },
+            {
+              "dataField": "advancedInformation",
+              "editable": false,
+              "ui:order": [
+                "serviceDate",
+                "toDate",
+                "placeOfService",
+                "renderingProvider",
+                "supervisingPhysician",
+                "orderingProvider",
+                "referringProvider",
+                "purchaseServiceProvider"
+              ],
+              "hidden": true,
+              "includeInExpandedRow": true,
+              "serviceDate": {
+                "classNames": "col-md-4 col-xs-4  date-rectangle procedurecode-field-title",
+                "includeInExpandedRow": true,
+                "field": "rdp",
+                "dataFormat": "MM/DD/YYYY",
+                "uiSchema": {
+                  "rdp": {
+                    "placeholder": "Service Date",
+                    "inputProps": {
+                      "className": "form-control serviceDate",
+                      "type": "text"
+                    }
+                  }
+                }
+              },
+              "toDate": {
+                "classNames": "col-md-4 col-xs-4  date-rectangle procedurecode-field-title",
+                "includeInExpandedRow": true,
+                "field": "rdp",
+                "dataFormat": "MM/DD/YYYY",
+                "uiSchema": {
+                  "rdp": {
+                    "placeholder": "To Date",
+                    "inputProps": {
+                      "className": "form-control toDate",
+                      "type": "text"
+                    }
+                  }
+                }
+              },
+              "placeOfService": {
+                "classNames": "rectangle diagnosisTypeahead placeOfService",
+                "field": "asyncTypeahead",
+                "includeInExpandedRow": true,
+                "uiSchema": {
+                  "asyncTypeahead": {
+                    "placeholder": "",
+                    "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchLocation/",
+                    "optionsPath": "LocationList",
+                    "mapping": {
+                      "id": "ServiceFacilityLocId",
+                      "description": "Name"
+                    },
+                    "minLength": 2,
+                    "labelKey": "Name",
+                    "className": "rectangle diagnosisTypeahead placeOfService"
+                  }
+                }
+              },
+              "renderingProvider": {
+                "classNames": "rectangle diagnosisTypeahead renderingProvider",
+                "field": "asyncTypeahead",
+                "includeInExpandedRow": true,
+                "uiSchema": {
+                  "asyncTypeahead": {
+                    "placeholder": "",
+                    "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchRenderingProvider/",
+                    "optionsPath": "ProviderList",
+                    "mapping": {
+                      "id": "RenderingProviderId",
+                      "description": "ProviderFullName"
+                    },
+                    "minLength": 2,
+                    "labelKey": "ProviderFullName",
+                    "className": "rectangle diagnosisTypeahead renderingProvider"
+                  }
+                }
+              },
+              "supervisingPhysician": {
+                "classNames": "rectangle diagnosisTypeahead supervisingPhysician",
+                "field": "asyncTypeahead",
+                "includeInExpandedRow": true,
+                "uiSchema": {
+                  "asyncTypeahead": {
+                    "placeholder": "",
+                    "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchSupervisingProvider/",
+                    "optionsPath": "ProviderList",
+                    "mapping": {
+                      "id": "SupervisingProviderId",
+                      "description": "ProviderFullName"
+                    },
+                    "minLength": 2,
+                    "labelKey": "ProviderFullName",
+                    "className": "rectangle diagnosisTypeahead supervisingPhysician"
+                  }
+                }
+              },
+              "orderingProvider": {
+                "classNames": "rectangle diagnosisTypeahead orderingProvider",
+                "field": "asyncTypeahead",
+                "includeInExpandedRow": true,
+                "uiSchema": {
+                  "asyncTypeahead": {
+                    "placeholder": "",
+                    "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchOrderingProvider/",
+                    "optionsPath": "ProviderList",
+                    "mapping": {
+                      "id": "OrderingProviderId",
+                      "description": "ProviderFullName"
+                    },
+                    "minLength": 2,
+                    "labelKey": "ProviderFullName",
+                    "className": "rectangle diagnosisTypeahead orderingProvider"
+                  }
+                }
+              },
+              "referringProvider": {
+                "classNames": "rectangle diagnosisTypeahead referringProvider",
+                "field": "asyncTypeahead",
+                "includeInExpandedRow": true,
+                "uiSchema": {
+                  "asyncTypeahead": {
+                    "placeholder": "",
+                    "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchReferringProvider/",
+                    "optionsPath": "ProviderList",
+                    "mapping": {
+                      "id": "ReferringProviderId",
+                      "description": "ProviderFullName"
+                    },
+                    "minLength": 2,
+                    "labelKey": "ProviderFullName",
+                    "className": "rectangle diagnosisTypeahead referringProvider"
+                  }
+                }
+              },
+              "purchaseServiceProvider": {
+                "classNames": "rectangle diagnosisTypeahead purchaseServiceProvider",
+                "field": "asyncTypeahead",
+                "includeInExpandedRow": true,
+                "uiSchema": {
+                  "asyncTypeahead": {
+                    "placeholder": "",
+                    "url": "/EHRV8PatientEncounterAPIServices/ehrv8/company/SearchPurchaseServiceProvider/",
+                    "optionsPath": "ProviderList",
+                    "mapping": {
+                      "id": "PurchaseServiceProviderId",
+                      "description": "ProviderFullName"
+                    },
+                    "minLength": 2,
+                    "labelKey": "ProviderFullName",
+                    "className": "rectangle diagnosisTypeahead purchaseServiceProvider"
+                  }
+                }
+              }
+            }
+          ],
+          "focusOnAdd": 0,
+          "rightActions": [
+            {
+              "action": "dropDownAction",
+              "className": "table-action rxntTableStyle rxntHeaderStyle",
+              "columnClassName": "table-action rxntTableStyle rxntRowStyle",
+              "editColumnClassName": "table-action",
+              "icon": "glyphicon glyphicon-option-vertical",
+              "expandable": false,
+              "dropDownAction": [
+                {
+                  "action": "edit",
+                  "className": "table-action",
+                  "columnClassName": "table-action",
+                  "editColumnClassName": "table-action",
+                  "icon": "glyphicon glyphicon-pencil",
+                  "displayName": "Edit"
+                },
+                {
+                  "action": "delete",
+                  "className": "table-action",
+                  "columnClassName": "table-action",
+                  "editColumnClassName": "table-action",
+                  "icon": "glyphicon glyphicon-trash",
+                  "displayName": "Delete",
+                  "windowDeleteAction": "handleCptUpdatePopUp"
+                }
+              ]
+            }
+          ],
+          "striped": true,
+          "tableHeaderClass": "tableHeadingCell",
+          "hover": true,
+          "isTableExpandable": true
+        },
+        "nav": "coding",
+        "ui:options": {
+          "label": false
+        },
+        "tableWithSearchAdd": {
+          "addElement": "procedureCode"
+        },
+        
+        "isRxntTable": true,
+        "pdfRender": "procedureCode"
+      }      
     }
   }
 }
