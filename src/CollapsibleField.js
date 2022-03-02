@@ -251,7 +251,8 @@ class CollapsibleField extends Component {
     let { collapsed, AddElement } = this.state;
     let { collapse: { field } } = uiSchema;
     let CollapseElement = fields[field];
-    // uischema retains the value form the state
+
+    // uischema retains the value for the state
     uiSchema.collapse.collapsed = this.state.collapsed;
 
     title = uiSchema["ui:title"] ? uiSchema["ui:title"] : title ? title : name;

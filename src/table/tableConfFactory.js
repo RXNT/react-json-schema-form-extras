@@ -5,10 +5,10 @@ const POSITION_KEY = "_position";
 const DEFAULT_TABLE_CONF = {
   cellEdit: {
     mode: "click",
-    blurToSave: true,
+    blurToSave: true
   },
   options: {},
-  handleConfirmDeleteRow: (next) => next(),
+  handleConfirmDeleteRow: next => next()
 };
 
 export function addPosition(data) {
@@ -17,7 +17,7 @@ export function addPosition(data) {
 
 export function removePosition(data) {
   if (Array.isArray(data)) {
-    return data.map((el) => removePosition(el));
+    return data.map(el => removePosition(el));
   } else {
     let dataCopy = Object.assign({}, data);
     delete dataCopy[POSITION_KEY];
@@ -35,12 +35,23 @@ export default function tableConfFrom(
   handleAllRowSelect,
   myRowExpand,
   isRowExpandable,
-  expandColumnComponent
+  expandColumnComponent,
+  selectedItems
 ) {
   let { keyField = POSITION_KEY } = table;
   if (keyField === POSITION_KEY) {
     formData = addPosition(formData);
   }
+
+  if (!table.selectRow && selectedItems) {
+    table.selectRow = {
+      mode: "checkbox",
+      onSelectRow: true,
+      onSelectAllRow: true
+    };
+  }
+
+  table.selectRow.selected = selectedItems;
 
   let tableConf = Object.assign(
     { data: formData },
@@ -51,18 +62,15 @@ export default function tableConfFrom(
   tableConf.cellEdit.afterSaveCell = afterSaveCell;
   tableConf.options.afterDeleteRow = afterDeleteRow;
   tableConf.trClassName = highlightAfterDelete;
-  if (
-    tableConf.selectRow !== undefined &&
-    tableConf.selectRow.onSelectRow !== undefined
-  ) {
+
+  if (tableConf.selectRow && tableConf.selectRow.onSelectRow) {
     tableConf.selectRow.onSelect = handleRowSelect;
   }
-  if (
-    tableConf.selectRow !== undefined &&
-    tableConf.selectRow.onSelectAllRow !== undefined
-  ) {
+
+  if (tableConf.selectRow && tableConf.selectRow.onSelectAllRow) {
     tableConf.selectRow.onSelectAll = handleAllRowSelect;
   }
+
   let { isTableExpandable = false, allowOneRowExpanding = true } = table;
   if (isTableExpandable) {
     tableConf.options.onlyOneExpanding = allowOneRowExpanding;
@@ -70,7 +78,7 @@ export default function tableConfFrom(
     tableConf.expandableRow = isRowExpandable;
     tableConf.expandColumnOptions = {
       expandColumnVisible: isTableExpandable,
-      expandColumnComponent: expandColumnComponent,
+      expandColumnComponent: expandColumnComponent
     };
   }
 

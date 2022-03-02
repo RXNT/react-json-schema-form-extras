@@ -292,7 +292,10 @@
         "striped": true,
         "tableHeaderClass": "tableHeadingCell",
         "hover": true,
-        "isTableExpandable": true
+          "isTableExpandable": true,
+          "selectRow": {
+            "mode": "checkbox"
+          }
       },
       "nav": "clinical",
       "ui:options": {
