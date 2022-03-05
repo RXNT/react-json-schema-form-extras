@@ -168,6 +168,7 @@ class TableField extends Component {
     });
     this.props.onChange(filteredRows);
   }
+
   componentWillReceiveProps(nextProps) {
     let { uiSchema: { table: { focusOnAdd } = {} } } = nextProps;
 

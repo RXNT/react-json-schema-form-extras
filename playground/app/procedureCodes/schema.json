@@ -116,48 +116,49 @@
                 "type": "object",
                 "title": "Advanced Information",
                 "properties": {
-                "serviceDate": {
-                  "templatable": true,
-                  "type": "string",
-                  "title": "Service Date",
-                  "format": "date"
-                },
-                "toDate": {
-                  "templatable": true,
-                  "type": "string",
-                  "title": "To Date",
-                  "format": "date"
-                },
-                "placeOfService": {
-                  "templatable": true,
-                  "type": "object",
-                  "title": "Place of Service"
-                },
-                "renderingProvider": {
-                  "templatable": true,
-                  "type": "object",
-                  "title": "Rendering Provider"
-                },
-                "supervisingPhysician": {
-                  "templatable": true,
-                  "type": "object",
-                  "title": "Supervising Physician"
-                },
-                "orderingProvider": {
-                  "templatable": true,
-                  "type": "object",
-                  "title": "Ordering Provider"
-                },
-                "referringProvider": {
-                  "templatable": true,
-                  "type": "object",
-                  "title": "Referring Provider"
-                },
-                "purchaseServiceProvider": {
-                  "templatable": true,
-                  "type": "object",
-                  "title": "Purchase Service Provider"
-                }
+                    "serviceDate": {
+                      "templatable": true,
+                      "type": "string",
+                      "title": "Service Date",
+                      "format": "date"
+                    },
+                    "toDate": {
+                      "templatable": true,
+                      "type": "string",
+                      "title": "To Date",
+                      "format": "date"
+                    },
+                    "placeOfService": {
+                      "templatable": true,
+                      "type": "object",
+                      "title": "Place of Service"
+                    },
+                    "renderingProvider": {
+                      "templatable": true,
+                      "type": "object",
+                      "title": "Rendering Provider"
+                    },
+                    "supervisingPhysician": {
+                      "templatable": true,
+                      "type": "object",
+                      "title": "Supervising Physician"
+                    },
+                    "orderingProvider": {
+                      "templatable": true,
+                      "type": "object",
+                      "title": "Ordering Provider"
+                    },
+                    "referringProvider": {
+                      "templatable": true,
+                      "type": "object",
+                      "title": "Referring Provider"
+                    },
+                    "purchaseServiceProvider": {
+                      "templatable": true,
+                      "type": "object",
+                      "title": "Purchase Service Provider"
+                    }
+                  }
                 }
               }
             }

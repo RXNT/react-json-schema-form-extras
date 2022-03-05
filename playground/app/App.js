@@ -4,7 +4,7 @@ import fields from "../../src/index";
 import Form from "react-jsonschema-form";
 
 // import typeahead from "./order";
-// import medications from "./medications";
+import medications from "./medications";
 // import typeaheadNonExpandable from "./typeaheadNonExpandable";
 // import datePicker from "./react-date-picker";
 // import rte2 from "./rte2";
@@ -16,7 +16,7 @@ import Form from "react-jsonschema-form";
 // import aTypeahead from "./asyncTypeahead";
 // import formContextField from "./formContextField";
 import SignatureCheckbox from "./formContextField/SignatureCheckbox";
-import procedureCodes from "./procedureCodes";
+//import procedureCodes from "./procedureCodes";
 import applyRules from "react-jsonschema-form-conditionals";
 import Engine from "json-rules-engine-simplified";
 
@@ -26,13 +26,13 @@ const ALL_CONFS = [
   // simpleTable,
   // rte2,
   // typeaheadNonExpandable,
-  //medications,
+  medications
   // typeahead,
   // ros,
   // simpleLabel,
   // aTypeahead,
   // formContextField,
-  procedureCodes
+  //procedureCodes
 ];
 
 export default function App() {
