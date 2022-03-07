@@ -1,0 +1,9 @@
+/*Collapsible header items*/
+.header-elements-wrapper {
+    align-items: center;
+    color: white;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding-left: 20px;
+  }

@@ -5,7 +5,7 @@
   "author": "mavarazy@gmail.com",
   "version": "0.9.69",
   "scripts": {
-    "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/",
+    "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/ --copy-files",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js --optimize-minimize",
     "build:playground": "rimraf build && cross-env NODE_ENV=production webpack --config webpack.config.prod.js --optimize-minimize && cp playground/index.prod.html build/index.html",
     "cs-check": "prettier -l $npm_package_prettierOptions '{playground,src,test}/**/*.js'",
