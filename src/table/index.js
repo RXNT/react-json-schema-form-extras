@@ -140,7 +140,7 @@ class TableField extends Component {
       selectRow: { onSelectRow: { fieldToUpdate = "picked" } }
     } = this.tableConf;
 
-    row.isSelected = isSelected;
+    row.isRowSelected = isSelected;
 
     if (!isSelected) {
       delete row[fieldToUpdate];
@@ -158,7 +158,7 @@ class TableField extends Component {
     } = this.tableConf;
 
     let filteredRows = data.map(item => {
-      item["isSelected"] = isSelected;
+      item.isRowSelected = isSelected;
       if (!isSelected && item[fieldToUpdate] !== undefined) {
         delete item[fieldToUpdate];
       } else {
