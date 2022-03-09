@@ -45,10 +45,13 @@ export default function tableConfFrom(
 
   if (!table.selectRow && selectedItems) {
     table.selectRow = {
-      mode: "checkbox",
-      onSelectRow: true,
-      onSelectAllRow: true
+      mode: "checkbox"
     };
+  }
+
+  if (selectedItems) {
+    (table.selectRow.onSelectRow = true),
+      (table.selectRow.onSelectAllRow = true);
   }
 
   table.selectRow.selected = selectedItems;
