@@ -57,36 +57,10 @@ function getFieldValue(cellValue, type, format, dataFormat) {
   }
   return cellValue;
 }
-function isEquivalentObject(a, b) {
-  // Create arrays of property names
-  var aProps = Object.getOwnPropertyNames(a);
-  var bProps = Object.getOwnPropertyNames(b);
-
-  // If number of properties is different,
-  // objects are not equivalent
-  if (aProps.length != bProps.length) {
-    return false;
-  }
-
-  for (var i = 0; i < aProps.length; i++) {
-    var propName = aProps[i];
-
-    // If values of same property are not equal,
-    // objects are not equivalent
-    if (a[propName] !== b[propName]) {
-      return false;
-    }
-  }
-
-  // If we made it this far, objects
-  // are considered equivalent
-
-  return true;
-}
-
 class TableField extends Component {
   constructor(props) {
     super(props);
+
     this.handleCellSave = this.handleCellSave.bind(this);
     this.handleRowsDelete = this.handleRowsDelete.bind(this);
     this.handleDeletedRow = this.handleDeletedRow.bind(this);
@@ -95,6 +69,7 @@ class TableField extends Component {
     this.isRowExpandable = this.isRowExpandable.bind(this);
     this.myRowExpand = this.myRowExpand.bind(this);
   }
+
   handleDeletedRow(row, rowIdx, c) {
     let { items: { defaultFilterKey = undefined } } = this.props.schema;
     let { table: { rightActions } } = this.props.uiSchema;
@@ -158,29 +133,32 @@ class TableField extends Component {
     this.props.onChange(removePosition(filteredRows));
   }
   handleRowSelect(row, isSelected, e) {
+    const { onChange } = this.props;
+
     const {
-      data,
+      data = [],
       selectRow: { onSelectRow: { fieldToUpdate = "picked" } }
     } = this.tableConf;
-    let filteredRows = (data || []).map(item => {
-      if (!isSelected && item[fieldToUpdate] !== undefined) {
-        if (isEquivalentObject(item, row)) {
-          delete item[fieldToUpdate];
-        }
-      } else if (isEquivalentObject(item, row)) {
-        item[fieldToUpdate] = isSelected;
-      }
-      return item;
-    });
-    this.props.onChange(filteredRows);
+
+    row.isRowSelected = isSelected;
+
+    if (!isSelected) {
+      delete row[fieldToUpdate];
+    } else {
+      row[fieldToUpdate] = isSelected;
+    }
+
+    onChange(data);
   }
+
   handleAllRowSelect(isSelected, rows, e) {
     const {
-      // data,
+      data,
       selectRow: { onSelectAllRow: { fieldToUpdate = "picked" } }
     } = this.tableConf;
 
-    let filteredRows = (rows || []).map(item => {
+    let filteredRows = data.map(item => {
+      item.isRowSelected = isSelected;
       if (!isSelected && item[fieldToUpdate] !== undefined) {
         delete item[fieldToUpdate];
       } else {
@@ -190,6 +168,7 @@ class TableField extends Component {
     });
     this.props.onChange(filteredRows);
   }
+
   componentWillReceiveProps(nextProps) {
     let { uiSchema: { table: { focusOnAdd } = {} } } = nextProps;
 
@@ -393,7 +372,8 @@ class TableField extends Component {
       formData,
       registry: { fields },
       idSchema: { $id } = {},
-      onChange
+      onChange,
+      selectedItems
     } = this.props;
 
     let forceReRenderTable = this.forceReRenderTable;
@@ -408,8 +388,10 @@ class TableField extends Component {
       this.handleAllRowSelect,
       this.myRowExpand,
       this.isRowExpandable,
-      this.expandColumnComponent
+      this.expandColumnComponent,
+      selectedItems
     );
+
     const expandableTableOptions = this.getExpandableTableOptions();
     this.tableConf.options.insertModal = this.createCustomModal;
     const boostrapTableOptions = {
@@ -430,7 +412,11 @@ class TableField extends Component {
 
     return (
       <div id={$id}>
-        <BootstrapTable {...this.tableConf}  trClassName={this.handleRowColorChange} ref="table">
+        <BootstrapTable
+          {...this.tableConf}
+          trClassName={this.handleRowColorChange}
+          ref="table"
+        >
           {columns.map((column, i) => {
             return (
               <TableHeaderColumn key={i} {...column}>

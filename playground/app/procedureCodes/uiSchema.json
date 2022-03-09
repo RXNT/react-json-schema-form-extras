@@ -360,6 +360,9 @@
           "tableHeaderClass": "tableHeadingCell",
           "hover": true,
           "isTableExpandable": true
+          "selectRow": {
+            "mode": "checkbox"
+          }
         },
         "nav": "coding",
         "ui:options": {
