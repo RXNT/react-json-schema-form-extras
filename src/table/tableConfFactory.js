@@ -43,18 +43,15 @@ export default function tableConfFrom(
     formData = addPosition(formData);
   }
 
-  if (!table.selectRow && selectedItems) {
+  if (selectedItems) {
     table.selectRow = {
-      mode: "checkbox"
+      ...table.selectRow,
+      mode: "checkbox",
+      selected: selectedItems,
+      onSelect: handleRowSelect,
+      onSelectAll: handleAllRowSelect
     };
   }
-
-  if (selectedItems) {
-    (table.selectRow.onSelectRow = true),
-      (table.selectRow.onSelectAllRow = true);
-  }
-
-  table.selectRow.selected = selectedItems;
 
   let tableConf = Object.assign(
     { data: formData },
