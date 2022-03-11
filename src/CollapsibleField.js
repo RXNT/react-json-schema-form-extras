@@ -319,9 +319,13 @@ class CollapsibleField extends Component {
     //remove header elements from the schema
     let headerElementsSchemas = {};
     let propertiesNoHeader = { ...properties };
-    let orderNoHeader = uiSchema["ui:order"]
-      ? uiSchema["ui:order"].filter(x => elements.indexOf(x) < 0)
-      : uiSchema["ui:order"];
+    let orderNoHeader = uiSchema["ui:order"];
+
+    if (orderNoHeader && orderNoHeader.filter) {
+      orderNoHeader = orderNoHeader.filter(x => elements.indexOf(x) < 0);
+    } else if (orderNoHeader) {
+      orderNoHeader = [orderNoHeader].filter(x => elements.indexOf(x) < 0);
+    }
 
     elements.forEach(key => {
       if (propertiesNoHeader[key]) {
