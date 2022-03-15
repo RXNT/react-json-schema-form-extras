@@ -49,7 +49,9 @@ export default function tableConfFrom(
       mode: "checkbox",
       selected: selectedItems,
       onSelect: handleRowSelect,
-      onSelectAll: handleAllRowSelect
+      onSelectAll: handleAllRowSelect,
+      onSelectRow: { fieldToUpdate: "picked" },
+      onSelectAllRow: { fieldToUpdate: "picked" }
     };
   }
 
