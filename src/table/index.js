@@ -182,7 +182,10 @@ class TableField extends Component {
 
   componentDidUpdate() {
     if (this.adding) {
-      let { uiSchema: { table: { focusOnAdd, focusRowIndex } } } = this.props;
+      let {
+        uiSchema: { table: { focusOnAdd, focusRowIndex, tableCols = [] } },
+        formData = []
+      } = this.props;
 
       let body = this.refs.table.refs.body
         ? this.refs.table.refs.body
@@ -191,9 +194,20 @@ class TableField extends Component {
         console.error("Can't find body in the table");
         return;
       }
+      let allowToFocusField = true;
+      if (focusOnAdd) {
+        const { dataField = "" } = tableCols[focusOnAdd] || {};
+        const addedRowIndex = focusRowIndex
+          ? focusRowIndex
+          : this.props.formData.length;
+        const addedRow = formData[addedRowIndex - 1];
+        if (dataField !== "" && addedRow[dataField]) {
+          allowToFocusField = false;
+        }
+      }
       body.handleEditCell(
         focusRowIndex ? focusRowIndex : this.props.formData.length,
-        focusOnAdd
+        allowToFocusField ? focusOnAdd : undefined
       );
     }
   }
