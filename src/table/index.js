@@ -317,11 +317,11 @@ class TableField extends Component {
               Object.keys(fieldData[fieldName]).length > 0
             ) {
               isComponentDataAvailable = true;
+              const listElementLeftHand = fieldData[fieldName].code || fieldData[fieldName].question;
+              const listElementRightHand = fieldData[fieldName].description || fieldData[fieldName].answer;
               return (
                 <li className="customTable-item">
-                  {fieldData[fieldName].code +
-                    " - " +
-                    fieldData[fieldName].description}
+                  {listElementLeftHand + " - " + listElementRightHand}
                 </li>
               );
             }
