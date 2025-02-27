@@ -3,7 +3,7 @@
   "description": "Extra widgets for Mozilla's react-jsonschema-form",
   "private": false,
   "author": "mavarazy@gmail.com",
-  "version": "0.9.74",
+  "version": "0.9.75",
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/ --copy-files",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js --optimize-minimize",
@@ -58,7 +58,8 @@
     "lodash.debounce": "^4.0.8",
     "react-draft-wysiwyg": "^1.12.13",
     "react-render-html": "^0.6.0",
-    "selectn": "^1.1.2"
+    "selectn": "^1.1.2",
+    "use-debounce": "^10.0.4"
   },
   "devDependencies": {
     "atob": "^2.1.1",
