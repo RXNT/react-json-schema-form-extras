@@ -1,26 +1,28 @@
-import table from "./table";
-import { AsyncTypeaheadField, TypeaheadField } from "./TypeaheadField";
-import CompositeArrayField from "./CompositeArrayField";
 import AltInputField from "./AltInputField";
 import CollapsibleField from "./CollapsibleField";
+import CompositeArrayField from "./CompositeArrayField";
 import RTEField from "./RTEField";
-import rdp from "./ReactDatePicker";
 import SimpleLabel from "./SimpleLabel";
+import dateTimePicker from "./DateTimePicker";
 import draftRte from "./DraftRte";
 import formContextField from "./FormContextField";
-import dateTimePicker from "./DateTimePicker";
+import rdp from "./ReactDatePicker";
+import table from "./table";
+import { AsyncTypeaheadField, TypeaheadField } from "./TypeaheadField";
+import { DebouncedStringField } from "./DebouncedStringField";
 
 export default {
-  table,
+  StringField: DebouncedStringField,
+  altInput: AltInputField,
   asyncTypeahead: AsyncTypeaheadField,
-  typeahead: TypeaheadField,
   collapsible: CollapsibleField,
   compositeArray: CompositeArrayField,
-  altInput: AltInputField,
-  rte: RTEField,
-  rdp,
-  simpleLabel: SimpleLabel,
+  dateTimePicker: dateTimePicker,
   draftRte,
   formContextField,
-  dateTimePicker: dateTimePicker,
+  rdp,
+  rte: RTEField,
+  simpleLabel: SimpleLabel,
+  table,
+  typeahead: TypeaheadField
 };
