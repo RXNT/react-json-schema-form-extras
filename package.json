@@ -38,7 +38,6 @@
   ],
   "engineStrict": false,
   "engines": {
-    "npm": "^5.0.4",
     "node": ">=8.0.0"
   },
   "peerDependencies": {
