@@ -7,7 +7,7 @@ import {
   isStringSchema,
   isNumberSchema,
   toArray,
-  getDefaultValueForSchema,
+  getDefaultValueForSchema
 } from "./utils";
 import selectn from "selectn";
 import { DefaultLabel } from "./Label";
@@ -17,7 +17,7 @@ const DEFAULT_OPTIONS = {
   labelKey: "name",
   minLength: 3,
   placeholder: "Search...",
-  ref: "typeahead",
+  ref: "typeahead"
 };
 
 function optionToString(fields, separator) {
@@ -212,12 +212,18 @@ function transformLabelKey(labelKey, schema, selected) {
 }
 
 class BaseTypeaheadField extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      timeStamp: null
+    };
+  }
   handleSelectionChange = conf => events => {
     let { mapping, cleanAfterSelection = false } = conf;
     let { schema } = this.props;
 
     this.setState({
-      selected: events,
+      selected: events
     });
 
     if (events.length > 0) {
@@ -235,25 +241,34 @@ class BaseTypeaheadField extends Component {
 
   componentDidMount() {
     let { uiSchema: { focusOnMount = false } } = this.props;
+    const rbtElement = document.querySelector(".rbt");
+    rbtElement.addEventListener("mousedown", () => {
+      this.setState({ timeStamp: new Date() });
+    });
+    rbtElement.addEventListener("mousemove", () => {});
+    rbtElement.addEventListener("mouseup", () => {
+      this.handleBlur();
+    });
     if (focusOnMount) {
       this.refs.typeahead.getInstance().focus();
     }
   }
 
   handleBlur = () => {
-    let { selected } = this.state;
-
+    let { selected, timeStamp } = this.state;
     if (selected.length === 0) {
       this.setState({
-        selected: [],
+        selected: []
       });
-      if (this.refs.typeahead) {
-        this.refs.typeahead.getInstance() &&
-          this.refs.typeahead.getInstance().clear();
+      if (timeStamp === null) {
+        if (this.refs.typeahead) {
+          this.refs.typeahead.getInstance() &&
+            this.refs.typeahead.getInstance().clear();
+        }
+        // let onChangeValue = getDefaultValueForSchema(schema);
+        // remove the field if the value is empty
+        this.props.onChange(undefined);
       }
-      // let onChangeValue = getDefaultValueForSchema(schema);
-      // remove the field if the value is empty
-      this.props.onChange(undefined);
     }
   };
 }
@@ -270,7 +285,7 @@ export class TypeaheadField extends BaseTypeaheadField {
     this.state = {
       selected: isValidFormData(formData)
         ? toSelected(formData, schema, typeahead.mapping, typeahead.options)
-        : [],
+        : []
     };
   }
 
@@ -278,7 +293,7 @@ export class TypeaheadField extends BaseTypeaheadField {
     let {
       uiSchema: { typeahead },
       idSchema: { $id } = {},
-      schema,
+      schema
     } = this.props;
 
     let labelKey = mapLabelKey(typeahead.labelKey);
@@ -289,7 +304,7 @@ export class TypeaheadField extends BaseTypeaheadField {
       onChange: this.handleSelectionChange(typeahead),
       labelKey,
       selected: this.state.selected,
-      onBlur: this.handleBlur,
+      onBlur: this.handleBlur
     });
 
     return (
@@ -310,11 +325,11 @@ TypeaheadField.propTypes = {
       mapping: PropTypes.oneOfType([
         PropTypes.func,
         PropTypes.string,
-        PropTypes.object,
+        PropTypes.object
       ]),
-      cleanAfterSelection: PropTypes.bool,
-    }).isRequired,
-  }).isRequired,
+      cleanAfterSelection: PropTypes.bool
+    }).isRequired
+  }).isRequired
 };
 
 export class AsyncTypeaheadField extends BaseTypeaheadField {
@@ -328,7 +343,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       isLoading: false,
       selected: isValidFormData(formData)
         ? toSelected(formData, schema, asyncTypeahead.mapping)
-        : [],
+        : []
     };
   }
 
@@ -343,9 +358,9 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
           url,
           optionsPath,
           search = (url, query) =>
-            fetch(`${url}?query=${query}`).then(res => res.json()),
-        },
-      },
+            fetch(`${url}?query=${query}`).then(res => res.json())
+        }
+      }
     } = this.props;
 
     this.setState({ isLoading: true });
@@ -364,9 +379,9 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
           queryOnFocus = "",
           minLength,
           search = (url, query) =>
-            fetch(`${url}?query=${query}`).then(res => res.json()),
-        },
-      },
+            fetch(`${url}?query=${query}`).then(res => res.json())
+        }
+      }
     } = this.props;
 
     if (minLength === 0) {
@@ -381,7 +396,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
     let {
       uiSchema: { asyncTypeahead },
       idSchema: { $id } = {},
-      schema,
+      schema
     } = this.props;
 
     let labelKey = mapLabelKey(asyncTypeahead.labelKey);
@@ -396,7 +411,7 @@ export class AsyncTypeaheadField extends BaseTypeaheadField {
       onSearch: this.handleSearch,
       options: this.state.options,
       onFocus: this.handleOnFocus,
-      onBlur: this.handleBlur,
+      onBlur: this.handleBlur
     });
 
     if (asyncTypeahead.overrideOptions) {
@@ -422,11 +437,11 @@ AsyncTypeaheadField.propTypes = {
       mapping: PropTypes.oneOfType([
         PropTypes.func,
         PropTypes.string,
-        PropTypes.object,
+        PropTypes.object
       ]),
       cleanAfterSelection: PropTypes.bool,
       overrideOptions: PropTypes.bool,
-      search: PropTypes.func,
-    }).isRequired,
-  }),
+      search: PropTypes.func
+    }).isRequired
+  })
 };
