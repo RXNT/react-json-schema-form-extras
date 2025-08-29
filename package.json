@@ -3,7 +3,7 @@
   "description": "Extra widgets for Mozilla's react-jsonschema-form",
   "private": false,
   "author": "mavarazy@gmail.com",
-  "version": "0.9.75",
+  "version": "0.9.76",
   "scripts": {
     "build:lib": "rimraf lib && cross-env NODE_ENV=production babel -d lib/ src/ --copy-files",
     "build:dist": "rimraf dist && cross-env NODE_ENV=production webpack --config webpack.config.dist.js --optimize-minimize",
@@ -51,6 +51,8 @@
     "react-rte": "^0.15.0"
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/lab": "^4.0.0-alpha.61",
     "classnames": "^2.2.6",
     "draftjs-to-html": "^0.8.4",
     "es6-shim": "^0.35.5",
