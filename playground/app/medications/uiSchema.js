@@ -197,13 +197,73 @@ export default {
   allergyData: {
     classNames: "col-md-12",
     nav: "intake",
-    "ui:order": ["noKnownAllergies", "noKnownDrugAllergies", "allergies"],
+    "ui:order": [
+      "noKnownAllergies",
+      "noKnownDrugAllergies",
+      "allergies",
+      "allergyCategoriesStatic",
+      "allergyCategoriesUrlBased"
+    ],
     "ui:field": "collapsible",
     noKnownAllergies: {
       classNames: "col-md-6"
     },
     noKnownDrugAllergies: {
       classNames: "col-md-6"
+    },
+    allergyCategoriesStatic: {
+      classNames: "col-md-12",
+      "ui:field": "collapsible",
+      categories: {
+        "ui:field": "multiSelect",
+        classNames: "col-md-3",
+        multiSelect: {
+          options: [
+            { label: "Food Allergies", value: "food" },
+            { label: "Drug Allergies", value: "drug" },
+            { label: "Environmental Allergies", value: "environmental" },
+            { label: "Seasonal Allergies", value: "seasonal" },
+            { label: "Pet Allergies", value: "pet" },
+            { label: "Insect Allergies", value: "insect" }
+          ],
+          label: "Allergy Categories (Static Options)",
+          placeholder: "Select allergy categories..."
+        }
+      },
+      "ui:options": {
+        label: false
+      },
+      collapse: {
+        field: "ObjectField",
+        collapsed: false,
+        actions: [],
+        addTo: "categories"
+      }
+    },
+    allergyCategoriesUrlBased: {
+      classNames: "col-md-12",
+      "ui:field": "collapsible",
+      categories: {
+        "ui:field": "multiSelect",
+        classNames: "col-md-3",
+        multiSelect: {
+          url: "https://jsonplaceholder.typicode.com/users",
+          optionsPath: null,
+          labelKey: "name",
+          valueKey: "id",
+          label: "Allergy Categories (URL-Based)",
+          placeholder: "Select allergy categories..."
+        }
+      },
+      "ui:options": {
+        label: false
+      },
+      collapse: {
+        field: "ObjectField",
+        collapsed: false,
+        actions: [],
+        addTo: "categories"
+      }
     },
     allergies: {
       classNames: "col-md-12",

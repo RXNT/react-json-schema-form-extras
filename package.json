@@ -51,6 +51,8 @@
     "react-rte": "^0.15.0"
   },
   "dependencies": {
+    "@material-ui/core": "^4.12.4",
+    "@material-ui/lab": "^4.0.0-alpha.61",
     "classnames": "^2.2.6",
     "draftjs-to-html": "^0.8.4",
     "es6-shim": "^0.35.5",

@@ -14,6 +14,15 @@ export default {
         { drugId: 3, quantity: 23, useGeneric: true, isSelected: true },
         { drugId: 1, quantity: 24, useGeneric: true, isSelected: true }
       ]
+    },
+    allergyData: {
+      allergyCategoriesStatic: {
+        categories: []
+      },
+      allergyCategoriesUrlBased: {
+        categories: []
+      },
+      allergies: []
     }
   }
 };

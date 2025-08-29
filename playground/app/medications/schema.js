@@ -7,7 +7,7 @@ export default {
       properties: {
         medications_no_active: {
           type: "boolean",
-          title: "NO ACTIVE MEDICATIONS",
+          title: "NO ACTIVE MEDICATIONS"
         },
         medications: {
           type: "array",
@@ -18,19 +18,19 @@ export default {
             defaultFilterKey: "isSelected",
             properties: {
               drugId: {
-                type: "string",
+                type: "string"
               },
               drugName: {
                 type: "string",
-                title: "Drug Name",
+                title: "Drug Name"
               },
               dosage: {
                 type: "number",
-                title: "Dosage",
+                title: "Dosage"
               },
               quantity: {
                 type: "number",
-                title: "Quantity",
+                title: "Quantity"
               },
               unit: {
                 type: "string",
@@ -120,32 +120,32 @@ export default {
                   "Pen Needle",
                   "Pre - filled Pen Syringe",
                   "Pump",
-                  "Unspecified",
-                ],
+                  "Unspecified"
+                ]
               },
               refills: {
                 type: "string",
-                title: "Refills",
+                title: "Refills"
               },
               useGeneric: {
                 default: true,
                 type: "boolean",
-                title: "Use Generic",
+                title: "Use Generic"
               },
               startDate: {
                 type: "string",
                 format: "date",
-                title: "Start Date",
+                title: "Start Date"
               },
               isSelected: {
                 default: true,
                 type: "boolean",
-                title: "IsSelected",
-              },
-            },
-          },
-        },
-      },
+                title: "IsSelected"
+              }
+            }
+          }
+        }
+      }
     },
     allergyData: {
       type: "object",
@@ -157,13 +157,37 @@ export default {
           type: "boolean",
           title: "No Known Allergies",
           default: false,
-          rxnt: "NoKnownAllergies",
+          rxnt: "NoKnownAllergies"
         },
         noKnownDrugAllergies: {
           type: "boolean",
           title: "No Known Drug Allergies",
           default: false,
-          rxnt: "NoKnownDrugAllergies",
+          rxnt: "NoKnownDrugAllergies"
+        },
+        allergyCategoriesStatic: {
+          type: "object",
+          title: "Allergy Categories (Static Options)",
+          default: {},
+          properties: {
+            categories: {
+              type: "array",
+              items: { type: "string" },
+              default: []
+            }
+          }
+        },
+        allergyCategoriesUrlBased: {
+          type: "object",
+          title: "Allergy Categories (URL-Based)",
+          default: {},
+          properties: {
+            categories: {
+              type: "array",
+              items: { type: "string" },
+              default: []
+            }
+          }
         },
         allergies: {
           type: "array",
@@ -176,34 +200,34 @@ export default {
             properties: {
               allergyId: {
                 type: "number",
-                title: "Allergy ID",
+                title: "Allergy ID"
               },
               allergyName: {
                 type: "string",
-                title: "Allergy Name",
+                title: "Allergy Name"
               },
               allergyReaction: {
                 type: "string",
-                title: "Allergy Reaction",
+                title: "Allergy Reaction"
               },
               allergyComments: {
                 type: "string",
-                title: "Allergy Comments",
+                title: "Allergy Comments"
               },
               allergyActive: {
                 type: "boolean",
                 title: "Allergy Active",
-                default: false,
+                default: false
               },
               allergyDate: {
                 type: "string",
                 title: "Allergy Identified On",
-                format: "date",
-              },
-            },
-          },
-        },
-      },
-    },
-  },
+                format: "date"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 };
