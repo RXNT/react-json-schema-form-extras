@@ -38,10 +38,26 @@ const styles = {
     letterSpacing: "0.15px",
     color: "#003B5CBF"
   },
+  inputBase: {
+    fontFamily: "Mulish",
+    fontWeight: 400,
+    fontSize: "1rem",
+    letterSpacing: "0.15px",
+    lineHeight: "2.2",
+    paddingTop: 10,
+    paddingBottom: 10,
+    boxSizing: "border-box", // Ensure consistent box model
+    "&::placeholder": {
+      color: "#003B5CBF",
+      opacity: 1, // Keep placeholder visible
+      display: "block" // Ensure placeholder is always displayed
+    }
+  },
   inputRoot: {
     paddingTop: 0,
     paddingBottom: 0,
     minHeight: "auto",
+    margin: 0, // Removed unnecessary margins to prevent extra line
     "& .MuiChip-root": {
       marginTop: 2,
       marginBottom: 2
@@ -59,19 +75,6 @@ const styles = {
   },
   inputLabelFocused: {
     color: "#003B5CBF !important"
-  },
-  inputBase: {
-    fontFamily: "Mulish",
-    fontWeight: 400,
-    fontSize: "1rem",
-    letterSpacing: "0.15px",
-    lineHeight: "2.2",
-    paddingTop: 10,
-    paddingBottom: 10,
-    "&::placeholder": {
-      color: "#003B5CBF",
-      opacity: 1
-    }
   },
   chipRoot: {
     background: "#00629B",
@@ -263,7 +266,7 @@ class MultiSelectField extends Component {
         return React.createElement(TextField, {
           ...params,
           label: label,
-          placeholder: selectedOptions.length === 0 ? placeholder : "",
+          placeholder: placeholder, // Always show placeholder text
           variant: "outlined",
           fullWidth: true,
           InputLabelProps: {
