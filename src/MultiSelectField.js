@@ -57,7 +57,6 @@ const styles = {
     paddingTop: 0,
     paddingBottom: 0,
     minHeight: "auto",
-    margin: 0, // Removed unnecessary margins to prevent extra line
     "& .MuiChip-root": {
       marginTop: 2,
       marginBottom: 2
