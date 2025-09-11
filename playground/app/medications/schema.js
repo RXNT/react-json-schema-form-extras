@@ -185,10 +185,10 @@ export default {
             }
           }
         },
-        // POST search using public API
+        // POST search using public API with optionsPath
         allergyCategoriesPost: {
           type: "object",
-          title: "Allergy Categories (POST)",
+          title: "Allergy Categories (POST with optionsPath)",
           properties: {
             categories: {
               type: "array",

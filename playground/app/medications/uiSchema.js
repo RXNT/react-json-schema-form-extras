@@ -282,6 +282,7 @@ export default {
         classNames: "col-md-6",
         multiTypeahead: {
           url: "https://jsonplaceholder.typicode.com/posts",
+          optionsPath: "data.categories", // Extract from nested response
           search: (url, query) => {
             // POST request using JSONPlaceholder (public API)
             return fetch(url, {
@@ -297,23 +298,30 @@ export default {
             })
               .then(res => res.json())
               .then(response => {
-                // Simulate categories response from POST
-                return [
-                  {
-                    id: response.id || "1",
-                    name: `Category for "${query}"`,
-                    username: "category_user",
-                    email: "category@example.com",
-                    phone: "123-456-7890",
-                    website: "category.example.com"
+                // Simulate nested API response structure
+                return {
+                  status: "success",
+                  data: {
+                    categories: [
+                      {
+                        id: response.id || "1",
+                        name: `Category for "${query}"`,
+                        username: "category_user",
+                        email: "category@example.com",
+                        phone: "123-456-7890",
+                        website: "category.example.com"
+                      }
+                    ],
+                    total: 1,
+                    page: 1
                   }
-                ];
+                };
               });
           },
           labelTemplate: "{name} ({username}) - {email}",
           valueKeys: ["id", "name", "username", "email", "phone", "website"],
-          label: "Allergy Categories (POST)",
-          placeholder: "Search with POST request...",
+          label: "Allergy Categories (POST with optionsPath)",
+          placeholder: "Search with POST request using optionsPath...",
           minLength: 2
         }
       },

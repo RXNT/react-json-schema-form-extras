@@ -215,7 +215,8 @@ function MultiTypeaheadField(props) {
     url,
     options: staticOptions,
     search: customSearch,
-    queryKey = "query"
+    queryKey = "query",
+    optionsPath
   } = multiTypeaheadConfig;
 
   // Debounced fetch function
@@ -232,8 +233,17 @@ function MultiTypeaheadField(props) {
         const searchFn =
           typeof customSearch === "function" ? customSearch : defaultSearch;
         const data = await searchFn(url, query, queryKey);
-        // Always expect data to be an array
-        const newOptions = Array.isArray(data) ? data : [];
+
+        // Extract options from response using optionsPath if provided
+        let newOptions;
+        if (optionsPath && typeof optionsPath === "string") {
+          newOptions = selectn(optionsPath, data);
+          newOptions = Array.isArray(newOptions) ? newOptions : [];
+        } else {
+          // Always expect data to be an array if no optionsPath specified
+          newOptions = Array.isArray(data) ? data : [];
+        }
+
         setOptions(newOptions);
       } catch (error) {
         console.error("Error fetching options:", error);
@@ -242,7 +252,7 @@ function MultiTypeaheadField(props) {
         setLoading(false);
       }
     },
-    [url, customSearch, queryKey]
+    [url, customSearch, queryKey, optionsPath]
   );
 
   // Debounce the fetch with useEffect
@@ -583,7 +593,8 @@ MultiTypeaheadField.propTypes = {
       label: PropTypes.string,
       placeholder: PropTypes.string,
       search: PropTypes.func, // Optional custom search function
-      queryKey: PropTypes.string // Optional query parameter key (default: "query")
+      queryKey: PropTypes.string, // Optional query parameter key (default: "query")
+      optionsPath: PropTypes.string // Optional path to extract options array from API response
     })
   }),
   schema: PropTypes.object
