@@ -12,8 +12,8 @@ import { Clear as ClearIcon } from "@material-ui/icons";
 import selectn from "selectn";
 
 // Default search function
-async function defaultSearch(url, query) {
-  const res = await fetch(`${url}?query=${encodeURIComponent(query)}`);
+async function defaultSearch(url, query, queryKey = "query") {
+  const res = await fetch(`${url}?${queryKey}=${encodeURIComponent(query)}`);
   return await res.json();
 }
 
@@ -214,7 +214,8 @@ function MultiTypeaheadField(props) {
   const {
     url,
     options: staticOptions,
-    search: customSearch
+    search: customSearch,
+    queryKey = "query"
   } = multiTypeaheadConfig;
 
   // Debounced fetch function
@@ -230,7 +231,7 @@ function MultiTypeaheadField(props) {
         // Use custom search function if provided, otherwise use defaultSearch
         const searchFn =
           typeof customSearch === "function" ? customSearch : defaultSearch;
-        const data = await searchFn(url, query);
+        const data = await searchFn(url, query, queryKey);
         // Always expect data to be an array
         const newOptions = Array.isArray(data) ? data : [];
         setOptions(newOptions);
@@ -241,7 +242,7 @@ function MultiTypeaheadField(props) {
         setLoading(false);
       }
     },
-    [url, customSearch]
+    [url, customSearch, queryKey]
   );
 
   // Debounce the fetch with useEffect
@@ -581,7 +582,8 @@ MultiTypeaheadField.propTypes = {
       valueKeys: PropTypes.array,
       label: PropTypes.string,
       placeholder: PropTypes.string,
-      search: PropTypes.func // Optional custom search function
+      search: PropTypes.func, // Optional custom search function
+      queryKey: PropTypes.string // Optional query parameter key (default: "query")
     })
   }),
   schema: PropTypes.object

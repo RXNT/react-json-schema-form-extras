@@ -781,7 +781,8 @@ All properties are configured under the `multiTypeahead` object in uiSchema:
 
 - `options` (array): Static list of options to display. Can be an array of objects or strings.
 - `url` (string): URL for API-based options. When provided, options will be fetched dynamically based on user input with 300ms debounce.
-- `search` (function): Custom search function that overrides the default fetch behavior. Takes `(url, query)` parameters and must return a Promise.
+- `search` (function): Custom search function that overrides the default fetch behavior. Takes `(url, query, queryKey)` parameters and must return a Promise.
+- `queryKey` (string): Query parameter key used in API requests (default: "query"). For example, with `queryKey: "search"`, the URL becomes `${url}?search=${query}`.
 - `label` (string): Optional label for the field.
 - `placeholder` (string): Optional placeholder text (default: "Select...").
 - `labelTemplate` (string): Template for displaying option labels. Use `{fieldName}` syntax to reference object properties (e.g., `"{name} - {category}"`).
@@ -848,16 +849,29 @@ const uiSchema = {
     "ui:field": "multiTypeahead",
     multiTypeahead: {
       url: "/api/medications/search",
+      queryKey: "search", // Use "search" instead of default "query"
       label: "Select Medications",
       placeholder: "Type to search medications...",
       labelTemplate: "{name} ({strength})",
       valueKeys: ["id", "name"],
       // Optional custom search function
-      search: (url, query) => {
-        return fetch(`${url}?q=${encodeURIComponent(query)}&limit=20`)
+      search: (url, query, queryKey) => {
+        return fetch(`${url}?${queryKey}=${encodeURIComponent(query)}&limit=20`)
           .then((res) => res.json())
           .then((data) => data.results || []);
       }
+    }
+  }
+};
+
+// Without queryKey specified (defaults to "query")
+const uiSchemaDefault = {
+  users: {
+    "ui:field": "multiTypeahead",
+    multiTypeahead: {
+      url: "/api/users/search", // Will call: /api/users/search?query=userInput
+      labelTemplate: "{firstName} {lastName}",
+      valueKeys: ["id", "username"]
     }
   }
 };
