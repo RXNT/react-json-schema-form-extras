@@ -16,7 +16,7 @@ All configurations you can specify in original projects, can be reused here.
 - Async Typeahead based on [react-bootstrap-typeahead](https://github.com/ericgio/react-bootstrap-typeahead) (`ui:field` > `asyncTypeahead`)
 - RTE, based on [react-rte](https://github.com/sstur/react-rte) (`ui:field` > `rte`)
 - Tables, based on [react-bootstrap-table](https://github.com/AllenFang/react-bootstrap-table) (`ui:field` > `table`)
-- Multi-select field (`ui:field` > `multiSelect`)
+- Multi-typeahead field (`ui:field` > `multiTypeahead`)
 
 ## Table of Contents
 
@@ -53,7 +53,7 @@ All configurations you can specify in original projects, can be reused here.
       - [Columns order](#columns-order)
       - [Cell dataFormat](#cell-dataformat)
     - [Additional column actions](#additional-column-actions)
-  - [Multi-select field (multiSelect)](#multi-select-field-multiselect)
+  - [Multi-typeahead field (multiTypeahead)](#multi-typeahead-field-multitypeahead)
     - [Purpose](#purpose)
     - [Recent Changes](#recent-changes)
     - [Use](#use)
@@ -736,22 +736,26 @@ Right panel is defined with small syntactic sugar to simpify action defintion
 - `text` text to use for the column
 - `displayName` column name
 
-## Multi-select field (`multiSelect`)
+## Multi-typeahead field (`multiTypeahead`)
 
 ### Purpose
 
-This component provides a multi-select dropdown using Material-UI Autocomplete (v4) with multiple selection enabled. It allows users to select multiple options, displaying them as chips/tags, and integrates with react-jsonschema-form.
+This component provides a multi-typeahead dropdown using Material-UI components with multiple selection enabled. It allows users to search and select multiple options, displaying them as chips/tags, and integrates with react-jsonschema-form. Compatible with react-jsonschema-form.
 
 ### Recent Changes
 
-- Uses Material-UI Autocomplete for multi-select functionality.
+- **BREAKING CHANGE**: Renamed from `MultiSelectField` to `MultiTypeaheadField`
+- **Field Name**: Changed from `ui:field: "multiSelect"` to `ui:field: "multiTypeahead"`
+- **Configuration**: Changed from `multiSelect: {}` to `multiTypeahead: {}` in uiSchema
+- Uses Material-UI components for multi-typeahead functionality.
 - All styling (border, label, placeholder, chip, dropdown options, icons) is handled via JSS (`withStyles`).
 - Consistent color for label, placeholder, dropdown options, chips, and icons.
 - Placeholder and label are always centered and use color `#003B5CBF`.
 - Chips use background `#00629B` and white text; delete icon is white.
 - Dropdown and clear icons use dark blue (`#00629B`).
 - Input and chip layout is compact, with no extra lines or spacing.
-- Example of custom styling and props included below.
+- Fixed chip grey appearance on click/hover with proper state overrides.
+- Fixed React key prop issues to prevent visual glitches when deleting chips.
 
 ### Use
 
@@ -759,8 +763,8 @@ The simplest `uiSchema` configuration would be:
 
 ```json
 {
-  "ui:field": "multiSelect",
-  "multiSelect": {
+  "ui:field": "multiTypeahead",
+  "multiTypeahead": {
     "options": [
       { "label": "Option 1", "value": "opt1" },
       { "label": "Option 2", "value": "opt2" }
@@ -773,39 +777,62 @@ The simplest `uiSchema` configuration would be:
 
 ### Properties
 
-- `options` (array): List of `{ label, value }` objects to display.
+All properties are configured under the `multiTypeahead` object in uiSchema:
+
+- `options` (array): Static list of options to display. Can be an array of objects or strings.
+- `url` (string): URL for API-based options. When provided, options will be fetched dynamically based on user input with 300ms debounce.
+- `search` (function): Custom search function that overrides the default fetch behavior. Takes `(url, query)` parameters and must return a Promise.
 - `label` (string): Optional label for the field.
-- `placeholder` (string): Optional placeholder text.
-- `url` (string): Optional URL to fetch options dynamically.
-- `labelKey` (string): Key for option label (default: `label`).
-- `valueKey` (string): Key for option value (default: `value`).
+- `placeholder` (string): Optional placeholder text (default: "Select...").
+- `labelTemplate` (string): Template for displaying option labels. Use `{fieldName}` syntax to reference object properties (e.g., `"{name} - {category}"`).
+- `valueKeys` (array): Array of keys to extract from selected options for the form value (default: `["value"]`).
+
+### Key Features
+
+- **Dual Mode Support**: Works with both static options and dynamic API-based options
+- **Template Labels**: Use `labelTemplate` to customize how options are displayed
+- **Flexible Values**: `valueKeys` allows you to control which properties are saved in the form data
+- **Search & Filter**: For static options, filters locally; for URL-based options, searches via API
+- **Debounced API Calls**: 300ms debounce prevents excessive API requests during typing
+- **Persistent Selections**: Selected values remain visible even when not in current search results
+- **Clear Functionality**: Clear individual chips or all selections at once
+- **Loading States**: Shows loading indicator during API calls
+- **Keyboard Accessible**: Full keyboard navigation support
+- **Click-away Handling**: Dropdown closes when clicking outside the component
 
 ### Example
 
+#### Static Options Example
+
 ```js
 import Form from "react-jsonschema-form";
-import { MultiSelectField } from "react-jsonschema-form-extras/lib/MultiSelectField";
+import { MultiTypeaheadField } from "react-jsonschema-form-extras/lib/MultiTypeaheadField";
 
-const fields = { multiSelect: MultiSelectField };
+const fields = { multiTypeahead: MultiTypeaheadField };
 
 const schema = {
   type: "object",
   properties: {
-    choices: { type: "array", items: { type: "string" } }
+    fruits: {
+      type: "array",
+      items: { type: "object" }
+    }
   }
 };
 
 const uiSchema = {
-  choices: {
-    "ui:field": "multiSelect",
-    multiSelect: {
+  fruits: {
+    "ui:field": "multiTypeahead",
+    multiTypeahead: {
       options: [
-        { label: "Apple", value: "apple" },
-        { label: "Banana", value: "banana" },
-        { label: "Cherry", value: "cherry" }
+        { name: "Apple", category: "Tree Fruit", value: "apple", id: 1 },
+        { name: "Banana", category: "Tropical", value: "banana", id: 2 },
+        { name: "Cherry", category: "Stone Fruit", value: "cherry", id: 3 }
       ],
-      label: "Fruits",
-      placeholder: "Select fruits..."
+      label: "Select Fruits",
+      placeholder: "Choose fruits...",
+      labelTemplate: "{name} - {category}",
+      valueKeys: ["id", "value", "name"]
     }
   }
 };
@@ -813,16 +840,97 @@ const uiSchema = {
 <Form schema={schema} uiSchema={uiSchema} fields={fields} />;
 ```
 
+#### Dynamic/API-based Options Example
+
+```js
+const uiSchema = {
+  medications: {
+    "ui:field": "multiTypeahead",
+    multiTypeahead: {
+      url: "/api/medications/search",
+      label: "Select Medications",
+      placeholder: "Type to search medications...",
+      labelTemplate: "{name} ({strength})",
+      valueKeys: ["id", "name"],
+      // Optional custom search function
+      search: (url, query) => {
+        return fetch(`${url}?q=${encodeURIComponent(query)}&limit=20`)
+          .then((res) => res.json())
+          .then((data) => data.results || []);
+      }
+    }
+  }
+};
+```
+
+#### Simple String Array Example
+
+```js
+const schema = {
+  type: "object",
+  properties: {
+    tags: {
+      type: "array",
+      items: { type: "string" }
+    }
+  }
+};
+
+const uiSchema = {
+  tags: {
+    "ui:field": "multiTypeahead",
+    multiTypeahead: {
+      options: ["JavaScript", "React", "Node.js", "Python", "Java"],
+      label: "Programming Languages",
+      placeholder: "Select languages..."
+    }
+  }
+};
+```
+
 ### Custom Styling
 
-All styles are handled via JSS in the component. You can override colors, spacing, and font by editing the `styles` object in `MultiSelectField.js`.
+All styles are handled via JSS (`withStyles`) in the component. The styling is designed to be consistent and follows Material-UI design patterns with custom color overrides:
+
+**Input Field:**
 
 - Border color: `#DFE6EB`
+- Font family: Mulish
+- Input text color: `#003B5C`
 - Label/placeholder color: `#003B5CBF`
-- Chip background: `#00629B`, text: white
-- Delete icon: white
-- Dropdown/clear icons: `#00629B`
-- Dropdown options: `#003B5CBF`, font: Mulish
+- Minimum height: 56px with centered alignment
+
+**Chips (Selected Items):**
+
+- Background: `#00629B` (blue)
+- Text color: White
+- Delete icon: White
+- Font: Mulish, 12px
+- Proper state handling for hover/focus/active states
+
+**Dropdown:**
+
+- Background: White
+- Border: `#DFE6EB`
+- Border radius: 4px (bottom only)
+- Box shadow: `0 2px 8px rgba(0,0,0,0.1)`
+- Max height: 200px with scroll
+- Option hover: `#f5f5f5`
+
+**Icons:**
+
+- Dropdown indicator: `#00629B`
+- Clear button: `#00629B`
+- Loading indicator: Displays during API calls
+
+**Layout:**
+
+- Chips and input field are properly aligned in a flex container
+- Input field takes remaining space with minimum 120px width
+- Clear button appears when selections exist
+- Compact layout with optimized spacing
+
+To customize styling, edit the `styles` object in `MultiTypeaheadField.js` using JSS syntax.
 
 ## React Day Picker, based on [react-day-picker](https://github.com/gpbl/react-day-picker) (`rdp`)
 

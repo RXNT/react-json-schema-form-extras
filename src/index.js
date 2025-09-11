@@ -10,7 +10,7 @@ import rdp from "./ReactDatePicker";
 import table from "./table";
 import { AsyncTypeaheadField, TypeaheadField } from "./TypeaheadField";
 import { DebouncedStringField } from "./DebouncedStringField";
-import MultiSelectField from "./MultiSelectField";
+import MultiTypeaheadField from "./MultiTypeaheadField";
 
 export default {
   StringField: DebouncedStringField,
@@ -26,5 +26,5 @@ export default {
   simpleLabel: SimpleLabel,
   table,
   typeahead: TypeaheadField,
-  multiSelect: MultiSelectField
+  multiTypeahead: MultiTypeaheadField
 };
