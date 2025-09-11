@@ -783,6 +783,7 @@ All properties are configured under the `multiTypeahead` object in uiSchema:
 - `url` (string): URL for API-based options. When provided, options will be fetched dynamically based on user input with 300ms debounce.
 - `search` (function): Custom search function that overrides the default fetch behavior. Takes `(url, query, queryKey)` parameters and must return a Promise.
 - `queryKey` (string): Query parameter key used in API requests (default: "query"). For example, with `queryKey: "search"`, the URL becomes `${url}?search=${query}`.
+- `optionsPath` (string): Path to extract options array from API response. Use dot notation for nested properties (e.g., `"data.results"`, `"response.items"`).
 - `label` (string): Optional label for the field.
 - `placeholder` (string): Optional placeholder text (default: "Select...").
 - `labelTemplate` (string): Template for displaying option labels. Use `{fieldName}` syntax to reference object properties (e.g., `"{name} - {category}"`).
@@ -793,6 +794,8 @@ All properties are configured under the `multiTypeahead` object in uiSchema:
 - **Dual Mode Support**: Works with both static options and dynamic API-based options
 - **Template Labels**: Use `labelTemplate` to customize how options are displayed
 - **Flexible Values**: `valueKeys` allows you to control which properties are saved in the form data
+- **Nested API Responses**: Use `optionsPath` to extract options from complex API response structures
+- **Custom Query Parameters**: Use `queryKey` to customize the API query parameter name
 - **Search & Filter**: For static options, filters locally; for URL-based options, searches via API
 - **Debounced API Calls**: 300ms debounce prevents excessive API requests during typing
 - **Persistent Selections**: Selected values remain visible even when not in current search results
@@ -850,28 +853,43 @@ const uiSchema = {
     multiTypeahead: {
       url: "/api/medications/search",
       queryKey: "search", // Use "search" instead of default "query"
+      optionsPath: "data.medications", // Extract from nested response
       label: "Select Medications",
       placeholder: "Type to search medications...",
       labelTemplate: "{name} ({strength})",
       valueKeys: ["id", "name"],
       // Optional custom search function
       search: (url, query, queryKey) => {
-        return fetch(`${url}?${queryKey}=${encodeURIComponent(query)}&limit=20`)
-          .then((res) => res.json())
-          .then((data) => data.results || []);
+        return fetch(
+          `${url}?${queryKey}=${encodeURIComponent(query)}&limit=20`
+        ).then((res) => res.json());
+        // No need to extract data.results here, optionsPath will handle it
       }
     }
   }
 };
 
-// Without queryKey specified (defaults to "query")
-const uiSchemaDefault = {
+// Without queryKey specified (defaults to "query") but with optionsPath
+const uiSchemaWithOptionsPath = {
   users: {
     "ui:field": "multiTypeahead",
     multiTypeahead: {
       url: "/api/users/search", // Will call: /api/users/search?query=userInput
+      optionsPath: "response.users", // Extract from { response: { users: [...] } }
       labelTemplate: "{firstName} {lastName}",
       valueKeys: ["id", "username"]
+    }
+  }
+};
+
+// Simple case - API returns array directly (no optionsPath needed)
+const uiSchemaDefault = {
+  tags: {
+    "ui:field": "multiTypeahead",
+    multiTypeahead: {
+      url: "/api/tags/search", // API returns: [{ name: "tag1" }, { name: "tag2" }]
+      labelTemplate: "{name}",
+      valueKeys: ["id", "name"]
     }
   }
 };
