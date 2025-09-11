@@ -165,26 +165,44 @@ export default {
           default: false,
           rxnt: "NoKnownDrugAllergies"
         },
-        allergyCategoriesStatic: {
+        // GET allergies search
+        allergiesGet: {
           type: "object",
-          title: "Allergy Categories (Static Options)",
-          default: {},
+          title: "Allergies (GET)",
           properties: {
-            categories: {
+            items: {
               type: "array",
-              items: { type: "string" },
+              items: {
+                type: "object",
+                properties: {
+                  id: { type: "string" },
+                  title: { type: "string" },
+                  type: { type: "string" },
+                  originalId: { type: "string" }
+                }
+              },
               default: []
             }
           }
         },
-        allergyCategoriesUrlBased: {
+        // POST search using public API
+        allergyCategoriesPost: {
           type: "object",
-          title: "Allergy Categories (URL-Based)",
-          default: {},
+          title: "Allergy Categories (POST)",
           properties: {
             categories: {
               type: "array",
-              items: { type: "string" },
+              items: {
+                type: "object",
+                properties: {
+                  id: { type: "string" },
+                  name: { type: "string" },
+                  username: { type: "string" },
+                  email: { type: "string" },
+                  phone: { type: "string" },
+                  website: { type: "string" }
+                }
+              },
               default: []
             }
           }

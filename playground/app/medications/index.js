@@ -16,10 +16,10 @@ export default {
       ]
     },
     allergyData: {
-      allergyCategoriesStatic: {
-        categories: []
+      allergiesGet: {
+        items: []
       },
-      allergyCategoriesUrlBased: {
+      allergyCategoriesPost: {
         categories: []
       },
       allergies: []

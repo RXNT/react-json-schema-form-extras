@@ -55,10 +55,22 @@ export default {
               focusOnMount: true,
               asyncTypeahead: {
                 url: "https://jsonplaceholder.typicode.com/users",
+                search: (url, query) => {
+                  // Enhanced search with query parameters
+                  const searchUrl = `${url}?q=${encodeURIComponent(
+                    query
+                  )}&_limit=10`;
+                  return fetch(searchUrl, {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/json"
+                    }
+                  }).then(res => res.json());
+                },
                 bodyContainer: true,
                 mapping: {
                   drugName: "name",
-                  allergyName: "username"
+                  drugId: "id"
                 },
                 labelKey: "name",
                 minLength: 2,
@@ -200,9 +212,9 @@ export default {
     "ui:order": [
       "noKnownAllergies",
       "noKnownDrugAllergies",
-      "allergies",
-      "allergyCategoriesStatic",
-      "allergyCategoriesUrlBased"
+      "allergiesGet",
+      "allergyCategoriesPost",
+      "allergies"
     ],
     "ui:field": "collapsible",
     noKnownAllergies: {
@@ -211,23 +223,43 @@ export default {
     noKnownDrugAllergies: {
       classNames: "col-md-6"
     },
-    allergyCategoriesStatic: {
+    // GET allergies search
+    allergiesGet: {
       classNames: "col-md-12",
       "ui:field": "collapsible",
-      categories: {
-        "ui:field": "multiSelect",
-        classNames: "col-md-3",
-        multiSelect: {
-          options: [
-            { label: "Food Allergies", value: "food" },
-            { label: "Drug Allergies", value: "drug" },
-            { label: "Environmental Allergies", value: "environmental" },
-            { label: "Seasonal Allergies", value: "seasonal" },
-            { label: "Pet Allergies", value: "pet" },
-            { label: "Insect Allergies", value: "insect" }
-          ],
-          label: "Allergy Categories (Static Options)",
-          placeholder: "Select allergy categories..."
+      items: {
+        "ui:field": "multiTypeahead",
+        classNames: "col-md-6",
+        multiTypeahead: {
+          url: "https://jsonplaceholder.typicode.com/posts",
+          search: (url, query) => {
+            // Search using GET with query parameters
+            const searchUrl = `${url}?q=${encodeURIComponent(
+              query
+            )}&_limit=10&_sort=title&_order=asc`;
+
+            return fetch(searchUrl, {
+              method: "GET",
+              headers: { "Content-Type": "application/json" }
+            })
+              .then(res => res.json())
+              .then(posts => {
+                // Format posts data as allergies
+                return posts.map(post => ({
+                  id: `allergy_${post.id}`,
+                  title: `${post.title}`,
+                  type: "allergy",
+                  originalId: post.id,
+                  body: post.body,
+                  userId: post.userId
+                }));
+              });
+          },
+          labelTemplate: "{title}",
+          valueKeys: ["id", "title", "type", "originalId"],
+          label: "Allergies (GET Search)",
+          placeholder: "Search allergies...",
+          minLength: 2
         }
       },
       "ui:options": {
@@ -237,22 +269,51 @@ export default {
         field: "ObjectField",
         collapsed: false,
         actions: [],
-        addTo: "categories"
+        addTo: "items"
       }
     },
-    allergyCategoriesUrlBased: {
+    // POST search using public API
+    allergyCategoriesPost: {
       classNames: "col-md-12",
       "ui:field": "collapsible",
       categories: {
-        "ui:field": "multiSelect",
-        classNames: "col-md-3",
-        multiSelect: {
-          url: "https://jsonplaceholder.typicode.com/users",
-          optionsPath: null,
-          labelKey: "name",
-          valueKey: "id",
-          label: "Allergy Categories (URL-Based)",
-          placeholder: "Select allergy categories..."
+        "ui:field": "multiTypeahead",
+        classNames: "col-md-6",
+        multiTypeahead: {
+          url: "https://jsonplaceholder.typicode.com/posts",
+          search: (url, query) => {
+            // POST request using JSONPlaceholder (public API)
+            return fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                title: query,
+                body: `Search query for: ${query}`,
+                userId: 1
+              })
+            })
+              .then(res => res.json())
+              .then(response => {
+                // Simulate categories response from POST
+                return [
+                  {
+                    id: response.id || "1",
+                    name: `Category for "${query}"`,
+                    username: "category_user",
+                    email: "category@example.com",
+                    phone: "123-456-7890",
+                    website: "category.example.com"
+                  }
+                ];
+              });
+          },
+          labelTemplate: "{name} ({username}) - {email}",
+          valueKeys: ["id", "name", "username", "email", "phone", "website"],
+          label: "Allergy Categories (POST)",
+          placeholder: "Search with POST request...",
+          minLength: 2
         }
       },
       "ui:options": {
@@ -306,9 +367,21 @@ export default {
               focusOnMount: true,
               asyncTypeahead: {
                 url: "https://jsonplaceholder.typicode.com/users",
+                search: (url, query) => {
+                  // GET search only to avoid authorization issues
+                  const searchUrl = `${url}?q=${encodeURIComponent(
+                    query
+                  )}&_limit=10`;
+                  return fetch(searchUrl, {
+                    method: "GET",
+                    headers: {
+                      "Content-Type": "application/json"
+                    }
+                  }).then(res => res.json());
+                },
                 bodyContainer: true,
                 mapping: {
-                  allergyId: "username",
+                  allergyId: "id",
                   allergyName: "name"
                 },
                 labelKey: "name",
