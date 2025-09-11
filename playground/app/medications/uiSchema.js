@@ -232,9 +232,10 @@ export default {
         classNames: "col-md-6",
         multiTypeahead: {
           url: "https://jsonplaceholder.typicode.com/posts",
-          search: (url, query) => {
-            // Search using GET with query parameters
-            const searchUrl = `${url}?q=${encodeURIComponent(
+          queryKey: "q", // Use "q" instead of default "query"
+          search: (url, query, queryKey) => {
+            // Search using GET with custom query parameter
+            const searchUrl = `${url}?${queryKey}=${encodeURIComponent(
               query
             )}&_limit=10&_sort=title&_order=asc`;
 
@@ -257,7 +258,7 @@ export default {
           },
           labelTemplate: "{title}",
           valueKeys: ["id", "title", "type", "originalId"],
-          label: "Allergies (GET Search)",
+          label: "Allergies (GET Search with custom queryKey)",
           placeholder: "Search allergies...",
           minLength: 2
         }
