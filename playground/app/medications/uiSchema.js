@@ -305,7 +305,7 @@ export default {
                     categories: [
                       {
                         id: response.id || "1",
-                        name: {
+                        category: {
                           name: `Category for "${query}"`
                         },
                         username: "category_user",
@@ -320,10 +320,10 @@ export default {
                 };
               });
           },
-          labelTemplate: "{name.name} ({username}) - {email}",
+          labelTemplate: "{category.name} ({username}) - {email}",
           valueKeys: [
             "id",
-            "name.name",
+            "category.name",
             "username",
             "email",
             "phone",
