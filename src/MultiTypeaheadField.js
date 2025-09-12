@@ -12,9 +12,10 @@ import ClearIcon from "@mui/icons-material/Clear";
 import selectn from "selectn";
 
 // Default search function
-async function defaultSearch(url, query, queryKey = "query") {
-  const res = await fetch(`${url}?${queryKey}=${encodeURIComponent(query)}`);
-  return await res.json();
+function defaultSearch(url, query, queryKey = "query") {
+  return fetch(`${url}?${queryKey}=${encodeURIComponent(query)}`).then(res =>
+    res.json()
+  );
 }
 
 /**
@@ -190,36 +191,39 @@ function MultiTypeaheadField(props) {
 
   // Debounced fetch function
   const fetchOptions = useCallback(
-    async query => {
+    query => {
       if (!url || !query.trim()) {
         setOptions([]);
         return;
       }
 
       setLoading(true);
-      try {
-        // Use custom search function if provided, otherwise use defaultSearch
-        const searchFn =
-          typeof customSearch === "function" ? customSearch : defaultSearch;
-        const data = await searchFn(url, query, queryKey);
 
-        // Extract options from response using optionsPath if provided
-        let newOptions;
-        if (optionsPath && typeof optionsPath === "string") {
-          newOptions = selectn(optionsPath, data);
-          newOptions = Array.isArray(newOptions) ? newOptions : [];
-        } else {
-          // Always expect data to be an array if no optionsPath specified
-          newOptions = Array.isArray(data) ? data : [];
-        }
+      // Use custom search function if provided, otherwise use defaultSearch
+      const searchFn =
+        typeof customSearch === "function" ? customSearch : defaultSearch;
 
-        setOptions(newOptions);
-      } catch (error) {
-        console.error("Error fetching options:", error);
-        setOptions([]);
-      } finally {
-        setLoading(false);
-      }
+      searchFn(url, query, queryKey)
+        .then(data => {
+          // Extract options from response using optionsPath if provided
+          let newOptions;
+          if (optionsPath && typeof optionsPath === "string") {
+            newOptions = selectn(optionsPath, data);
+            newOptions = Array.isArray(newOptions) ? newOptions : [];
+          } else {
+            // Always expect data to be an array if no optionsPath specified
+            newOptions = Array.isArray(data) ? data : [];
+          }
+
+          setOptions(newOptions);
+        })
+        .catch(error => {
+          console.error("Error fetching options:", error);
+          setOptions([]);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     },
     [url, customSearch, queryKey, optionsPath]
   );
