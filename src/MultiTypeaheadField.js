@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
 import {
   TextField,
@@ -7,14 +7,15 @@ import {
   CircularProgress,
   ClickAwayListener,
   IconButton
-} from "@material-ui/core";
-import { Clear as ClearIcon } from "@material-ui/icons";
+} from "@mui/material";
+import ClearIcon from "@mui/icons-material/Clear";
 import selectn from "selectn";
 
 // Default search function
-async function defaultSearch(url, query, queryKey = "query") {
-  const res = await fetch(`${url}?${queryKey}=${encodeURIComponent(query)}`);
-  return await res.json();
+function defaultSearch(url, query, queryKey = "query") {
+  return fetch(`${url}?${queryKey}=${encodeURIComponent(query)}`).then(res =>
+    res.json()
+  );
 }
 
 /**
@@ -22,54 +23,101 @@ async function defaultSearch(url, query, queryKey = "query") {
  * Supports both static options and URL-based options with search functionality.
  * Compatible with react-jsonschema-form
  */
-const styles = {
-  "@global": {
-    ".MuiAutocomplete-clearIndicator": {
-      color: "#00629B !important"
-    },
-    ".MuiAutocomplete-popupIndicator": {
-      color: "#00629B !important"
-    }
+// Styled components for MUI v5 - converted from original withStyles
+const StyledContainer = styled("div")({
+  position: "relative",
+  width: "100%"
+});
+
+const StyledDropdown = styled("div")({
+  position: "absolute",
+  top: "100%",
+  left: 0,
+  right: 0,
+  zIndex: 1300,
+  maxHeight: 200,
+  overflow: "auto",
+  backgroundColor: "#fff",
+  border: "1px solid #DFE6EB",
+  borderTop: "none",
+  borderRadius: "0 0 4px 4px",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+});
+
+const StyledOptionItem = styled("div")({
+  padding: "8px 16px",
+  cursor: "pointer",
+  fontFamily: "Mulish",
+  fontWeight: 400,
+  lineHeight: "12px",
+  letterSpacing: "0.15px",
+  color: "#003B5CBF",
+  "&:hover": {
+    backgroundColor: "#f5f5f5"
+  }
+});
+
+const StyledLoadingContainer = styled("div")({
+  padding: "16px",
+  textAlign: "center",
+  fontFamily: "Mulish",
+  color: "#003B5CBF"
+});
+
+const StyledNoOptionsContainer = styled("div")({
+  padding: "16px",
+  textAlign: "center",
+  fontFamily: "Mulish",
+  color: "#003B5CBF"
+});
+
+const StyledChipContainer = styled("div")({
+  display: "flex",
+  flexWrap: "wrap",
+  gap: "4px",
+  alignItems: "center",
+  overflow: "hidden",
+  flex: "1 1 auto", // Allow container to grow and shrink as needed
+  minWidth: 0, // Allow shrinking below content size
+  minHeight: "20px", // Reduce minimum height for better alignment
+  paddingTop: "2px",
+  paddingBottom: "2px"
+});
+
+const StyledChip = styled(Chip)({
+  background: "#00629B !important",
+  color: "#fff !important",
+  fontFamily: "Mulish",
+  fontWeight: 400,
+  fontSize: "12px",
+  lineHeight: "18px",
+  letterSpacing: "0.16px",
+  "&:hover": {
+    background: "#00629B !important",
+    color: "#fff !important"
   },
-  endAdornment: {
+  "&:focus": {
+    background: "#00629B !important",
+    color: "#fff !important"
+  },
+  "&:active": {
+    background: "#00629B !important",
+    color: "#fff !important"
+  },
+  "&.Mui-focusVisible": {
+    background: "#00629B !important",
+    color: "#fff !important"
+  },
+  "& .MuiChip-deleteIcon": {
     color: "#fff"
-  },
-  clearIndicator: {
-    color: "#fff"
-  },
-  popupIndicator: {
-    color: "#fff"
-  },
-  inputIcon: {
-    color: "#fff"
-  },
-  option: {
-    fontFamily: "Mulish",
-    fontWeight: 400,
-    fontSize: "1rem",
-    letterSpacing: "0.15px",
-    color: "#003B5CBF"
-  },
-  inputBase: {
-    fontFamily: "Mulish",
-    fontWeight: 400,
-    fontSize: "1rem",
-    letterSpacing: "0.15px",
-    lineHeight: "2.2",
-    paddingTop: 10,
-    paddingBottom: 10,
-    boxSizing: "border-box", // Ensure consistent box model
-    color: "#003B5C", // Set visible text color for user input
-    "&::placeholder": {
-      color: "#003B5CBF",
-      opacity: 1, // Keep placeholder visible
-      display: "block" // Ensure placeholder is always displayed
-    }
-  },
-  inputRoot: {
+  }
+});
+
+const StyledTextField = styled(TextField)({
+  "& .MuiOutlinedInput-root": {
     paddingTop: 8,
     paddingBottom: 8,
-    minHeight: 56, // Ensure consistent height
+    minHeight: 48, // Ensure consistent height
     alignItems: "center", // Center align for better appearance
     display: "flex", // Ensure flex display
     flexWrap: "wrap", // Allow wrapping when needed
@@ -81,126 +129,48 @@ const styles = {
       paddingTop: 6,
       paddingBottom: 6,
       flex: "1 1 120px", // Allow input to take remaining space with minimum width
-      minWidth: "120px" // Ensure minimum input width
+      minWidth: "120px", // Ensure minimum input width
+      fontFamily: "Mulish",
+      fontWeight: 400,
+      letterSpacing: "0.15px",
+      fontSize: "16px",
+      lineHeight: "12px",
+      boxSizing: "border-box", // Ensure consistent box model
+      color: "#003B5C", // Set visible text color for user input
+      "&::placeholder": {
+        color: "#003B5CBF",
+        opacity: 1, // Keep placeholder visible
+        display: "block" // Ensure placeholder is always displayed
+      }
     }
   },
-  notchedOutline: {
+  "& .MuiOutlinedInput-notchedOutline": {
     border: "1px solid #DFE6EB !important"
   },
-  inputLabel: {
+  "& .MuiInputLabel-root": {
     fontFamily: "Mulish",
     fontWeight: 400,
-    fontSize: "1rem",
-    letterSpacing: "0.15px",
-    color: "#003B5CBF"
-  },
-  inputLabelFocused: {
-    color: "#003B5CBF !important"
-  },
-  chipRoot: {
-    background: "#00629B !important",
-    color: "#fff !important",
-    fontFamily: "Mulish",
-    fontWeight: 400,
-    fontSize: "12px",
-    lineHeight: "18px",
-    letterSpacing: "0.16px",
-    "&:hover": {
-      background: "#00629B !important",
-      color: "#fff !important"
-    },
-    "&:focus": {
-      background: "#00629B !important",
-      color: "#fff !important"
-    },
-    "&:active": {
-      background: "#00629B !important",
-      color: "#fff !important"
-    },
-    "&.Mui-focusVisible": {
-      background: "#00629B !important",
-      color: "#fff !important"
-    }
-  },
-  chipDeleteIcon: {
-    color: "#fff"
-  },
-  // Custom dropdown styles
-  dropdown: {
-    position: "absolute",
-    top: "100%",
-    left: 0,
-    right: 0,
-    zIndex: 1300,
-    maxHeight: 200,
-    overflow: "auto",
-    backgroundColor: "#fff",
-    border: "1px solid #DFE6EB",
-    borderTop: "none",
-    borderRadius: "0 0 4px 4px",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
-  },
-  optionItem: {
-    padding: "8px 16px",
-    cursor: "pointer",
-    fontFamily: "Mulish",
-    fontWeight: 400,
-    fontSize: "1rem",
     letterSpacing: "0.15px",
     color: "#003B5CBF",
-    "&:hover": {
-      backgroundColor: "#f5f5f5"
+    "&.Mui-focused": {
+      color: "#003B5CBF !important"
     }
-  },
-  container: {
-    position: "relative",
-    width: "100%"
-  },
-  loadingContainer: {
-    padding: "16px",
-    textAlign: "center",
-    fontFamily: "Mulish",
-    color: "#003B5CBF"
-  },
-  noOptionsContainer: {
-    padding: "16px",
-    textAlign: "center",
-    fontFamily: "Mulish",
-    color: "#003B5CBF"
-  },
-  chipContainer: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: "4px",
-    alignItems: "center",
-    overflow: "hidden",
-    flex: "1 1 auto", // Allow container to grow and shrink as needed
-    minWidth: 0, // Allow shrinking below content size
-    minHeight: "20px", // Reduce minimum height for better alignment
-    paddingTop: "2px",
-    paddingBottom: "2px"
-  },
-  inputContainer: {
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
-    width: "100%"
-  },
-  clearButton: {
-    padding: "4px",
-    color: "#00629B",
-    "&:hover": {
-      backgroundColor: "rgba(0, 98, 155, 0.04)"
-    }
-  },
-  inputFieldWrapper: {
-    display: "flex",
-    alignItems: "center",
-    width: "100%",
-    gap: "8px"
   }
-};
+});
 
+const StyledClearButton = styled(IconButton)({
+  padding: "4px",
+  color: "#00629B",
+  "&:hover": {
+    backgroundColor: "rgba(0, 98, 155, 0.04)"
+  }
+});
+
+/**
+ * MultiTypeaheadField - A custom multi-select dropdown component with search capability.
+ * Supports both static options and URL-based options with search functionality.
+ * Compatible with react-jsonschema-form and MUI v5
+ */
 function MultiTypeaheadField(props) {
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState([]);
@@ -209,7 +179,7 @@ function MultiTypeaheadField(props) {
   const containerRef = useRef(null);
   const inputRef = useRef(null);
 
-  const { uiSchema = {}, formData = [], onChange, classes } = props;
+  const { uiSchema = {}, formData = [], onChange } = props;
   const multiTypeaheadConfig = uiSchema.multiTypeahead || {};
   const {
     url,
@@ -221,36 +191,39 @@ function MultiTypeaheadField(props) {
 
   // Debounced fetch function
   const fetchOptions = useCallback(
-    async query => {
+    query => {
       if (!url || !query.trim()) {
         setOptions([]);
         return;
       }
 
       setLoading(true);
-      try {
-        // Use custom search function if provided, otherwise use defaultSearch
-        const searchFn =
-          typeof customSearch === "function" ? customSearch : defaultSearch;
-        const data = await searchFn(url, query, queryKey);
 
-        // Extract options from response using optionsPath if provided
-        let newOptions;
-        if (optionsPath && typeof optionsPath === "string") {
-          newOptions = selectn(optionsPath, data);
-          newOptions = Array.isArray(newOptions) ? newOptions : [];
-        } else {
-          // Always expect data to be an array if no optionsPath specified
-          newOptions = Array.isArray(data) ? data : [];
-        }
+      // Use custom search function if provided, otherwise use defaultSearch
+      const searchFn =
+        typeof customSearch === "function" ? customSearch : defaultSearch;
 
-        setOptions(newOptions);
-      } catch (error) {
-        console.error("Error fetching options:", error);
-        setOptions([]);
-      } finally {
-        setLoading(false);
-      }
+      searchFn(url, query, queryKey)
+        .then(data => {
+          // Extract options from response using optionsPath if provided
+          let newOptions;
+          if (optionsPath && typeof optionsPath === "string") {
+            newOptions = selectn(optionsPath, data);
+            newOptions = Array.isArray(newOptions) ? newOptions : [];
+          } else {
+            // Always expect data to be an array if no optionsPath specified
+            newOptions = Array.isArray(data) ? data : [];
+          }
+
+          setOptions(newOptions);
+        })
+        .catch(error => {
+          console.error("Error fetching options:", error);
+          setOptions([]);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     },
     [url, customSearch, queryKey, optionsPath]
   );
@@ -312,7 +285,9 @@ function MultiTypeaheadField(props) {
       valueKeys.forEach(key => {
         const value = selectn(key, option);
         if (value !== undefined) {
-          valueObj[key] = value;
+          // Use the last part of the key chain instead of the full key
+          const lastKeyPart = key.split(".").pop();
+          valueObj[lastKeyPart] = value;
         }
       });
       return valueObj;
@@ -457,42 +432,24 @@ function MultiTypeaheadField(props) {
   const label = multiTypeaheadConfig.label;
   const placeholder = multiTypeaheadConfig.placeholder || "Select...";
 
-  return React.createElement(
-    ClickAwayListener,
-    { onClickAway: handleClickAway },
-    React.createElement(
-      "div",
-      { className: classes.container, ref: containerRef },
-      React.createElement(TextField, {
-        label: label,
-        placeholder: placeholder,
-        variant: "outlined",
-        fullWidth: true,
-        value: inputValue,
-        onChange: handleInputChange,
-        onFocus: handleInputFocus,
-        onClick: handleContainerClick,
-        inputRef: inputRef,
-        InputLabelProps: {
-          classes: {
-            root: classes.inputLabel,
-            focused: classes.inputLabelFocused
-          }
-        },
-        inputProps: {
-          className: classes.inputBase
-        },
-        InputProps: {
-          classes: {
-            root: classes.inputRoot,
-            notchedOutline: classes.notchedOutline
-          },
-          startAdornment:
-            selectedOptions.length > 0
-              ? React.createElement(
-                  "div",
-                  { className: classes.chipContainer },
-                  selectedOptions.map((option, index) => {
+  return (
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <StyledContainer ref={containerRef}>
+        <StyledTextField
+          label={label}
+          placeholder={placeholder}
+          variant="outlined"
+          fullWidth
+          value={inputValue}
+          onChange={handleInputChange}
+          onFocus={handleInputFocus}
+          onClick={handleContainerClick}
+          inputRef={inputRef}
+          InputProps={{
+            startAdornment:
+              selectedOptions.length > 0 ? (
+                <StyledChipContainer>
+                  {selectedOptions.map((option, index) => {
                     // Create a stable key based on the option content
                     const optionValue = getOptionValue(option);
                     const stableKey =
@@ -500,84 +457,68 @@ function MultiTypeaheadField(props) {
                         ? JSON.stringify(optionValue)
                         : String(optionValue);
 
-                    return React.createElement(Chip, {
-                      key: stableKey,
-                      label: getOptionLabel(option),
-                      size: "small",
-                      onDelete: () => handleChipDelete(index),
-                      classes: {
-                        root: classes.chipRoot,
-                        deleteIcon: classes.chipDeleteIcon
-                      }
-                    });
-                  })
-                )
-              : null,
-          endAdornment: React.createElement(
-            "div",
-            {
-              style: {
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                flexShrink: 0 // Prevent shrinking
-              }
-            },
-            loading && !isOpen
-              ? React.createElement(CircularProgress, { size: 20 })
-              : null,
-            selectedOptions.length > 0
-              ? React.createElement(
-                  IconButton,
-                  {
-                    size: "small",
-                    onClick: handleClearAll,
-                    className: classes.clearButton,
-                    title: "Clear all selections"
-                  },
-                  React.createElement(ClearIcon, { fontSize: "small" })
-                )
-              : null
-          )
-        }
-      }),
+                    return (
+                      <StyledChip
+                        key={stableKey}
+                        label={getOptionLabel(option)}
+                        size="small"
+                        onDelete={() => handleChipDelete(index)}
+                      />
+                    );
+                  })}
+                </StyledChipContainer>
+              ) : null,
+            endAdornment: (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                  flexShrink: 0
+                }}
+              >
+                {loading && !isOpen ? <CircularProgress size={20} /> : null}
+                {selectedOptions.length > 0 ? (
+                  <StyledClearButton
+                    size="small"
+                    onClick={handleClearAll}
+                    title="Clear all selections"
+                  >
+                    <ClearIcon fontSize="small" />
+                  </StyledClearButton>
+                ) : null}
+              </div>
+            )
+          }}
+        />
 
-      // Dropdown
-      isOpen && (filteredOptions.length > 0 || (loading && inputValue.trim()))
-        ? React.createElement(
-            "div",
-            { className: classes.dropdown },
-            loading && inputValue.trim()
-              ? React.createElement(
-                  "div",
-                  { className: classes.loadingContainer },
-                  React.createElement(CircularProgress, { size: 20 }),
-                  React.createElement(
-                    "span",
-                    { style: { marginLeft: "8px" } },
-                    "Loading..."
-                  )
-                )
-              : filteredOptions.length > 0
-              ? filteredOptions.map((option, index) =>
-                  React.createElement(
-                    "div",
-                    {
-                      key: index,
-                      className: classes.optionItem,
-                      onClick: () => handleOptionClick(option)
-                    },
-                    getOptionLabel(option)
-                  )
-                )
-              : React.createElement(
-                  "div",
-                  { className: classes.noOptionsContainer },
-                  "No options available"
-                )
-          )
-        : null
-    )
+        {/* Dropdown */}
+        {isOpen &&
+        (filteredOptions.length > 0 || (loading && inputValue.trim())) ? (
+          <StyledDropdown>
+            {loading && inputValue.trim() ? (
+              <StyledLoadingContainer>
+                <CircularProgress size={20} />
+                <span style={{ marginLeft: "8px" }}>Loading...</span>
+              </StyledLoadingContainer>
+            ) : filteredOptions.length > 0 ? (
+              filteredOptions.map((option, index) => (
+                <StyledOptionItem
+                  key={index}
+                  onClick={() => handleOptionClick(option)}
+                >
+                  {getOptionLabel(option)}
+                </StyledOptionItem>
+              ))
+            ) : (
+              <StyledNoOptionsContainer>
+                No options available
+              </StyledNoOptionsContainer>
+            )}
+          </StyledDropdown>
+        ) : null}
+      </StyledContainer>
+    </ClickAwayListener>
   );
 }
 
@@ -600,4 +541,4 @@ MultiTypeaheadField.propTypes = {
   schema: PropTypes.object
 };
 
-export default withStyles(styles)(MultiTypeaheadField);
+export default MultiTypeaheadField;

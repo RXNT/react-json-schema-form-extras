@@ -2,18 +2,15 @@ var path = require("path");
 var webpack = require("webpack");
 
 module.exports = {
+  mode: "development",
   devtool: "eval-source-map",
-  entry: [
-    "./playground/app",
-  ],
+  entry: ["./playground/app"],
   output: {
     path: path.join(__dirname, "build"),
     filename: "bundle.js",
     publicPath: "/static/"
   },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin()
-  ],
+  plugins: [new webpack.HotModuleReplacementPlugin()],
   module: {
     rules: [
       {
@@ -22,19 +19,14 @@ module.exports = {
           path.resolve(__dirname, "src"),
           path.resolve(__dirname, "playground")
         ],
-        exclude: [
-          path.resolve(__dirname, "node_modules"),
-        ],
+        exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: "babel-loader"
         }
       },
       {
         test: /\.css$/,
-        loaders: [
-          'style-loader',
-          'css-loader?modules'
-        ]
+        use: ["style-loader", "css-loader?modules"]
       }
     ]
   },
@@ -49,22 +41,22 @@ module.exports = {
       errors: true
     },
     proxy: {
-      '/PMV2API': {
-        target: 'https://localhost:7171/',
+      "/PMV2API": {
+        target: "https://localhost:7171/",
         secure: false
       },
-      '/IMOAPIServices': {
-        target: 'https://localhost:7171/',
+      "/IMOAPIServices": {
+        target: "https://localhost:7171/",
         secure: false
       },
-      '/EHRV8PatientEncounterAPIServices': {
-        target: 'https://localhost:7171/',
+      "/EHRV8PatientEncounterAPIServices": {
+        target: "https://localhost:7171/",
         secure: false
       },
-      '/EHRV8AuthenticateAPIServices': {
-        target: 'https://localhost:7171/',
+      "/EHRV8AuthenticateAPIServices": {
+        target: "https://localhost:7171/",
         secure: false
       }
     }
-  },
+  }
 };

@@ -305,7 +305,9 @@ export default {
                     categories: [
                       {
                         id: response.id || "1",
-                        name: `Category for "${query}"`,
+                        category: {
+                          name: `Category for "${query}"`
+                        },
                         username: "category_user",
                         email: "category@example.com",
                         phone: "123-456-7890",
@@ -318,8 +320,15 @@ export default {
                 };
               });
           },
-          labelTemplate: "{name} ({username}) - {email}",
-          valueKeys: ["id", "name", "username", "email", "phone", "website"],
+          labelTemplate: "{category.name} ({username}) - {email}",
+          valueKeys: [
+            "id",
+            "category.name",
+            "username",
+            "email",
+            "phone",
+            "website"
+          ],
           label: "Allergy Categories (POST with optionsPath)",
           placeholder: "Search with POST request using optionsPath...",
           minLength: 2

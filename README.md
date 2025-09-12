@@ -787,7 +787,7 @@ All properties are configured under the `multiTypeahead` object in uiSchema:
 - `label` (string): Optional label for the field.
 - `placeholder` (string): Optional placeholder text (default: "Select...").
 - `labelTemplate` (string): Template for displaying option labels. Use `{fieldName}` syntax to reference object properties (e.g., `"{name} - {category}"`).
-- `valueKeys` (array): Array of keys to extract from selected options for the form value (default: `["value"]`).
+- `valueKeys` (array): Array of keys to extract from selected options for the form value (default: `["value"]`). **Note**: When using nested property paths (e.g., `"user.profile.name"`), only the last part of the key chain (`"name"`) will be used as the property name in the resulting value object.
 
 ### Key Features
 
@@ -918,6 +918,43 @@ const uiSchema = {
     }
   }
 };
+```
+
+#### ValueKeys with Nested Properties Example
+
+```js
+// Options with nested properties
+const options = [
+  {
+    user: { profile: { name: "John Doe" }, id: 123 },
+    department: { info: { title: "Engineering" } },
+    role: "Developer"
+  }
+];
+
+const uiSchema = {
+  employees: {
+    "ui:field": "multiTypeahead",
+    multiTypeahead: {
+      options: options,
+      labelTemplate: "{user.profile.name} - {role}",
+      valueKeys: [
+        "user.profile.name",
+        "user.id",
+        "department.info.title",
+        "role"
+      ]
+    }
+  }
+};
+
+// Resulting value object for selected option will be:
+// {
+//   name: "John Doe",        // from user.profile.name (uses last part: "name")
+//   id: 123,                 // from user.id (uses last part: "id")
+//   title: "Engineering",    // from department.info.title (uses last part: "title")
+//   role: "Developer"        // from role (uses last part: "role")
+// }
 ```
 
 ### Custom Styling
