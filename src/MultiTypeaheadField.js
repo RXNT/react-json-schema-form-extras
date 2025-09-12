@@ -285,7 +285,9 @@ function MultiTypeaheadField(props) {
       valueKeys.forEach(key => {
         const value = selectn(key, option);
         if (value !== undefined) {
-          valueObj[key] = value;
+          // Use the last part of the key chain instead of the full key
+          const lastKeyPart = key.split(".").pop();
+          valueObj[lastKeyPart] = value;
         }
       });
       return valueObj;
