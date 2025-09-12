@@ -8,7 +8,6 @@ import {
   ClickAwayListener,
   IconButton
 } from "@material-ui/core";
-import { Clear as ClearIcon } from "@material-ui/icons";
 import selectn from "selectn";
 
 // Default search function
@@ -535,7 +534,7 @@ function MultiTypeaheadField(props) {
                     className: classes.clearButton,
                     title: "Clear all selections"
                   },
-                  React.createElement(ClearIcon, { fontSize: "small" })
+                  "×"
                 )
               : null
           )
