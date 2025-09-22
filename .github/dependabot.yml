@@ -1,0 +1,16 @@
+version: 2
+registries:
+  rxnt-npm:
+    type: npm-registry
+    url: https://registry.npmjs.org
+    token: ${{secrets.NPM_ACCESS_TOKEN}}
+    replaces-base: true
+updates:
+  - package-ecosystem: "npm"
+    open-pull-requests-limit: 0
+    directories:
+      - "/"
+    schedule:
+      interval: "daily"
+    registries:
+      - rxnt-npm
