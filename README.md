@@ -786,14 +786,14 @@ All properties are configured under the `multiTypeahead` object in uiSchema:
 - `optionsPath` (string): Path to extract options array from API response. Use dot notation for nested properties (e.g., `"data.results"`, `"response.items"`).
 - `label` (string): Optional label for the field.
 - `placeholder` (string): Optional placeholder text (default: "Select...").
-- `labelTemplate` (string): Template for displaying option labels. Use `{fieldName}` syntax to reference object properties (e.g., `"{name} - {category}"`).
-- `valueKeys` (array): Array of keys to extract from selected options for the form value (default: `["value"]`). **Note**: When using nested property paths (e.g., `"user.profile.name"`), only the last part of the key chain (`"name"`) will be used as the property name in the resulting value object.
+- `labelTemplate` (string): Template for displaying both option labels in the dropdown and chip labels. Use `{fieldName}` syntax to reference object properties (e.g., `"{name} - {category}"`). **Required for object values** - if not provided, both options and chips will display as empty when dealing with object values. For string values, the string itself will be displayed regardless of template. This template uses the **flattened data structure** created by `valueKeys`.
+- `valueKeys` (array): Array of keys to extract from selected options for the form value (default: `["value"]`). **Note**: When using nested property paths (e.g., `"user.profile.name"`), only the last part of the key chain (`"name"`) will be used as the property name in the resulting value object. The selected data is **flattened** based on these keys before being stored in formData. Both dropdown options and chips use this flattened structure.
 
 ### Key Features
 
 - **Dual Mode Support**: Works with both static options and dynamic API-based options
-- **Template Labels**: Use `labelTemplate` to customize how options are displayed
-- **Flexible Values**: `valueKeys` allows you to control which properties are saved in the form data
+- **Unified Templates**: Use `labelTemplate` to customize how both dropdown options and chips are displayed. Both use the same flattened data structure from `valueKeys`.
+- **Flexible Values**: `valueKeys` allows you to control which properties are saved in the form data and flattens the data structure for consistent display
 - **Nested API Responses**: Use `optionsPath` to extract options from complex API response structures
 - **Custom Query Parameters**: Use `queryKey` to customize the API query parameter name
 - **Search & Filter**: For static options, filters locally; for URL-based options, searches via API
@@ -836,7 +836,7 @@ const uiSchema = {
       label: "Select Fruits",
       placeholder: "Choose fruits...",
       labelTemplate: "{name} - {category}",
-      valueKeys: ["id", "value", "name"]
+      valueKeys: ["id", "value", "name", "category"]
     }
   }
 };
@@ -857,7 +857,7 @@ const uiSchema = {
       label: "Select Medications",
       placeholder: "Type to search medications...",
       labelTemplate: "{name} ({strength})",
-      valueKeys: ["id", "name"],
+      valueKeys: ["id", "name", "strength"],
       // Optional custom search function
       search: (url, query, queryKey) => {
         return fetch(
@@ -877,7 +877,7 @@ const uiSchemaWithOptionsPath = {
       url: "/api/users/search", // Will call: /api/users/search?query=userInput
       optionsPath: "response.users", // Extract from { response: { users: [...] } }
       labelTemplate: "{firstName} {lastName}",
-      valueKeys: ["id", "username"]
+      valueKeys: ["id", "username", "firstName", "lastName"]
     }
   }
 };
@@ -923,7 +923,7 @@ const uiSchema = {
 #### ValueKeys with Nested Properties Example
 
 ```js
-// Options with nested properties
+// Options with nested properties (original structure)
 const options = [
   {
     user: { profile: { name: "John Doe" }, id: 123 },
@@ -937,7 +937,9 @@ const uiSchema = {
     "ui:field": "multiTypeahead",
     multiTypeahead: {
       options: options,
-      labelTemplate: "{user.profile.name} - {role}",
+      // labelTemplate uses FLATTENED data structure (after valueKeys processing)
+      // Both dropdown options and chips use the same flattened structure
+      labelTemplate: "{name} - {role}",
       valueKeys: [
         "user.profile.name",
         "user.id",
@@ -948,13 +950,16 @@ const uiSchema = {
   }
 };
 
-// Resulting value object for selected option will be:
-// {
-//   name: "John Doe",        // from user.profile.name (uses last part: "name")
-//   id: 123,                 // from user.id (uses last part: "id")
-//   title: "Engineering",    // from department.info.title (uses last part: "title")
-//   role: "Developer"        // from role (uses last part: "role")
-// }
+// How it works:
+// 1. Options are transformed once using valueKeys to create flattened structure:
+//    {
+//      name: "John Doe",        // from user.profile.name (uses last part: "name")
+//      id: 123,                 // from user.id (uses last part: "id")
+//      title: "Engineering",    // from department.info.title (uses last part: "title")
+//      role: "Developer"        // from role (uses last part: "role")
+//    }
+// 2. Both dropdown and chips show: "John Doe - Developer" (using labelTemplate with flattened structure)
+// 3. FormData contains the same flattened structure as displayed
 ```
 
 ### Custom Styling

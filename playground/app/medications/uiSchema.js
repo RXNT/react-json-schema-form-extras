@@ -238,26 +238,21 @@ export default {
             const searchUrl = `${url}?${queryKey}=${encodeURIComponent(
               query
             )}&_limit=10&_sort=title&_order=asc`;
-
-            return fetch(searchUrl, {
-              method: "GET",
-              headers: { "Content-Type": "application/json" }
-            })
-              .then(res => res.json())
-              .then(posts => {
-                // Format posts data as allergies
-                return posts.map(post => ({
-                  id: `allergy_${post.id}`,
-                  title: `${post.title}`,
-                  type: "allergy",
-                  originalId: post.id,
-                  body: post.body,
-                  userId: post.userId
-                }));
-              });
+            // Add artificial delay to show loading state
+            return new Promise(resolve => {
+              setTimeout(() => {
+                fetch(searchUrl, {
+                  method: "GET",
+                  headers: { "Content-Type": "application/json" }
+                })
+                  .then(res => res.json())
+                  .then(resolve);
+              }, 1200); // 1.2s delay
+            });
           },
+          valueKeys: ["id", "title", "userId", "body"],
+          labelKey: "title",
           labelTemplate: "{title}",
-          valueKeys: ["id", "title", "type", "originalId"],
           label: "Allergies (GET Search with custom queryKey)",
           placeholder: "Search allergies...",
           minLength: 2
@@ -305,13 +300,9 @@ export default {
                     categories: [
                       {
                         id: response.id || "1",
-                        category: {
-                          name: `Category for "${query}"`
-                        },
-                        username: "category_user",
-                        email: "category@example.com",
-                        phone: "123-456-7890",
-                        website: "category.example.com"
+                        title: response.title,
+                        body: response.body,
+                        userId: response.userId
                       }
                     ],
                     total: 1,
@@ -320,15 +311,9 @@ export default {
                 };
               });
           },
-          labelTemplate: "{category.name} ({username}) - {email}",
-          valueKeys: [
-            "id",
-            "category.name",
-            "username",
-            "email",
-            "phone",
-            "website"
-          ],
+          valueKeys: ["id", "title", "userId", "body"],
+          labelKey: "title",
+          labelTemplate: "{title}",
           label: "Allergy Categories (POST with optionsPath)",
           placeholder: "Search with POST request using optionsPath...",
           minLength: 2
