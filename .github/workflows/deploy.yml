@@ -13,6 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          ssh-key: ${{ secrets.REPO_WRITE_ACCESS_PRIVATE_KEY }}
           fetch-depth: 0
           ref: master
       - name: Set up Node.js
