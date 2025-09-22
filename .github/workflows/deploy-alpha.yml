@@ -1,0 +1,55 @@
+name: Deploy Alpha Version
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16"
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      - name: Run linter
+        run: npm run lint
+
+  deploy-alpha:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16"
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+      - name: Build project
+        run: npm run dist
+      - name: Authenticate with NPM
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+      - name: Generate alpha version
+        id: generate_version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          TIMESTAMP=$(date +'%H%M%S')
+          ALPHA_VERSION="${CURRENT_VERSION}-alpha.${TIMESTAMP}"
+          echo "alpha_version=${ALPHA_VERSION}" >> $GITHUB_ENV
+          jq ".version = \"${ALPHA_VERSION}\"" package.json > package.json.tmp && mv package.json.tmp package.json
+            npm install --legacy-peer-deps
+      - name: Publish Alpha Version (dry run)
+        run: npm publish --tag alpha --dry-run
+        if: endsWith(github.event.pull_request.user.login, '[bot]') == false
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
