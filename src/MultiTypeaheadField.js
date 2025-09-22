@@ -23,7 +23,7 @@ function defaultSearch(url, query, queryKey = "query") {
  * Supports both static options and URL-based options with search functionality.
  * Compatible with react-jsonschema-form
  */
-// Styled components for MUI v5 - converted from original withStyles
+// Styled components for MUI v5
 const StyledContainer = styled("div")({
   position: "relative",
   width: "100%"
@@ -77,9 +77,9 @@ const StyledChipContainer = styled("div")({
   gap: "4px",
   alignItems: "center",
   overflow: "hidden",
-  flex: "1 1 auto", // Allow container to grow and shrink as needed
-  minWidth: 0, // Allow shrinking below content size
-  minHeight: "20px", // Reduce minimum height for better alignment
+  flex: "1 1 auto",
+  minWidth: 0,
+  minHeight: "20px",
   paddingTop: "2px",
   paddingBottom: "2px"
 });
@@ -117,10 +117,10 @@ const StyledTextField = styled(TextField)({
   "& .MuiOutlinedInput-root": {
     paddingTop: 8,
     paddingBottom: 8,
-    minHeight: 48, // Ensure consistent height
-    alignItems: "center", // Center align for better appearance
-    display: "flex", // Ensure flex display
-    flexWrap: "wrap", // Allow wrapping when needed
+    minHeight: 48,
+    alignItems: "center",
+    display: "flex",
+    flexWrap: "wrap",
     "& .MuiChip-root": {
       marginTop: 2,
       marginBottom: 2
@@ -128,19 +128,19 @@ const StyledTextField = styled(TextField)({
     "& .MuiInputBase-input": {
       paddingTop: 6,
       paddingBottom: 6,
-      flex: "1 1 120px", // Allow input to take remaining space with minimum width
-      minWidth: "120px", // Ensure minimum input width
+      flex: "1 1 120px",
+      minWidth: "120px",
       fontFamily: "Mulish",
       fontWeight: 400,
       letterSpacing: "0.15px",
       fontSize: "16px",
       lineHeight: "12px",
-      boxSizing: "border-box", // Ensure consistent box model
-      color: "#003B5C", // Set visible text color for user input
+      boxSizing: "border-box",
+      color: "#003B5C",
       "&::placeholder": {
         color: "#003B5CBF",
-        opacity: 1, // Keep placeholder visible
-        display: "block" // Ensure placeholder is always displayed
+        opacity: 1,
+        display: "block"
       }
     }
   },
@@ -176,6 +176,7 @@ function MultiTypeaheadField(props) {
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const containerRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -189,7 +190,7 @@ function MultiTypeaheadField(props) {
     optionsPath
   } = multiTypeaheadConfig;
 
-  // Debounced fetch function
+  // Fetch options (debounced)
   const fetchOptions = useCallback(
     query => {
       if (!url || !query.trim()) {
@@ -199,23 +200,42 @@ function MultiTypeaheadField(props) {
 
       setLoading(true);
 
-      // Use custom search function if provided, otherwise use defaultSearch
+      // Use custom search function if provided
       const searchFn =
         typeof customSearch === "function" ? customSearch : defaultSearch;
 
       searchFn(url, query, queryKey)
         .then(data => {
-          // Extract options from response using optionsPath if provided
+          // Extract options from response
           let newOptions;
           if (optionsPath && typeof optionsPath === "string") {
             newOptions = selectn(optionsPath, data);
             newOptions = Array.isArray(newOptions) ? newOptions : [];
           } else {
-            // Always expect data to be an array if no optionsPath specified
+            // Expect data to be an array if no optionsPath specified
             newOptions = Array.isArray(data) ? data : [];
           }
 
-          setOptions(newOptions);
+          // Transform options using valueKeys
+          const valueKeys = multiTypeaheadConfig.valueKeys || ["value"];
+          const transformedOptions = newOptions.map(option => {
+            if (typeof option === "string") {
+              return option;
+            }
+            // Always create an object with specified valueKeys
+            const valueObj = {};
+            valueKeys.forEach(key => {
+              const value = selectn(key, option);
+              if (value !== undefined) {
+                // Use the last part of the key chain instead of the full key
+                const lastKeyPart = key.split(".").pop();
+                valueObj[lastKeyPart] = value;
+              }
+            });
+            return valueObj;
+          });
+
+          setOptions(transformedOptions);
         })
         .catch(error => {
           console.error("Error fetching options:", error);
@@ -225,7 +245,7 @@ function MultiTypeaheadField(props) {
           setLoading(false);
         });
     },
-    [url, customSearch, queryKey, optionsPath]
+    [url, customSearch, queryKey, optionsPath, multiTypeaheadConfig.valueKeys]
   );
 
   // Debounce the fetch with useEffect
@@ -234,9 +254,19 @@ function MultiTypeaheadField(props) {
       return;
     }
 
+    // When inputValue changes, user is typing
+    if (inputValue.trim()) {
+      setIsTyping(true);
+      setLoading(false);
+    }
+
     const timeoutId = setTimeout(() => {
-      fetchOptions(inputValue);
-    }, 300);
+      if (inputValue.trim()) {
+        setIsTyping(false);
+        setLoading(true);
+        fetchOptions(inputValue);
+      }
+    }, 600);
 
     return () => clearTimeout(timeoutId);
   }, [inputValue, fetchOptions, url]);
@@ -244,91 +274,69 @@ function MultiTypeaheadField(props) {
   // Initialize options for static data
   useEffect(() => {
     if (staticOptions) {
-      setOptions(staticOptions);
+      // Transform static options using valueKeys immediately
+      const valueKeys = multiTypeaheadConfig.valueKeys || ["value"];
+      const transformedOptions = staticOptions.map(option => {
+        if (typeof option === "string") {
+          return option;
+        }
+        // Always create an object with specified valueKeys
+        const valueObj = {};
+        valueKeys.forEach(key => {
+          const value = selectn(key, option);
+          if (value !== undefined) {
+            // Use the last part of the key chain instead of the full key
+            const lastKeyPart = key.split(".").pop();
+            valueObj[lastKeyPart] = value;
+          }
+        });
+        return valueObj;
+      });
+      setOptions(transformedOptions);
     } else if (url) {
       setOptions([]);
     }
-  }, [staticOptions, url]);
+  }, [staticOptions, url, multiTypeaheadConfig.valueKeys]);
 
+  // Common template rendering logic
+  const renderTemplate = useCallback((template, obj) => {
+    if (!template || typeof template !== "string") {
+      return "";
+    }
+    return template.replace(/\{([^}]+)\}/g, (match, path) => {
+      const value = selectn(path, obj);
+      return value != null ? String(value) : "";
+    });
+  }, []);
+
+  // Dropdown label rendering (options are already transformed)
   const getOptionLabel = useCallback(
     option => {
-      const labelTemplate = multiTypeaheadConfig.labelTemplate;
-
       if (typeof option === "string") {
         return option;
       }
 
-      // Always use labelTemplate if provided
-      if (labelTemplate && typeof labelTemplate === "string") {
-        return labelTemplate.replace(/\{([^}]+)\}/g, (match, path) => {
-          const value = selectn(path, option);
-          return value != null ? String(value) : "";
-        });
+      const template = multiTypeaheadConfig.labelTemplate;
+      if (template) {
+        return renderTemplate(template, option);
       }
-
-      // Fallback to common label fields
-      return option.label || option.name || option.title || String(option);
+      return "";
     },
-    [multiTypeaheadConfig.labelTemplate]
-  );
-
-  const getOptionValue = useCallback(
-    option => {
-      const valueKeys = multiTypeaheadConfig.valueKeys || ["value"];
-
-      if (typeof option === "string") {
-        return option;
-      }
-
-      // Always create an object with specified valueKeys
-      const valueObj = {};
-      valueKeys.forEach(key => {
-        const value = selectn(key, option);
-        if (value !== undefined) {
-          // Use the last part of the key chain instead of the full key
-          const lastKeyPart = key.split(".").pop();
-          valueObj[lastKeyPart] = value;
-        }
-      });
-      return valueObj;
-    },
-    [multiTypeaheadConfig.valueKeys]
+    [multiTypeaheadConfig.labelTemplate, renderTemplate]
   );
 
   const getSelectedOptions = useCallback(() => {
     const selectedOptions = [];
 
     formData.forEach(value => {
-      const option = options.find(opt => {
-        const optValue = getOptionValue(opt);
-
-        // Handle object comparison for complex values
-        if (typeof value === "object" && typeof optValue === "object") {
-          return JSON.stringify(optValue) === JSON.stringify(value);
-        }
-
-        // Otherwise do string comparison
-        return String(optValue) === String(value);
-      });
-
-      if (option) {
-        selectedOptions.push(option);
-      } else {
-        // If option not found in current options, create a representation
-        // This ensures selected values persist even when not in current search results
-        if (typeof value === "object") {
-          // For object values, create a representation that can be displayed
-          const label = getOptionLabel(value);
-          selectedOptions.push({ ...value, _displayLabel: label });
-        } else {
-          // For string values, create a simple option object
-          selectedOptions.push({ label: String(value), value: value });
-        }
-      }
+      // For existing formData values, we don't need to find them in current options
+      // since they may not be present in current search results
+      // Just use the formData value directly for chip display
+      selectedOptions.push(value);
     });
 
     return selectedOptions;
-  }, [formData, options, getOptionValue, getOptionLabel]);
+  }, [formData]);
 
   const handleInputChange = useCallback(event => {
     const newValue = event.target.value;
@@ -346,12 +354,11 @@ function MultiTypeaheadField(props) {
 
   const handleOptionClick = useCallback(
     option => {
-      const selectedOptions = getSelectedOptions();
-      const optionValue = getOptionValue(option);
+      // Option is already transformed, use it directly
+      const optionValue = option;
 
-      // Check if already selected
-      const isSelected = selectedOptions.some(selected => {
-        const selectedValue = getOptionValue(selected);
+      // Check if already selected by comparing with formData directly
+      const isSelected = formData.some(selectedValue => {
         if (
           typeof optionValue === "object" &&
           typeof selectedValue === "object"
@@ -370,7 +377,7 @@ function MultiTypeaheadField(props) {
       setInputValue("");
       setIsOpen(false);
     },
-    [getSelectedOptions, getOptionValue, formData, onChange]
+    [formData, onChange]
   );
 
   const handleChipDelete = useCallback(
@@ -416,9 +423,9 @@ function MultiTypeaheadField(props) {
 
   // Remove already selected options from dropdown
   filteredOptions = filteredOptions.filter(option => {
-    const optionValue = getOptionValue(option);
-    return !selectedOptions.some(selected => {
-      const selectedValue = getOptionValue(selected);
+    // Option is already transformed, use it directly
+    const optionValue = option;
+    return !formData.some(selectedValue => {
       if (
         typeof optionValue === "object" &&
         typeof selectedValue === "object"
@@ -431,6 +438,10 @@ function MultiTypeaheadField(props) {
 
   const label = multiTypeaheadConfig.label;
   const placeholder = multiTypeaheadConfig.placeholder || "Select...";
+
+  // Show dropdown only if input is not empty or there are options
+  // Show dropdown only after typing is finished
+  const shouldShowDropdown = isOpen && !isTyping && inputValue.trim();
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
@@ -450,12 +461,11 @@ function MultiTypeaheadField(props) {
               selectedOptions.length > 0 ? (
                 <StyledChipContainer>
                   {selectedOptions.map((option, index) => {
-                    // Create a stable key based on the option content
-                    const optionValue = getOptionValue(option);
+                    // Option is already in transformed format
                     const stableKey =
-                      typeof optionValue === "object"
-                        ? JSON.stringify(optionValue)
-                        : String(optionValue);
+                      typeof option === "object"
+                        ? JSON.stringify(option)
+                        : String(option);
 
                     return (
                       <StyledChip
@@ -493,15 +503,18 @@ function MultiTypeaheadField(props) {
         />
 
         {/* Dropdown */}
-        {isOpen &&
-        (filteredOptions.length > 0 || (loading && inputValue.trim())) ? (
+        {shouldShowDropdown && (
           <StyledDropdown>
-            {loading && inputValue.trim() ? (
+            {loading ? (
               <StyledLoadingContainer>
                 <CircularProgress size={20} />
                 <span style={{ marginLeft: "8px" }}>Loading...</span>
               </StyledLoadingContainer>
-            ) : filteredOptions.length > 0 ? (
+            ) : filteredOptions.length === 0 ? (
+              <StyledNoOptionsContainer>
+                No options available
+              </StyledNoOptionsContainer>
+            ) : (
               filteredOptions.map((option, index) => (
                 <StyledOptionItem
                   key={index}
@@ -510,13 +523,9 @@ function MultiTypeaheadField(props) {
                   {getOptionLabel(option)}
                 </StyledOptionItem>
               ))
-            ) : (
-              <StyledNoOptionsContainer>
-                No options available
-              </StyledNoOptionsContainer>
             )}
           </StyledDropdown>
-        ) : null}
+        )}
       </StyledContainer>
     </ClickAwayListener>
   );

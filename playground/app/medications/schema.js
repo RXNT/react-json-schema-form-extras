@@ -18,7 +18,8 @@ export default {
             defaultFilterKey: "isSelected",
             properties: {
               drugId: {
-                type: "string"
+                type: "string",
+                title: "Drug ID"
               },
               drugName: {
                 type: "string",
