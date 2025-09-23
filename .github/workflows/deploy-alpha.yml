@@ -85,9 +85,9 @@ jobs:
           CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo "Current version: ${CURRENT_VERSION}"
 
-          # Get latest stable NPM version (excluding alpha/beta)
-          LATEST_NPM_VERSION=$(npm view react-jsonschema-form-extras dist-tags.latest 2>/dev/null || echo "0.0.0")
-          echo "Latest NPM version: ${LATEST_NPM_VERSION}"
+          # Get latest stable NPM version (excluding alpha/beta/prerelease)
+          LATEST_NPM_VERSION=$(npm view react-jsonschema-form-extras versions --json | jq -r '.[]' | grep -v '\-' | tail -1 2>/dev/null || echo "0.0.0")
+          echo "Latest stable NPM version: ${LATEST_NPM_VERSION}"
 
           # Clean current version (remove any prerelease suffix)
           CLEAN_CURRENT_VERSION=$(echo "${CURRENT_VERSION}" | sed 's/-.*$//')
@@ -98,19 +98,26 @@ jobs:
             const current = '${CLEAN_CURRENT_VERSION}';
             const npm = '${LATEST_NPM_VERSION}';
             
+            // Validate that npm version is a proper semver (not empty or invalid)
+            const npmParts = npm.split('.');
+            if (npmParts.length !== 3 || npmParts.some(part => isNaN(Number(part)))) {
+              console.log('no-bump');
+              return;
+            }
+            
             const currentParts = current.split('.').map(Number);
-            const npmParts = npm.split('.').map(Number);
+            const npmPartsNum = npmParts.map(Number);
             
             // Check if current is greater than npm
-            const isGreater = currentParts[0] > npmParts[0] || 
-                             (currentParts[0] === npmParts[0] && currentParts[1] > npmParts[1]) ||
-                             (currentParts[0] === npmParts[0] && currentParts[1] === npmParts[1] && currentParts[2] > npmParts[2]);
+            const isGreater = currentParts[0] > npmPartsNum[0] || 
+                             (currentParts[0] === npmPartsNum[0] && currentParts[1] > npmPartsNum[1]) ||
+                             (currentParts[0] === npmPartsNum[0] && currentParts[1] === npmPartsNum[1] && currentParts[2] > npmPartsNum[2]);
             
             if (isGreater) {
               console.log('no-bump');
             } else {
               // Calculate next patch version after NPM
-              const nextVersion = npmParts[0] + '.' + npmParts[1] + '.' + (npmParts[2] + 1);
+              const nextVersion = npmPartsNum[0] + '.' + npmPartsNum[1] + '.' + (npmPartsNum[2] + 1);
               console.log(nextVersion);
             }
           ")
