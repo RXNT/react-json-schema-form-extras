@@ -71,6 +71,7 @@ jobs:
         with:
           token: ${{ secrets.GH_ACTIONS_TOKEN }}
           fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -128,8 +129,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add ALPHA_VERSION.md
-          git commit -m "[alpha] Published version ${alpha_version} for PR #${{ github.event.pull_request.number }}"
-          git push
+          git commit -m "[skip ci] [alpha] Published version ${alpha_version} for PR #${{ github.event.pull_request.number }}"
+          git push origin ${{ github.event.pull_request.head.ref }}
           echo "✅ Alpha version info committed to PR branch"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
