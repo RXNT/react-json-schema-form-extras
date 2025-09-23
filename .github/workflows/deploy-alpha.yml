@@ -6,35 +6,92 @@ on:
       - master
 
 jobs:
+  test-secret:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Check required tokens
+        run: |
+          FAILED=false
+
+          if [ -z "${GH_ACTIONS_TOKEN}" ]; then
+            echo "❌ GH_ACTIONS_TOKEN is NOT set"
+            FAILED=true
+          else
+            echo "✅ GH_ACTIONS_TOKEN is set"
+          fi
+
+          if [ -z "${NPM_PUBLISH_TOKEN}" ]; then
+            echo "❌ NPM_PUBLISH_TOKEN is NOT set"
+            FAILED=true
+          else
+            echo "✅ NPM_PUBLISH_TOKEN is set"
+          fi
+
+          if [ "$FAILED" = true ]; then
+            echo "❌ One or more required tokens are missing"
+            exit 1
+          fi
+
+          echo "✅ All required tokens are configured"
+        env:
+          GH_ACTIONS_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
+          NPM_PUBLISH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+
   lint:
     name: Lint
+    needs: test-secret
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
+      - name: Debug PR info
+        run: |
+          echo "PR from: ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "Base repo: ${{ github.repository }}"
+          echo "Is fork: ${{ github.event.pull_request.head.repo.full_name != github.repository }}"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: "20"
+          cache: "npm"
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run: npm ci --legacy-peer-deps
       - name: Run linter
         run: npm run lint
 
   deploy-alpha:
     needs: lint
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_ACTIONS_TOKEN }}
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: "20"
+          cache: "npm"
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
       - name: Build project
         run: npm run dist
+      - name: Validate build output
+        run: |
+          if [ ! -d "lib" ]; then
+            echo "❌ lib directory not found"
+            exit 1
+          fi
+          if [ ! -d "dist" ]; then
+            echo "❌ dist directory not found"
+            exit 1
+          fi
+          echo "✅ Build output validated (lib and dist folders created)"
       - name: Authenticate with NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
@@ -46,10 +103,18 @@ jobs:
           TIMESTAMP=$(date +'%H%M%S')
           ALPHA_VERSION="${CURRENT_VERSION}-alpha.${TIMESTAMP}"
           echo "alpha_version=${ALPHA_VERSION}" >> $GITHUB_ENV
+
+          # Update package.json only for publishing (without committing)
           jq ".version = \"${ALPHA_VERSION}\"" package.json > package.json.tmp && mv package.json.tmp package.json
-            npm install --legacy-peer-deps
-      - name: Publish Alpha Version (dry run)
-        run: npm publish --tag alpha --dry-run
+          npm ci --legacy-peer-deps
+      - name: Publish Alpha Version
+        run: |
+          npm publish --tag alpha
+          echo "✅ Successfully published alpha version: ${alpha_version}"
+          echo ""
+          echo "🚀 To test this alpha version, run:"
+          echo "npm install react-jsonschema-form-extras@${alpha_version}"
         if: endsWith(github.event.pull_request.user.login, '[bot]') == false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+          alpha_version: ${{ env.alpha_version }}

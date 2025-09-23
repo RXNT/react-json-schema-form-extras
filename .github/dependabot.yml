@@ -3,7 +3,7 @@ registries:
   rxnt-npm:
     type: npm-registry
     url: https://registry.npmjs.org
-    token: ${{secrets.NPM_ACCESS_TOKEN}}
+    token: ${{secrets.NPM_PUBLISH_TOKEN}}
     replaces-base: true
 updates:
   - package-ecosystem: "npm"
