@@ -85,60 +85,54 @@ jobs:
           CURRENT_VERSION=$(node -p "require('./package.json').version")
           echo "Current version: ${CURRENT_VERSION}"
 
-          # Get latest stable NPM version (excluding alpha/beta/prerelease)
-          LATEST_NPM_VERSION=$(npm view react-jsonschema-form-extras versions --json | jq -r '.[]' | grep -v '\-' | tail -1 2>/dev/null || echo "0.0.0")
-          echo "Latest stable NPM version: ${LATEST_NPM_VERSION}"
+          # Get latest version from NPM (just the latest published version)
+          LATEST_NPM_VERSION=$(npm view react-jsonschema-form-extras version 2>/dev/null || echo "0.0.0")
+          echo "Latest NPM version: ${LATEST_NPM_VERSION}"
+
+          # Extract clean version from NPM version (remove prerelease suffix)
+          CLEAN_NPM_VERSION=$(echo "${LATEST_NPM_VERSION}" | sed 's/-.*$//')
+          echo "Clean NPM version: ${CLEAN_NPM_VERSION}"
 
           # Clean current version (remove any prerelease suffix)
           CLEAN_CURRENT_VERSION=$(echo "${CURRENT_VERSION}" | sed 's/-.*$//')
-          echo "Clean version: ${CLEAN_CURRENT_VERSION}"
+          echo "Clean current version: ${CLEAN_CURRENT_VERSION}"
 
-          # Calculate next version after NPM version
-          NEXT_VERSION=$(node -e "
-            const current = '${CLEAN_CURRENT_VERSION}';
-            const npm = '${LATEST_NPM_VERSION}';
+          # Simple version comparison using Node.js
+          SHOULD_BUMP=$(node -e "
+            const current = '${CLEAN_CURRENT_VERSION}'.split('.').map(Number);
+            const npm = '${CLEAN_NPM_VERSION}'.split('.').map(Number);
             
-            // Validate that npm version is a proper semver (not empty or invalid)
-            const npmParts = npm.split('.');
-            if (npmParts.length !== 3 || npmParts.some(part => isNaN(Number(part)))) {
-              console.log('no-bump');
-              return;
+            // Compare versions: if current <= npm, need bump
+            for (let i = 0; i < 3; i++) {
+              if (current[i] < npm[i]) {
+                console.log('true');
+                process.exit(0);
+              } else if (current[i] > npm[i]) {
+                console.log('false');
+                process.exit(0);
+              }
             }
-            
-            const currentParts = current.split('.').map(Number);
-            const npmPartsNum = npmParts.map(Number);
-            
-            // Check if current is greater than npm
-            const isGreater = currentParts[0] > npmPartsNum[0] || 
-                             (currentParts[0] === npmPartsNum[0] && currentParts[1] > npmPartsNum[1]) ||
-                             (currentParts[0] === npmPartsNum[0] && currentParts[1] === npmPartsNum[1] && currentParts[2] > npmPartsNum[2]);
-            
-            if (isGreater) {
-              console.log('no-bump');
-            } else {
-              // Calculate next patch version after NPM
-              const nextVersion = npmPartsNum[0] + '.' + npmPartsNum[1] + '.' + (npmPartsNum[2] + 1);
-              console.log(nextVersion);
-            }
+            // Equal versions = need bump
+            console.log('true');
           ")
 
-          if [ "${NEXT_VERSION}" = "no-bump" ]; then
-            echo "✅ Current version is already newer than NPM"
-          else
-            echo "📦 Version bump needed to: ${NEXT_VERSION}"
+          if [ "${SHOULD_BUMP}" = "true" ]; then
+            echo "📦 Version bump needed"
             
-            # Set the exact next version
-            npm version "${NEXT_VERSION}" --no-git-tag-version
-            echo "🚀 Bumped to: ${NEXT_VERSION}"
+            # Simple patch bump
+            NEW_VERSION=$(npm version patch --no-git-tag-version)
+            echo "🚀 Bumped to: ${NEW_VERSION}"
             
             # Commit to PR branch
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add package.json package-lock.json
-            git commit -m "[skip ci] 🔖 Bump version to ${NEXT_VERSION}"
+            git commit -m "[skip ci] 🔖 Bump version to ${NEW_VERSION}"
             git push origin ${{ github.event.pull_request.head.ref }}
             
             echo "✅ Version bumped and committed"
+          else
+            echo "✅ Current version is already newer than NPM"
           fi
 
   deploy-alpha:
