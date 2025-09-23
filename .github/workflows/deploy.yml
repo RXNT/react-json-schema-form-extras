@@ -24,11 +24,15 @@ jobs:
         run: npm run dist
       - name: Validate build output
         run: |
-          if [ ! -d "build" ]; then
-            echo "❌ Build directory not found"
+          if [ ! -d "lib" ]; then
+            echo "❌ lib directory not found"
             exit 1
           fi
-          echo "✅ Build output validated"
+          if [ ! -d "dist" ]; then
+            echo "❌ dist directory not found"
+            exit 1
+          fi
+          echo "✅ Build output validated (lib and dist folders created)"
       - name: Bump version
         id: bump_version
         run: |

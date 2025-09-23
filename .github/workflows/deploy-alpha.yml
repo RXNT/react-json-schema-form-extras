@@ -35,6 +35,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_ACTIONS_TOKEN }}
+          fetch-depth: 0
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -46,11 +49,15 @@ jobs:
         run: npm run dist
       - name: Validate build output
         run: |
-          if [ ! -d "build" ]; then
-            echo "❌ Build directory not found"
+          if [ ! -d "lib" ]; then
+            echo "❌ lib directory not found"
             exit 1
           fi
-          echo "✅ Build output validated"
+          if [ ! -d "dist" ]; then
+            echo "❌ dist directory not found"
+            exit 1
+          fi
+          echo "✅ Build output validated (lib and dist folders created)"
       - name: Authenticate with NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
@@ -62,6 +69,17 @@ jobs:
           TIMESTAMP=$(date +'%H%M%S')
           ALPHA_VERSION="${CURRENT_VERSION}-alpha.pr${{ github.event.pull_request.number }}.${TIMESTAMP}"
           echo "alpha_version=${ALPHA_VERSION}" >> $GITHUB_ENV
+
+          # Create alpha version info file instead of modifying package.json
+          echo "# Alpha Version Info" > ALPHA_VERSION.md
+          echo "" >> ALPHA_VERSION.md
+          echo "**Current Alpha Version:** \`${ALPHA_VERSION}\`" >> ALPHA_VERSION.md
+          echo "**Base Version:** \`${CURRENT_VERSION}\`" >> ALPHA_VERSION.md
+          echo "**PR Number:** #${{ github.event.pull_request.number }}" >> ALPHA_VERSION.md
+          echo "**Generated:** $(date)" >> ALPHA_VERSION.md
+          echo "**NPM Command:** \`npm install react-jsonschema-form-extras@${ALPHA_VERSION}\`" >> ALPHA_VERSION.md
+
+          # Update package.json only for publishing (without committing)
           jq ".version = \"${ALPHA_VERSION}\"" package.json > package.json.tmp && mv package.json.tmp package.json
           npm ci --legacy-peer-deps
       - name: Publish Alpha Version
@@ -71,4 +89,15 @@ jobs:
         if: endsWith(github.event.pull_request.user.login, '[bot]') == false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+          alpha_version: ${{ env.alpha_version }}
+      - name: Commit alpha version change (for testing)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add ALPHA_VERSION.md
+          git commit -m "[alpha] Published version ${alpha_version} for PR #${{ github.event.pull_request.number }}"
+          git push
+          echo "✅ Alpha version info committed to PR branch"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
           alpha_version: ${{ env.alpha_version }}
