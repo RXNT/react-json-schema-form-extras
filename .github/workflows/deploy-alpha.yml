@@ -5,10 +5,6 @@ on:
     branches:
       - master
 
-permissions:
-  contents: read
-  packages: write
-
 jobs:
   lint:
     name: Lint
@@ -25,7 +21,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: "20"
           cache: "npm"
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
@@ -42,7 +38,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "16"
+          node-version: "20"
           cache: "npm"
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
