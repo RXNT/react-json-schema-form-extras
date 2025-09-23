@@ -13,7 +13,13 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
+      - name: Debug PR info
+        run: |
+          echo "PR from: ${{ github.event.pull_request.head.repo.full_name }}"
+          echo "Base repo: ${{ github.repository }}"
+          echo "Is fork: ${{ github.event.pull_request.head.repo.full_name != github.repository }}"
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Set up Node.js
@@ -29,6 +35,7 @@ jobs:
   deploy-alpha:
     needs: lint
     runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
