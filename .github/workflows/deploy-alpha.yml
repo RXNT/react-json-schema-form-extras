@@ -6,23 +6,8 @@ on:
       - master
 
 jobs:
-  test-secret:
-    runs-on: ubuntu-latest
-    if: github.event.pull_request.head.repo.full_name == github.repository
-    steps:
-      - name: Check GH_ACTIONS_TOKEN
-        run: |
-          if [ -z "${GH_ACTIONS_TOKEN}" ]; then
-            echo "GH_ACTIONS_TOKEN is NOT set"
-          else
-            echo "GH_ACTIONS_TOKEN is set"
-          fi
-        env:
-          GH_ACTIONS_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
-
   lint:
     name: Lint
-    needs: test-secret
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
@@ -51,7 +36,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_ACTIONS_TOKEN }}
+          token: ${{ secrets.GH_ACTION_TOKEN }}
           fetch-depth: 0
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -114,5 +99,5 @@ jobs:
           git push
           echo "✅ Alpha version info committed to PR branch"
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ACTION_TOKEN }}
           alpha_version: ${{ env.alpha_version }}
