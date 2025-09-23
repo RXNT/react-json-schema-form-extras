@@ -93,9 +93,23 @@ jobs:
           CLEAN_CURRENT_VERSION=$(echo "${CURRENT_VERSION}" | sed 's/-.*$//')
           echo "Clean version: ${CLEAN_CURRENT_VERSION}"
 
-          # Check if version bump is needed using semver
-          npm install --no-save semver
-          NEEDS_BUMP=$(node -e "const semver = require('semver'); console.log(semver.lte('${CLEAN_CURRENT_VERSION}', '${LATEST_NPM_VERSION}'))")
+          # Check if version bump is needed using Node.js built-in comparison
+          NEEDS_BUMP=$(node -e "
+            const current = '${CLEAN_CURRENT_VERSION}'.split('.').map(Number);
+            const npm = '${LATEST_NPM_VERSION}'.split('.').map(Number);
+            
+            // Compare major.minor.patch
+            for (let i = 0; i < 3; i++) {
+              if (current[i] < npm[i]) {
+                console.log('true'); // need bump
+                process.exit(0);
+              } else if (current[i] > npm[i]) {
+                console.log('false'); // no bump
+                process.exit(0);
+              }
+            }
+            console.log('true'); // versions are equal, need bump
+          ")
 
           if [ "${NEEDS_BUMP}" = "true" ]; then
             echo "📦 Version bump needed"
