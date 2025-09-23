@@ -100,7 +100,8 @@ jobs:
         id: generate_version
         run: |
           CURRENT_VERSION=$(node -p "require('./package.json').version")
-          ALPHA_VERSION="${CURRENT_VERSION}-alpha"
+          TIMESTAMP=$(date +'%H%M%S')
+          ALPHA_VERSION="${CURRENT_VERSION}-alpha.${TIMESTAMP}"
           echo "alpha_version=${ALPHA_VERSION}" >> $GITHUB_ENV
 
           # Update package.json only for publishing (without committing)
@@ -108,8 +109,7 @@ jobs:
           npm ci --legacy-peer-deps
       - name: Publish Alpha Version
         run: |
-          # Force publish alpha version (overwrites existing alpha if it exists)
-          npm publish --tag alpha --force
+          npm publish --tag alpha
           echo "✅ Successfully published alpha version: ${alpha_version}"
           echo ""
           echo "🚀 To test this alpha version, run:"
