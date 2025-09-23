@@ -746,7 +746,7 @@ This component provides a multi-typeahead dropdown using Material-UI components 
 
 - **BREAKING CHANGE**: Renamed from `MultiSelectField` to `MultiTypeaheadField`
 - **Field Name**: Changed from `ui:field: "multiSelect"` to `ui:field: "multiTypeahead"`
-- **Configuration**: Changed from `multiSelect: {}` to `multiTypeahead: {}` in uiSchema
+- **Configuration**: Changed from `multiSelect: {}` to `multiTypeahead: {}` in uiSchema.
 - Uses Material-UI components for multi-typeahead functionality.
 - All styling (border, label, placeholder, chip, dropdown options, icons) is handled via JSS (`withStyles`).
 - Consistent color for label, placeholder, dropdown options, chips, and icons.
