@@ -10,16 +10,33 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      - name: Check GH_ACTION_TOKEN
+      - name: Check required tokens
         run: |
+          FAILED=false
+
           if [ -z "${GH_ACTION_TOKEN}" ]; then
             echo "❌ GH_ACTION_TOKEN is NOT set"
-            exit 1
+            FAILED=true
           else
             echo "✅ GH_ACTION_TOKEN is set"
           fi
+
+          if [ -z "${NPM_PUBLISH_TOKEN}" ]; then
+            echo "❌ NPM_PUBLISH_TOKEN is NOT set"
+            FAILED=true
+          else
+            echo "✅ NPM_PUBLISH_TOKEN is set"
+          fi
+
+          if [ "$FAILED" = true ]; then
+            echo "❌ One or more required tokens are missing"
+            exit 1
+          fi
+
+          echo "✅ All required tokens are configured"
         env:
           GH_ACTION_TOKEN: ${{ secrets.GH_ACTION_TOKEN }}
+          NPM_PUBLISH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
   lint:
     name: Lint
