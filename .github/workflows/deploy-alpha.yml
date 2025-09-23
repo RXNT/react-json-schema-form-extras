@@ -61,12 +61,72 @@ jobs:
       - name: Run linter
         run: npm run lint
 
-  deploy-alpha:
+  check-and-bump-version:
     needs: lint
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_ACTIONS_TOKEN }}
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+      - name: Check and bump version if needed
+        run: |
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: ${CURRENT_VERSION}"
+
+          # Get latest stable NPM version (excluding alpha/beta)
+          LATEST_NPM_VERSION=$(npm view react-jsonschema-form-extras dist-tags.latest 2>/dev/null || echo "0.0.0")
+          echo "Latest NPM version: ${LATEST_NPM_VERSION}"
+
+          # Clean current version (remove any prerelease suffix)
+          CLEAN_CURRENT_VERSION=$(echo "${CURRENT_VERSION}" | sed 's/-.*$//')
+          echo "Clean version: ${CLEAN_CURRENT_VERSION}"
+
+          # Check if version bump is needed using semver
+          npm install --no-save semver
+          NEEDS_BUMP=$(node -e "const semver = require('semver'); console.log(semver.lte('${CLEAN_CURRENT_VERSION}', '${LATEST_NPM_VERSION}'))")
+
+          if [ "${NEEDS_BUMP}" = "true" ]; then
+            echo "📦 Version bump needed"
+            
+            # Reset to clean version if it has prerelease suffix
+            if [[ "${CURRENT_VERSION}" != "${CLEAN_CURRENT_VERSION}" ]]; then
+              npm version "${CLEAN_CURRENT_VERSION}" --no-git-tag-version
+            fi
+            
+            # Bump patch version
+            NEW_VERSION=$(npm version patch --no-git-tag-version)
+            echo "🚀 Bumped to: ${NEW_VERSION}"
+            
+            # Commit to PR branch
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add package.json package-lock.json
+            git commit -m "🔖 Bump version to ${NEW_VERSION}"
+            git push origin ${{ github.event.pull_request.head.ref }}
+            
+            echo "✅ Version bumped and committed"
+          else
+            echo "✅ Version is already newer than NPM"
+          fi
+
+  deploy-alpha:
+    needs: check-and-bump-version
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Checkout code (after version bump)
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_ACTIONS_TOKEN }}
