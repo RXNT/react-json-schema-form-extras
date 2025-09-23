@@ -6,8 +6,24 @@ on:
       - master
 
 jobs:
+  test-secret:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Check GH_ACTION_TOKEN
+        run: |
+          if [ -z "${GH_ACTION_TOKEN}" ]; then
+            echo "❌ GH_ACTION_TOKEN is NOT set"
+            exit 1
+          else
+            echo "✅ GH_ACTION_TOKEN is set"
+          fi
+        env:
+          GH_ACTION_TOKEN: ${{ secrets.GH_ACTION_TOKEN }}
+
   lint:
     name: Lint
+    needs: test-secret
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
