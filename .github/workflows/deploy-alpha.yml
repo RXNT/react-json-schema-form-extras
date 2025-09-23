@@ -14,11 +14,11 @@ jobs:
         run: |
           FAILED=false
 
-          if [ -z "${GH_ACTION_TOKEN}" ]; then
-            echo "❌ GH_ACTION_TOKEN is NOT set"
+          if [ -z "${GH_ACTIONS_TOKEN}" ]; then
+            echo "❌ GH_ACTIONS_TOKEN is NOT set"
             FAILED=true
           else
-            echo "✅ GH_ACTION_TOKEN is set"
+            echo "✅ GH_ACTIONS_TOKEN is set"
           fi
 
           if [ -z "${NPM_PUBLISH_TOKEN}" ]; then
@@ -35,7 +35,7 @@ jobs:
 
           echo "✅ All required tokens are configured"
         env:
-          GH_ACTION_TOKEN: ${{ secrets.GH_ACTION_TOKEN }}
+          GH_ACTIONS_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
           NPM_PUBLISH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
 
   lint:
@@ -69,7 +69,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_ACTION_TOKEN }}
+          token: ${{ secrets.GH_ACTIONS_TOKEN }}
           fetch-depth: 0
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -132,5 +132,5 @@ jobs:
           git push
           echo "✅ Alpha version info committed to PR branch"
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_ACTION_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
           alpha_version: ${{ env.alpha_version }}
