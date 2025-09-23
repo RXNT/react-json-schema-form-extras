@@ -4,7 +4,21 @@ on:
   workflow_dispatch:
 
 jobs:
+  test-secret:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check GH_ACTIONS_TOKEN
+        run: |
+          if [ -z "${GH_ACTIONS_TOKEN}" ]; then
+            echo "GH_ACTIONS_TOKEN is NOT set"
+          else
+            echo "GH_ACTIONS_TOKEN is set"
+          fi
+        env:
+          GH_ACTIONS_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
+
   deploy:
+    needs: test-secret
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
