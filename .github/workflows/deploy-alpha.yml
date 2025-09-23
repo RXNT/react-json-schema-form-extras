@@ -100,37 +100,21 @@ jobs:
         id: generate_version
         run: |
           CURRENT_VERSION=$(node -p "require('./package.json').version")
-          TIMESTAMP=$(date +'%H%M%S')
-          ALPHA_VERSION="${CURRENT_VERSION}-alpha.pr${{ github.event.pull_request.number }}.${TIMESTAMP}"
+          ALPHA_VERSION="${CURRENT_VERSION}-alpha"
           echo "alpha_version=${ALPHA_VERSION}" >> $GITHUB_ENV
-
-          # Create alpha version info file instead of modifying package.json
-          echo "# Alpha Version Info" > ALPHA_VERSION.md
-          echo "" >> ALPHA_VERSION.md
-          echo "**Alpha Version:** \`${ALPHA_VERSION}\`" >> ALPHA_VERSION.md
-          echo "**Base Version:** \`${CURRENT_VERSION}\`" >> ALPHA_VERSION.md
-          echo "**Generated:** $(date)" >> ALPHA_VERSION.md
-          echo "**Install:** \`npm install react-jsonschema-form-extras@${ALPHA_VERSION}\`" >> ALPHA_VERSION.md
 
           # Update package.json only for publishing (without committing)
           jq ".version = \"${ALPHA_VERSION}\"" package.json > package.json.tmp && mv package.json.tmp package.json
           npm ci --legacy-peer-deps
       - name: Publish Alpha Version
         run: |
-          npm publish --tag alpha
+          # Force publish alpha version (overwrites existing alpha if it exists)
+          npm publish --tag alpha --force
           echo "✅ Successfully published alpha version: ${alpha_version}"
+          echo ""
+          echo "🚀 To test this alpha version, run:"
+          echo "npm install react-jsonschema-form-extras@${alpha_version}"
         if: endsWith(github.event.pull_request.user.login, '[bot]') == false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
-          alpha_version: ${{ env.alpha_version }}
-      - name: Commit alpha version change (for testing)
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add ALPHA_VERSION.md
-          git commit -m "[skip ci] Update alpha version info"
-          git push origin ${{ github.event.pull_request.head.ref }}
-          echo "✅ Alpha version info committed to PR branch"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
           alpha_version: ${{ env.alpha_version }}
