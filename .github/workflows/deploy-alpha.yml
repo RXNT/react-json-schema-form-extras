@@ -119,15 +119,22 @@ jobs:
           if [ "${SHOULD_BUMP}" = "true" ]; then
             echo "📦 Version bump needed"
             
-            # Simple patch bump
-            NEW_VERSION=$(npm version patch --no-git-tag-version)
-            echo "🚀 Bumped to: ${NEW_VERSION}"
+            # Calculate next version after NPM version
+            NEXT_VERSION=$(node -e "
+              const npm = '${CLEAN_NPM_VERSION}'.split('.').map(Number);
+              const nextVersion = npm[0] + '.' + npm[1] + '.' + (npm[2] + 1);
+              console.log(nextVersion);
+            ")
+            
+            # Set the specific next version
+            npm version "${NEXT_VERSION}" --no-git-tag-version
+            echo "🚀 Bumped to: ${NEXT_VERSION}"
             
             # Commit to PR branch
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"
             git add package.json package-lock.json
-            git commit -m "[skip ci] 🔖 Bump version to ${NEW_VERSION}"
+            git commit -m "[skip ci] 🔖 Bump version to ${NEXT_VERSION}"
             git push origin ${{ github.event.pull_request.head.ref }}
             
             echo "✅ Version bumped and committed"
