@@ -38,7 +38,14 @@ jobs:
       - name: Authenticate with NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
-        run: echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+        run: |
+          echo "Checking if NPM token is set..."
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "NODE_AUTH_TOKEN is empty!"
+          else
+            echo "NODE_AUTH_TOKEN is set (hidden for security)."
+          fi
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
       - name: Generate alpha version
         id: generate_version
         run: |
@@ -47,9 +54,12 @@ jobs:
           ALPHA_VERSION="${CURRENT_VERSION}-alpha.${TIMESTAMP}"
           echo "alpha_version=${ALPHA_VERSION}" >> $GITHUB_ENV
           jq ".version = \"${ALPHA_VERSION}\"" package.json > package.json.tmp && mv package.json.tmp package.json
-            npm install --legacy-peer-deps
-      - name: Publish Alpha Version (dry run)
-        run: npm publish --tag alpha --dry-run
+          npm install --legacy-peer-deps
+      - name: Publish Alpha Version
         if: endsWith(github.event.pull_request.user.login, '[bot]') == false
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+        run: |
+          echo "Publishing alpha version: ${{ env.alpha_version }}"
+          npm whoami || echo "Failed to authenticate with NPM"
+          npm publish --tag alpha
