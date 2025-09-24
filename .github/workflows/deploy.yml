@@ -33,11 +33,24 @@ jobs:
             exit 1
           fi
           echo "✅ Build output validated (lib and dist folders created)"
-      - name: Bump version
-        id: bump_version
+      - name: Get current version
+        id: get_version
         run: |
-          NEW_VERSION=$(npm version patch --no-git-tag-version)
-          echo "new_version=${NEW_VERSION}" >> $GITHUB_ENV
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "current_version=${CURRENT_VERSION}" >> $GITHUB_ENV
+          echo "📦 Publishing version: ${CURRENT_VERSION}"
+      - name: Check if version exists on NPM
+        id: check_npm
+        run: |
+          CURRENT_VERSION="${{ env.current_version }}"
+          if npm view react-jsonschema-form-extras@${CURRENT_VERSION} version 2>/dev/null; then
+            echo "❌ Version ${CURRENT_VERSION} already exists on NPM"
+            echo "version_exists=true" >> $GITHUB_ENV
+            exit 1
+          else
+            echo "✅ Version ${CURRENT_VERSION} is new, proceeding with publication"
+            echo "version_exists=false" >> $GITHUB_ENV
+          fi
       - name: Authenticate with NPM
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
@@ -45,22 +58,12 @@ jobs:
       - name: Publish Release Version
         run: |
           npm publish
-          echo "✅ Successfully published to NPM"
+          echo "✅ Successfully published version ${{ env.current_version }} to NPM"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
-      - name: Commit and push version bump
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add package.json package-lock.json
-          git commit -m "[skip actions] bump to version ${new_version}"
-          git push origin master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
-          new_version: ${{ env.new_version }}
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
-          new_version: ${{ env.new_version }}
+          current_version: ${{ env.current_version }}
         run: |
-          gh release create "${new_version}" --generate-notes --latest --target master
+          gh release create "${{ env.current_version }}" --generate-notes --latest --target master

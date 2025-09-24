@@ -61,12 +61,93 @@ jobs:
       - name: Run linter
         run: npm run lint
 
-  deploy-alpha:
+  check-and-bump-version:
     needs: lint
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_ACTIONS_TOKEN }}
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+      - name: Check and bump version if needed
+        run: |
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current version: ${CURRENT_VERSION}"
+
+          # Get latest version from NPM (just the latest published version)
+          LATEST_NPM_VERSION=$(npm view react-jsonschema-form-extras version 2>/dev/null || echo "0.0.0")
+          echo "Latest NPM version: ${LATEST_NPM_VERSION}"
+
+          # Extract clean version from NPM version (remove prerelease suffix)
+          CLEAN_NPM_VERSION=$(echo "${LATEST_NPM_VERSION}" | sed 's/-.*$//')
+          echo "Clean NPM version: ${CLEAN_NPM_VERSION}"
+
+          # Clean current version (remove any prerelease suffix)
+          CLEAN_CURRENT_VERSION=$(echo "${CURRENT_VERSION}" | sed 's/-.*$//')
+          echo "Clean current version: ${CLEAN_CURRENT_VERSION}"
+
+          # Simple version comparison using Node.js
+          SHOULD_BUMP=$(node -e "
+            const current = '${CLEAN_CURRENT_VERSION}'.split('.').map(Number);
+            const npm = '${CLEAN_NPM_VERSION}'.split('.').map(Number);
+            
+            // Compare versions: if current <= npm, need bump
+            for (let i = 0; i < 3; i++) {
+              if (current[i] < npm[i]) {
+                console.log('true');
+                process.exit(0);
+              } else if (current[i] > npm[i]) {
+                console.log('false');
+                process.exit(0);
+              }
+            }
+            // Equal versions = need bump
+            console.log('true');
+          ")
+
+          if [ "${SHOULD_BUMP}" = "true" ]; then
+            echo "📦 Version bump needed"
+            
+            # Calculate next version after NPM version
+            NEXT_VERSION=$(node -e "
+              const npm = '${CLEAN_NPM_VERSION}'.split('.').map(Number);
+              const nextVersion = npm[0] + '.' + npm[1] + '.' + (npm[2] + 1);
+              console.log(nextVersion);
+            ")
+            
+            # Set the specific next version
+            npm version "${NEXT_VERSION}" --no-git-tag-version
+            echo "🚀 Bumped to: ${NEXT_VERSION}"
+            
+            # Commit to PR branch
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add package.json package-lock.json
+            git commit -m "[skip ci] 🔖 Bump version to ${NEXT_VERSION}"
+            git push origin ${{ github.event.pull_request.head.ref }}
+            
+            echo "✅ Version bumped and committed"
+          else
+            echo "✅ Current version is already newer than NPM"
+          fi
+
+  deploy-alpha:
+    needs: check-and-bump-version
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Checkout code (after version bump)
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GH_ACTIONS_TOKEN }}
